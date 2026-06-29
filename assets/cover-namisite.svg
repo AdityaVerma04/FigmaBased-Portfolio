@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#14131a"/>
+      <stop offset="100%" style="stop-color:#1e1b30"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8c6fff"/>
+      <stop offset="100%" style="stop-color:#c084fc"/>
+    </linearGradient>
+    <linearGradient id="card1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1d1c26"/>
+      <stop offset="100%" style="stop-color:#252335"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Dot grid -->
+  <pattern id="dots" x="0" y="0" width="28" height="28" patternUnits="userSpaceOnUse">
+    <circle cx="1" cy="1" r="1" fill="rgba(255,255,255,0.045)"/>
+  </pattern>
+  <rect width="1200" height="630" fill="url(#dots)"/>
+
+  <!-- Left decorative glow blob -->
+  <ellipse cx="200" cy="315" rx="200" ry="180" fill="rgba(140,111,255,0.07)"/>
+
+  <!-- Right glow blob -->
+  <ellipse cx="1050" cy="200" rx="160" ry="140" fill="rgba(192,132,252,0.05)"/>
+
+  <!-- Frame label top-left -->
+  <text x="48" y="54" font-family="'IBM Plex Mono', monospace" font-size="12" fill="rgba(255,255,255,0.3)">◇  Frame · Namisite / Client App</text>
+
+  <!-- Main title -->
+  <text x="48" y="160" font-family="'Space Grotesk', sans-serif" font-size="52" font-weight="700" fill="#f1f0f6" letter-spacing="-1">Client App</text>
+  <text x="48" y="225" font-family="'Space Grotesk', sans-serif" font-size="52" font-weight="700" fill="url(#accent)" letter-spacing="-1">UI/UX Design</text>
+  <text x="48" y="270" font-family="'Inter', sans-serif" font-size="17" fill="rgba(155,152,171,0.9)">Namisite Technologies · 2026 · Figma + Flutter</text>
+
+  <!-- Tag pills -->
+  <rect x="48" y="300" width="90" height="26" rx="13" fill="rgba(140,111,255,0.18)" stroke="rgba(140,111,255,0.4)" stroke-width="1"/>
+  <text x="93" y="318" font-family="'IBM Plex Mono', monospace" font-size="11" fill="#8c6fff" text-anchor="middle">UI Design</text>
+
+  <rect x="148" y="300" width="64" height="26" rx="13" fill="rgba(140,111,255,0.18)" stroke="rgba(140,111,255,0.4)" stroke-width="1"/>
+  <text x="180" y="318" font-family="'IBM Plex Mono', monospace" font-size="11" fill="#8c6fff" text-anchor="middle">Figma</text>
+
+  <rect x="222" y="300" width="68" height="26" rx="13" fill="rgba(140,111,255,0.18)" stroke="rgba(140,111,255,0.4)" stroke-width="1"/>
+  <text x="256" y="318" font-family="'IBM Plex Mono', monospace" font-size="11" fill="#8c6fff" text-anchor="middle">Flutter</text>
+
+  <!-- Right panel — mock wireframe screens -->
+  <!-- Screen 1 - large -->
+  <rect x="620" y="60" width="320" height="510" rx="16" fill="url(#card1)" stroke="rgba(140,111,255,0.25)" stroke-width="1.5"/>
+  <!-- Screen 1 header bar -->
+  <rect x="620" y="60" width="320" height="44" rx="16" fill="rgba(140,111,255,0.12)"/>
+  <rect x="620" y="84" width="320" height="20" fill="rgba(140,111,255,0.12)"/>
+  <!-- Status bar dots -->
+  <circle cx="645" cy="82" r="5" fill="rgba(255,255,255,0.15)"/>
+  <circle cx="663" cy="82" r="5" fill="rgba(255,255,255,0.1)"/>
+  <circle cx="681" cy="82" r="5" fill="rgba(255,255,255,0.1)"/>
+  <!-- Wireframe content blocks -->
+  <rect x="640" y="124" width="280" height="14" rx="4" fill="rgba(255,255,255,0.08)"/>
+  <rect x="640" y="146" width="200" height="10" rx="4" fill="rgba(255,255,255,0.05)"/>
+  <rect x="640" y="178" width="280" height="120" rx="10" fill="rgba(140,111,255,0.1)" stroke="rgba(140,111,255,0.2)" stroke-width="1"/>
+  <!-- Chart lines inside -->
+  <polyline points="660,270 690,240 720,255 750,225 780,235 810,215 840,228 870,210 900,220" stroke="rgba(140,111,255,0.6)" stroke-width="2" fill="none"/>
+  <rect x="640" y="318" width="130" height="80" rx="8" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+  <rect x="790" y="318" width="130" height="80" rx="8" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+  <rect x="640" y="420" width="280" height="12" rx="4" fill="rgba(255,255,255,0.06)"/>
+  <rect x="640" y="442" width="220" height="10" rx="4" fill="rgba(255,255,255,0.04)"/>
+  <rect x="640" y="462" width="160" height="10" rx="4" fill="rgba(255,255,255,0.04)"/>
+  <!-- Figma selection handles -->
+  <rect x="618" y="58" width="6" height="6" rx="1" fill="#8c6fff"/>
+  <rect x="932" y="58" width="6" height="6" rx="1" fill="#8c6fff"/>
+  <rect x="618" y="568" width="6" height="6" rx="1" fill="#8c6fff"/>
+  <rect x="932" y="568" width="6" height="6" rx="1" fill="#8c6fff"/>
+
+  <!-- Screen 2 - smaller, offset -->
+  <rect x="968" y="120" width="196" height="340" rx="12" fill="url(#card1)" stroke="rgba(140,111,255,0.2)" stroke-width="1"/>
+  <!-- mobile notch -->
+  <rect x="1026" y="130" width="80" height="10" rx="5" fill="rgba(255,255,255,0.08)"/>
+  <rect x="978" y="155" width="176" height="10" rx="4" fill="rgba(255,255,255,0.06)"/>
+  <rect x="978" y="175" width="130" height="8" rx="4" fill="rgba(255,255,255,0.04)"/>
+  <rect x="978" y="200" width="176" height="80" rx="8" fill="rgba(140,111,255,0.08)" stroke="rgba(140,111,255,0.18)" stroke-width="1"/>
+  <rect x="978" y="298" width="80" height="32" rx="6" fill="rgba(140,111,255,0.2)"/>
+  <text x="1018" y="319" font-family="'IBM Plex Mono', monospace" font-size="10" fill="rgba(140,111,255,0.9)" text-anchor="middle">Primary</text>
+  <rect x="978" y="348" width="176" height="8" rx="4" fill="rgba(255,255,255,0.05)"/>
+  <rect x="978" y="366" width="140" height="8" rx="4" fill="rgba(255,255,255,0.04)"/>
+  <rect x="978" y="384" width="176" height="8" rx="4" fill="rgba(255,255,255,0.04)"/>
+  <rect x="978" y="410" width="176" height="36" rx="6" fill="rgba(140,111,255,0.15)" stroke="rgba(140,111,255,0.3)" stroke-width="1"/>
+  <text x="1066" y="433" font-family="'IBM Plex Mono', monospace" font-size="10" fill="#8c6fff" text-anchor="middle">View Details →</text>
+
+  <!-- Figma measurement annotation -->
+  <line x1="618" y1="315" x2="618" y2="348" stroke="rgba(140,111,255,0.5)" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="590" y="336" font-family="'IBM Plex Mono', monospace" font-size="9" fill="rgba(140,111,255,0.7)" text-anchor="middle">24</text>
+
+  <!-- Bottom status bar -->
+  <text x="48" y="585" font-family="'IBM Plex Mono', monospace" font-size="11" fill="rgba(255,255,255,0.2)">End-to-end UI/UX · wireframes → prototype → Flutter front-end</text>
+</svg>

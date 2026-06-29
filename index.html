@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aditya Verma — UI/UX Designer</title>
+  <meta name="description" content="Aditya Verma — UI/UX Designer based in Pune, India. Figma-first design, wireframing, prototyping, and front-end collaboration. Available for internships and freelance roles.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://adityaverma.design/">
+  <!-- Open Graph -->
+  <meta property="og:title"       content="Aditya Verma — UI/UX Designer">
+  <meta property="og:description" content="Figma-first design, wireframing, prototyping, and front-end collaboration. Based in Pune, India.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://adityaverma.design/">
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Interactive dot-grid background canvas -->
+  <canvas id="bgCanvas" aria-hidden="true"></canvas>
+
+  <!-- Tool canvas overlay (Frame, Rect, Pen drawing) -->
+  <canvas id="toolCanvas" aria-hidden="true"></canvas>
+
+  <!-- Annotation layer (Text nodes, Comment pins) -->
+  <div id="annotationLayer" aria-hidden="true"></div>
+
+  <!-- ═══════════════════════════════════════
+       LEFT — FIGMA TOOL STRIP
+  ════════════════════════════════════════════ -->
+  <aside class="tool-strip" id="toolStrip" aria-label="Figma tools">
+    <!-- Move -->
+    <button class="tool-btn active" data-tool="move" data-shortcut="V — Move" title="Move (V)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 3l14 9-7 2-2 7L5 3z"/>
+      </svg>
+    </button>
+    <!-- Frame -->
+    <button class="tool-btn" data-tool="frame" data-shortcut="F — Frame" title="Frame (F)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+        <rect x="6" y="6" width="12" height="12" rx="0.5"/>
+        <path d="M2 8h4M2 12h4M2 16h4M22 8h-4M22 12h-4M22 16h-4"/>
+        <path d="M8 2v4M12 2v4M16 2v4M8 22v-4M12 22v-4M16 22v-4"/>
+      </svg>
+    </button>
+
+    <div class="tool-divider" aria-hidden="true"></div>
+
+    <!-- Rectangle -->
+    <button class="tool-btn" data-tool="rect" data-shortcut="R — Rectangle" title="Rectangle (R)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+        <rect x="4" y="6" width="16" height="12" rx="1"/>
+      </svg>
+    </button>
+    <!-- Pen -->
+    <button class="tool-btn" data-tool="pen" data-shortcut="P — Pen" title="Pen (P)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 20h9"/>
+        <path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>
+      </svg>
+    </button>
+    <!-- Text -->
+    <button class="tool-btn" data-tool="text" data-shortcut="T — Text" title="Text (T)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+        <path d="M4 7V5h16v2"/>
+        <path d="M12 5v14"/>
+        <path d="M9 19h6"/>
+      </svg>
+    </button>
+
+    <div class="tool-divider" aria-hidden="true"></div>
+
+    <!-- Hand -->
+    <button class="tool-btn" data-tool="hand" data-shortcut="H — Hand" title="Hand / Pan (H)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 11V9a2 2 0 00-4 0v-1a2 2 0 00-4 0V7a2 2 0 00-4 0v7l-1-1a2 2 0 00-3 3l3 3a4 4 0 003 1h5a4 4 0 004-4v-5a2 2 0 00-2-2h1a2 2 0 000-4h-1a2 2 0 00-2 2v4z"/>
+      </svg>
+    </button>
+    <!-- Comment -->
+    <button class="tool-btn" data-tool="comment" data-shortcut="C — Comment" title="Comment (C)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+      </svg>
+    </button>
+
+    <!-- Color swatch (accent picker) -->
+    <div class="tool-spacer" aria-hidden="true"></div>
+    <button class="tool-color-swatch" id="colorSwatchBtn" title="Change accent color">
+      <div class="swatch-fill" style="background: #8c6fff"></div>
+      <div class="swatch-stroke"></div>
+    </button>
+  </aside>
+
+  <!-- ═══════════════════════════════════════
+       TOP TOOLBAR — Figma chrome
+  ════════════════════════════════════════════ -->
+  <header class="topbar" role="banner">
+    <div class="topbar-left">
+      <div class="toolbar-icons" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M4 4l16 8-7 2-2 7-7-17z"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><circle cx="12" cy="12" r="8"/></svg>
+      </div>
+      <div class="file-tab" aria-label="Current file">Aditya Verma <span class="ext">.fig</span></div>
+    </div>
+    <div class="topbar-right">
+      <div class="status-pill" role="status" aria-live="polite">
+        <span class="dot" aria-hidden="true"></span>Available for work
+      </div>
+      <button class="share-btn" id="shareBtn" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">
+        Get in touch ▸
+      </button>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════════
+       LEFT — LAYERS PANEL
+  ════════════════════════════════════════════ -->
+  <nav class="layers-panel" id="layersPanel" aria-label="Page sections">
+    <h6>Layers</h6>
+    <div class="layer-item" data-target="hero"       role="button" tabindex="0"><span class="idx">00</span><span class="layer-icon" aria-hidden="true"></span>Cover</div>
+    <div class="layer-item" data-target="about"      role="button" tabindex="0"><span class="idx">01</span><span class="layer-icon" aria-hidden="true"></span>About</div>
+    <div class="layer-item" data-target="work"       role="button" tabindex="0"><span class="idx">02</span><span class="layer-icon" aria-hidden="true"></span>Case Studies</div>
+    <div class="layer-item" data-target="toolkit"    role="button" tabindex="0"><span class="idx">03</span><span class="layer-icon" aria-hidden="true"></span>Toolkit</div>
+    <div class="layer-item" data-target="experience" role="button" tabindex="0"><span class="idx">04</span><span class="layer-icon" aria-hidden="true"></span>Experience</div>
+    <div class="layer-item" data-target="education"  role="button" tabindex="0"><span class="idx">05</span><span class="layer-icon" aria-hidden="true"></span>Education</div>
+    <div class="layer-item" data-target="contact"    role="button" tabindex="0"><span class="idx">06</span><span class="layer-icon" aria-hidden="true"></span>Contact</div>
+  </nav>
+
+  <!-- ═══════════════════════════════════════
+       RIGHT — PROPERTIES INSPECTOR
+  ════════════════════════════════════════════ -->
+  <aside class="inspector" id="inspector" aria-label="Frame properties">
+    <h6>Inspector</h6>
+    <div class="insp-frame-name" id="inspName">Frame · Cover<span class="insp-cursor" aria-hidden="true"></span></div>
+
+    <div class="insp-section-title">Frame</div>
+    <div class="insp-row"><span>W × H</span><span id="inspSize">1440 × 900</span></div>
+    <div class="insp-row"><span>Layout</span><span id="inspLayout">Fixed</span></div>
+    <div class="insp-row"><span>Radius</span><span id="inspRadius">0</span></div>
+
+    <div class="insp-divider"></div>
+    <div class="insp-section-title">Fill</div>
+    <div class="insp-row">
+      <span>Color</span>
+      <span><span class="insp-swatch" id="inspSwatch" style="background:#14131a" aria-hidden="true"></span><span id="inspFill">#14131A</span></span>
+    </div>
+
+    <div class="insp-divider"></div>
+    <div class="insp-section-title">Effects</div>
+    <div class="insp-row"><span>Opacity</span><span id="inspOpacity">100%</span></div>
+    <div class="insp-row"><span>Blur</span><span id="inspBlur">0 px</span></div>
+  </aside>
+
+  <!-- ═══════════════════════════════════════
+       MAIN WORKSPACE
+  ════════════════════════════════════════════ -->
+  <main class="workspace" id="mainContent">
+
+    <!-- ─── 00 · HERO ─── -->
+    <section class="section hero" id="hero"
+      data-frame="Cover" data-size="1440 × 900" data-fill="#14131A"
+      data-radius="0" data-layout="Fixed" data-opacity="100%" data-blur="0 px">
+
+      <div class="frame-tag" aria-hidden="true">Frame · Cover / Desktop</div>
+      <div class="hero-corner tl" aria-hidden="true"></div>
+      <div class="hero-corner tr" aria-hidden="true"></div>
+      <div class="hero-corner bl" aria-hidden="true"></div>
+      <div class="hero-corner br" aria-hidden="true"></div>
+
+      <div class="hero-avatar" aria-label="Aditya Verma — initials avatar">AV</div>
+      <div class="hero-role mono" id="heroRole" aria-label="Role">UI/UX Designer · Figma · Pune, India<span class="hero-cursor" aria-hidden="true"></span></div>
+      <h1>Designing interfaces<br>people actually <em>understand.</em></h1>
+      <p class="hero-sub">I'm Aditya — a UI/UX designer who works mostly in Figma, from early wireframes through to working front-ends. I care about the version of a design that survives contact with real users and real engineering constraints.</p>
+      <div class="hero-cta">
+        <button class="btn-primary" id="heroViewWork" onclick="document.getElementById('work').scrollIntoView({behavior:'smooth'})">
+          View Case Studies
+        </button>
+        <a class="btn-ghost" href="#contact">Get in touch</a>
+      </div>
+      <div class="scroll-hint mono" id="scrollHint" aria-hidden="true">↓ scroll to open the file</div>
+    </section>
+
+    <!-- ─── 01 · ABOUT ─── -->
+    <section class="section" id="about"
+      data-frame="About" data-size="1440 × 760" data-fill="#1A1924"
+      data-radius="12" data-layout="Auto" data-opacity="100%" data-blur="0 px">
+
+      <div class="frame-tag" aria-hidden="true">Frame · About</div>
+      <span class="eyebrow">01 · About</span>
+
+      <div class="about-grid">
+        <div class="about-text">
+          <h2>Structured thinking,<br>built in Figma.</h2>
+          <p>I'm a final-year Computer Science student (AI specialization) who designs and ships UI/UX work — wireframes, prototypes, and design systems — and stays close enough to the front-end to know when a design will actually hold up in code.</p>
+          <p>Most recently I worked across UI/UX design and front-end build on client applications at Namisite Technologies, and co-founded a 10+ member design-and-ops club at Parul University.</p>
+          <div class="toolkit-row" role="list" aria-label="Primary tools">
+            <span class="tool-chip" role="listitem">Figma</span>
+            <span class="tool-chip" role="listitem">Miro</span>
+            <span class="tool-chip" role="listitem">HTML / CSS</span>
+            <span class="tool-chip" role="listitem">Flutter</span>
+            <span class="tool-chip" role="listitem">Notion</span>
+          </div>
+        </div>
+        <div class="stat-col" role="list" aria-label="Key achievements">
+          <div class="stat-card" role="listitem">
+            <div class="num">2026</div>
+            <div class="label">B.Tech CSE (AI), graduating</div>
+          </div>
+          <div class="stat-card" role="listitem">
+            <div class="num">2+</div>
+            <div class="label">Figma certifications earned</div>
+          </div>
+          <div class="stat-card" role="listitem">
+            <div class="num">10+</div>
+            <div class="label">Members mentored at Google NXT Club</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 02 · WORK / CASE STUDIES ─── -->
+    <section class="section" id="work"
+      data-frame="Case Studies" data-size="1440 × 1200" data-fill="#14131A"
+      data-radius="12" data-layout="Grid" data-opacity="100%" data-blur="0 px">
+
+      <div class="frame-tag" aria-hidden="true">Frame · Selected Work</div>
+      <span class="eyebrow">02 · Work</span>
+      <h2>Case studies. Open one to step inside the file.</h2>
+
+      <div class="filter-bar" id="filterBar" role="group" aria-label="Filter case studies by tag">
+        <!-- Populated by main.js -->
+      </div>
+
+      <div class="work-grid" id="workGrid" role="list" aria-label="Case studies">
+        <div class="empty-state" aria-live="polite">Loading case studies…</div>
+      </div>
+    </section>
+
+    <!-- ─── 03 · TOOLKIT ─── -->
+    <section class="section" id="toolkit"
+      data-frame="Toolkit" data-size="1440 × 640" data-fill="#1A1924"
+      data-radius="12" data-layout="Auto" data-opacity="100%" data-blur="0 px">
+
+      <div class="frame-tag" aria-hidden="true">Frame · Toolkit</div>
+      <span class="eyebrow">03 · Toolkit</span>
+      <h2>What I design and build with.</h2>
+
+      <div class="skill-cols" role="list">
+        <!-- Design column -->
+        <div role="listitem">
+          <div class="skill-group-title">Design</div>
+          <div class="skill-list">
+            <div class="skill-item"><span class="skill-dot" aria-hidden="true"></span>Wireframing</div>
+            <div class="skill-item"><span class="skill-dot" aria-hidden="true"></span>UI Design</div>
+            <div class="skill-item"><span class="skill-dot" aria-hidden="true"></span>Prototyping</div>
+            <div class="skill-item"><span class="skill-dot" aria-hidden="true"></span>User-Centered Design</div>
+            <div class="skill-item"><span class="skill-dot" aria-hidden="true"></span>Responsive Design</div>
+            <div class="skill-item"><span class="skill-dot" aria-hidden="true"></span>Design Systems</div>
+          </div>
+        </div>
+        <!-- Tools column -->
+        <div role="listitem">
+          <div class="skill-group-title">Tools</div>
+          <div class="skill-list">
+            <div class="skill-item"><span class="skill-dot" aria-hidden="true"></span>Figma</div>
+            <div class="skill-item"><span class="skill-dot" aria-hidden="true"></span>Miro</div>
+            <div class="skill-item"><span class="skill-dot" aria-hidden="true"></span>HTML / CSS / JS</div>
+            <div class="skill-item"><span class="skill-dot" aria-hidden="true"></span>Flutter</div>
+            <div class="skill-item"><span class="skill-dot" aria-hidden="true"></span>Notion</div>
+            <div class="skill-item"><span class="skill-dot" aria-hidden="true"></span>AI-assisted dev tools</div>
+          </div>
+        </div>
+        <!-- Languages column -->
+        <div role="listitem">
+          <div class="skill-group-title">Languages</div>
+          <div class="skill-list">
+            <div class="skill-item"><span class="skill-dot" aria-hidden="true"></span>English</div>
+            <div class="skill-item"><span class="skill-dot" aria-hidden="true"></span>Hindi</div>
+            <div class="skill-item"><span class="skill-dot" aria-hidden="true"></span>Marathi (read/understand)</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 04 · EXPERIENCE ─── -->
+    <section class="section" id="experience"
+      data-frame="Experience" data-size="1440 × 820" data-fill="#14131A"
+      data-radius="12" data-layout="Auto" data-opacity="100%" data-blur="0 px">
+
+      <div class="frame-tag" aria-hidden="true">Frame · Experience</div>
+      <span class="eyebrow">04 · Experience</span>
+      <h2>Version history.</h2>
+
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-version mono">v1.2 · Feb – Apr 2026</div>
+          <h3>Namisite Technologies</h3>
+          <div class="tl-role">UI/UX Designer &amp; Front-End App Developer</div>
+          <ul>
+            <li>Designed end-to-end UI/UX for 2–3 client applications prior to launch, producing wireframes and interactive Figma prototypes.</li>
+            <li>Built and shipped the front-end for Namisite's AI Services page independently, using AI-assisted development tools.</li>
+            <li>Built Flutter-based front-end screens for client app builds, translating Figma designs into functional UI.</li>
+          </ul>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-version mono">v1.1 · Jun – Nov 2025</div>
+          <h3>Google NXT Club, Parul University</h3>
+          <div class="tl-role">Chief Operations Lead &amp; Co-Founder</div>
+          <ul>
+            <li>Co-founded the club and built task-planning and tracking workflows to coordinate execution across teams.</li>
+            <li>Mentored 10+ junior members and collaborated with the design team on creatives and branding.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 05 · EDUCATION ─── -->
+    <section class="section" id="education"
+      data-frame="Education" data-size="1440 × 520" data-fill="#1A1924"
+      data-radius="12" data-layout="Auto" data-opacity="100%" data-blur="0 px">
+
+      <div class="frame-tag" aria-hidden="true">Frame · Education</div>
+      <span class="eyebrow">05 · Education</span>
+      <h2>Education &amp; certifications.</h2>
+
+      <div class="edu-grid">
+        <div class="edu-block">
+          <h3>Parul University, Vadodara</h3>
+          <div class="meta">2022 – 2026</div>
+          <p>Bachelor of Technology (B.Tech), Computer Science &amp; Engineering — Specialization: Artificial Intelligence. CGPA: 7.3 / 10</p>
+        </div>
+
+        <div class="edu-block">
+          <h3>Certifications</h3>
+          <div class="cert-item">
+            <strong>Figma UI/UX Design Essentials</strong>
+            <div class="meta">Daniel Walter Scott · Udemy</div>
+          </div>
+          <div class="cert-item">
+            <strong>Figma UI/UX Design Advanced</strong>
+            <div class="meta">Daniel Walter Scott · Udemy</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── 06 · CONTACT ─── -->
+    <section class="section contact-section" id="contact"
+      data-frame="Contact" data-size="1440 × 480" data-fill="#14131A"
+      data-radius="12" data-layout="Fixed" data-opacity="100%" data-blur="0 px">
+
+      <div class="frame-tag" aria-hidden="true">Frame · Contact</div>
+      <span class="eyebrow">06 · Contact</span>
+      <h2>Let's design something that ships.</h2>
+      <p>Open to internships, freelance UI/UX work, and full-time roles.</p>
+
+      <div class="contact-links" role="list">
+        <div class="contact-link-item" role="listitem">
+          <a href="mailto:adityaverma0424@gmail.com" id="emailLink">
+            adityaverma0424@gmail.com <span class="arrow" aria-hidden="true">↗</span>
+          </a>
+          <button class="copy-btn" id="copyEmailBtn" aria-label="Copy email address">copy</button>
+        </div>
+        <div class="contact-link-item" role="listitem">
+          <a href="https://www.linkedin.com/in/adityaverma0424" target="_blank" rel="noopener noreferrer">
+            LinkedIn <span class="arrow" aria-hidden="true">↗</span>
+          </a>
+        </div>
+        <div class="contact-link-item" role="listitem">
+          <a href="tel:+919801010051">+91 98010 10051 <span class="arrow" aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+    </section>
+
+    <footer role="contentinfo">
+      <span>© 2026 Aditya Verma</span>
+      <span class="footer-center mono">Designed in Figma · Built in HTML/CSS/JS</span>
+      <span class="mono" id="footerTs"></span>
+    </footer>
+
+  </main><!-- end .workspace -->
+
+  <script src="js/bg-canvas.js"></script>
+  <script src="js/figma-tools.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

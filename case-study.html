@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Case Study — Aditya Verma</title>
+  <meta name="description" content="UI/UX case study by Aditya Verma.">
+  <!-- OG tags updated by JS after case study loads -->
+  <meta property="og:title"       content="Case Study — Aditya Verma" id="ogTitle">
+  <meta property="og:description" content="UI/UX case study by Aditya Verma." id="ogDesc">
+  <meta property="og:type"        content="article">
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<body>
+
+  <!-- Interactive dot-grid background canvas -->
+  <canvas id="bgCanvas" aria-hidden="true"></canvas>
+
+  <!-- Tool canvas overlay (Frame, Rect, Pen drawing) -->
+  <canvas id="toolCanvas" aria-hidden="true"></canvas>
+
+  <!-- Annotation layer (Text nodes, Comment pins) -->
+  <div id="annotationLayer" aria-hidden="true"></div>
+
+  <!-- Scroll progress bar -->
+  <div class="scroll-progress" id="scrollProgress" role="progressbar" aria-hidden="true"></div>
+
+  <!-- ═══════════════════════════════════════
+       LEFT — FIGMA TOOL STRIP
+  ════════════════════════════════════════════ -->
+  <aside class="tool-strip" id="toolStrip" aria-label="Figma tools">
+    <button class="tool-btn active" data-tool="move" data-shortcut="V — Move" title="Move (V)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3l14 9-7 2-2 7L5 3z"/></svg>
+    </button>
+    <button class="tool-btn" data-tool="frame" data-shortcut="F — Frame" title="Frame (F)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="6" y="6" width="12" height="12" rx="0.5"/><path d="M2 8h4M2 12h4M2 16h4M22 8h-4M22 12h-4M22 16h-4"/><path d="M8 2v4M12 2v4M16 2v4M8 22v-4M12 22v-4M16 22v-4"/></svg>
+    </button>
+    <div class="tool-divider" aria-hidden="true"></div>
+    <button class="tool-btn" data-tool="rect" data-shortcut="R — Rectangle" title="Rectangle (R)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="6" width="16" height="12" rx="1"/></svg>
+    </button>
+    <button class="tool-btn" data-tool="pen" data-shortcut="P — Pen" title="Pen (P)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+    </button>
+    <button class="tool-btn" data-tool="text" data-shortcut="T — Text" title="Text (T)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7V5h16v2"/><path d="M12 5v14"/><path d="M9 19h6"/></svg>
+    </button>
+    <div class="tool-divider" aria-hidden="true"></div>
+    <button class="tool-btn" data-tool="hand" data-shortcut="H — Hand" title="Hand / Pan (H)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V9a2 2 0 00-4 0v-1a2 2 0 00-4 0V7a2 2 0 00-4 0v7l-1-1a2 2 0 00-3 3l3 3a4 4 0 003 1h5a4 4 0 004-4v-5a2 2 0 00-2-2h1a2 2 0 000-4h-1a2 2 0 00-2 2v4z"/></svg>
+    </button>
+    <button class="tool-btn" data-tool="comment" data-shortcut="C — Comment" title="Comment (C)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+    </button>
+    <div class="tool-spacer" aria-hidden="true"></div>
+    <button class="tool-color-swatch" id="colorSwatchBtn" title="Change accent color">
+      <div class="swatch-fill" style="background: #8c6fff"></div>
+      <div class="swatch-stroke"></div>
+    </button>
+  </aside>
+
+  <!-- ═══════════════════════════════════════
+       TOP TOOLBAR
+  ════════════════════════════════════════════ -->
+  <header class="topbar" role="banner">
+    <div class="topbar-left">
+      <div class="toolbar-icons" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M4 4l16 8-7 2-2 7-7-17z"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
+      </div>
+      <div class="file-tab" id="fileTab">Case Study <span class="ext">.fig</span></div>
+    </div>
+    <div class="topbar-right">
+      <a class="btn-ghost" href="index.html#work" style="padding:7px 16px;display:inline-flex;align-items:center;gap:6px;">
+        ← Back to work
+      </a>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════════
+       LEFT — CASE STUDY LAYERS PANEL
+  ════════════════════════════════════════════ -->
+  <nav class="cs-layers-panel" id="csLayersPanel" aria-label="Case study sections">
+    <h6>Layers</h6>
+    <div class="cs-layer-item" data-section="cs-overview"  role="button" tabindex="0">
+      <span class="cs-l-idx">01</span>Overview
+    </div>
+    <div class="cs-layer-item" data-section="cs-problem"   role="button" tabindex="0">
+      <span class="cs-l-idx">02</span>Problem
+    </div>
+    <div class="cs-layer-item" data-section="cs-process"   role="button" tabindex="0">
+      <span class="cs-l-idx">03</span>Process
+    </div>
+    <div class="cs-layer-item" data-section="cs-outcome"   role="button" tabindex="0">
+      <span class="cs-l-idx">04</span>Outcome
+    </div>
+    <div class="cs-layer-item" data-section="cs-links"     role="button" tabindex="0" id="csLinksLayer" style="display:none;">
+      <span class="cs-l-idx">05</span>Links
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════════════════════
+       RIGHT — INSPECTOR (case-study metadata)
+  ════════════════════════════════════════════ -->
+  <aside class="inspector" id="csInspector" aria-label="Case study properties">
+    <h6>Inspector</h6>
+    <div class="insp-frame-name" id="csInspName">
+      Frame · Case Study<span class="insp-cursor" aria-hidden="true"></span>
+    </div>
+
+    <div class="insp-section-title">Metadata</div>
+    <div class="cs-inspector-content" id="csInspContent">
+      <!-- Populated by case-study.js -->
+      <div class="insp-row"><span>Client</span><span>—</span></div>
+      <div class="insp-row"><span>Role</span><span>—</span></div>
+      <div class="insp-row"><span>Year</span><span>—</span></div>
+    </div>
+
+    <div class="insp-divider"></div>
+    <div class="insp-section-title">Tags</div>
+    <div id="csInspTags">
+      <!-- Populated by case-study.js -->
+    </div>
+
+    <div class="insp-divider"></div>
+    <div class="insp-section-title">Progress</div>
+    <div class="insp-row"><span>Read</span><span id="csReadPct">0%</span></div>
+  </aside>
+
+  <!-- ═══════════════════════════════════════
+       CASE STUDY WORKSPACE
+  ════════════════════════════════════════════ -->
+  <main class="cs-workspace" id="csMain">
+    <section class="section cs-hero" id="csHero">
+
+      <!-- Breadcrumb -->
+      <nav class="cs-breadcrumb" aria-label="Breadcrumb">
+        <a href="index.html">Home</a>
+        <span aria-hidden="true">/</span>
+        <a href="index.html#work">Work</a>
+        <span aria-hidden="true">/</span>
+        <span id="csBreadcrumbTitle" aria-current="page">Case Study</span>
+      </nav>
+
+      <!-- Dynamic content injected here -->
+      <div id="csBody" aria-live="polite">
+        <p class="mono" style="color:var(--text-faint);">Loading case study…</p>
+      </div>
+
+    </section>
+  </main>
+
+  <script src="js/bg-canvas.js"></script>
+  <script src="js/figma-tools.js"></script>
+  <script src="js/case-study.js"></script>
+</body>
+</html>

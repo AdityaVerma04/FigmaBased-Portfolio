@@ -1,0 +1,48 @@
+{
+  "caseStudies": [
+    {
+      "id": "cs-001",
+      "slug": "namisite-client-app",
+      "title": "Designing a client-facing app from zero to first build",
+      "client": "Namisite Technologies",
+      "role": "UI/UX Designer & Front-End App Developer",
+      "year": "2026",
+      "status": "published",
+      "order": 1,
+      "coverImage": "assets/cover-namisite.svg",
+      "tags": ["UI Design", "Figma", "Flutter", "Pre-launch"],
+      "tools": ["Figma", "Flutter", "HTML/CSS"],
+      "summary": "End-to-end UI/UX for a client application — from early wireframes through interactive Figma prototypes to a working Flutter front-end, delivered ahead of the app's public launch.",
+      "problem": "Replace this with the real brief: what did the client need, and what wasn't working before this project started? What constraints (timeline, platform, audience) shaped the brief?",
+      "process": "Replace this with your actual process: how did you start (desk research, user interviews, competitor audit)? How did you move through wireframes to high-fidelity in Figma? How many feedback rounds with the client? How did you hand off to — or personally build — the Flutter front-end?",
+      "outcome": "Replace this with the real result: what shipped, any measurable impact, what the client said, and what you'd do differently next time.",
+      "liveUrl": "",
+      "figmaUrl": "",
+      "mediaAssets": [],
+      "createdAt": "2026-06-01T00:00:00.000Z",
+      "updatedAt": "2026-06-30T00:00:00.000Z"
+    },
+    {
+      "id": "cs-002",
+      "slug": "sample-case-study-2",
+      "title": "Sample case study — replace via the admin panel",
+      "client": "Client name",
+      "role": "UI/UX Designer",
+      "year": "2026",
+      "status": "draft",
+      "order": 2,
+      "coverImage": "",
+      "tags": ["Sample"],
+      "tools": ["Figma"],
+      "summary": "This is placeholder content so the grid has something to render. Open admin.html to edit or replace this entry with a real case study.",
+      "problem": "What problem were you solving?",
+      "process": "How did you approach it — research, wireframes, prototyping, testing?",
+      "outcome": "What changed as a result of your design work?",
+      "liveUrl": "",
+      "figmaUrl": "",
+      "mediaAssets": [],
+      "createdAt": "2026-06-01T00:00:00.000Z",
+      "updatedAt": "2026-06-30T00:00:00.000Z"
+    }
+  ]
+}

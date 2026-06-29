@@ -1,0 +1,58 @@
+erDiagram
+    CASE_STUDY {
+        string id PK
+        string slug "unique, used in URL"
+        string title
+        string client
+        string role
+        string year
+        string status "published | draft | hidden"
+        int order "display order in grid"
+        string coverImage "URL or local path"
+        string summary "short, shown on grid card"
+        string problem
+        string process
+        string outcome
+        string liveUrl "optional"
+        string figmaUrl "optional"
+        datetime createdAt
+        datetime updatedAt
+    }
+
+    TAG {
+        string id PK
+        string name "e.g. UI Design, Mobile"
+    }
+
+    TOOL {
+        string id PK
+        string name "e.g. Figma, Flutter"
+    }
+
+    MEDIA_ASSET {
+        string id PK
+        string caseStudyId FK
+        string url
+        string altText
+        int position "ordering within a case study"
+    }
+
+    ADMIN_USER {
+        string id PK
+        string name
+        string email
+        string passwordHash "only needed if/when a real backend is added"
+    }
+
+    CONTACT_MESSAGE {
+        string id PK
+        string name
+        string email
+        string message
+        datetime submittedAt
+    }
+
+    CASE_STUDY }o--o{ TAG : "tagged with"
+    CASE_STUDY }o--o{ TOOL : "built with"
+    CASE_STUDY ||--o{ MEDIA_ASSET : "has many"
+    ADMIN_USER ||--o{ CASE_STUDY : "authors / owns"
