@@ -237,8 +237,11 @@
         toolCanvas.style.pointerEvents = 'auto';
         
         if (target) {
-            // Heuristic: If we clicked inside a card, button, or paragraph, drag the whole thing!
-            target = target.closest('.case-card, .tool-chip, button, a, p, h1, h2, h3, h4, h5, h6, .stat-card') || target;
+            // Priority heuristic: If we clicked inside a card, we want the whole card, not its child paragraphs.
+            target = target.closest('.case-card') || 
+                     target.closest('.stat-card') || 
+                     target.closest('.tool-chip') || 
+                     target.closest('button, a, p, h1, h2, h3, h4, h5, h6') || target;
         }
         
         // Only pick up elements inside the workspace, not UI panels or the background
