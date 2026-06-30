@@ -101,17 +101,18 @@
       wsRect = { left: 0, top: 0, width: window.innerWidth, height: window.innerHeight };
     }
 
-    // Size and position toolCanvas to exactly match the workspace area
-    toolCanvas.style.left   = wsRect.left   + 'px';
-    toolCanvas.style.top    = wsRect.top    + 'px';
+    // Size and position toolCanvas to exactly match the workspace area (absolute to body)
+    const scrollX = window.scrollX || window.pageXOffset;
+    const scrollY = window.scrollY || window.pageYOffset;
+    
+    toolCanvas.style.left   = (wsRect.left + scrollX)   + 'px';
+    toolCanvas.style.top    = (wsRect.top + scrollY)    + 'px';
     toolCanvas.style.width  = wsRect.width  + 'px';
     toolCanvas.style.height = wsRect.height + 'px';
     toolCanvas.width        = wsRect.width;
     toolCanvas.height       = wsRect.height;
 
     // Size and position annotationLayer to exactly match the workspace area (absolute to body)
-    const scrollX = window.scrollX || window.pageXOffset;
-    const scrollY = window.scrollY || window.pageYOffset;
     annoLayer.style.left   = (wsRect.left + scrollX)   + 'px';
     annoLayer.style.top    = (wsRect.top + scrollY)    + 'px';
     annoLayer.style.width  = wsRect.width  + 'px';
