@@ -230,7 +230,11 @@
         placeText(pos); break;
 
       case T.HAND:
+        // Hide toolCanvas from pointer events briefly so we can find what's underneath it
+        toolCanvas.style.pointerEvents = 'none';
         let target = document.elementFromPoint(e.clientX, e.clientY);
+        toolCanvas.style.pointerEvents = 'auto';
+        
         // Only pick up elements inside the workspace, not UI panels or the background
         if (target && target !== document.body && target !== document.documentElement && target !== wsEl && !target.closest('.topbar') && !target.closest('.layers-panel') && !target.closest('.inspector') && !target.closest('.toolstrip')) {
            draggedEl = target;
