@@ -230,13 +230,19 @@
         placeText(pos); break;
 
       case T.HAND:
+        e.preventDefault(); // Prevent native drag-and-drop of links/images and text selection
         // Hide toolCanvas from pointer events briefly so we can find what's underneath it
         toolCanvas.style.pointerEvents = 'none';
         let target = document.elementFromPoint(e.clientX, e.clientY);
         toolCanvas.style.pointerEvents = 'auto';
         
+        if (target) {
+            // Heuristic: If we clicked inside a card, button, or paragraph, drag the whole thing!
+            target = target.closest('.case-card, .tool-chip, button, a, p, h1, h2, h3, h4, h5, h6, .stat-card') || target;
+        }
+        
         // Only pick up elements inside the workspace, not UI panels or the background
-        if (target && target !== document.body && target !== document.documentElement && target !== wsEl && !target.closest('.topbar') && !target.closest('.layers-panel') && !target.closest('.inspector') && !target.closest('.toolstrip')) {
+        if (target && target !== document.body && target !== document.documentElement && !target.classList.contains('workspace') && !target.closest('.topbar') && !target.closest('.layers-panel') && !target.closest('.inspector') && !target.closest('.toolstrip')) {
            draggedEl = target;
            dragStartPos = { cx: e.clientX, cy: e.clientY };
            
@@ -245,6 +251,7 @@
                 transform: target.style.transform || '',
                 transition: target.style.transition || '',
                 position: target.style.position || '',
+                display: target.style.display || '',
                 zIndex: target.style.zIndex || '',
                 dx: 0,
                 dy: 0
@@ -252,8 +259,12 @@
            }
            
            target.style.transition = 'none';
-           if (window.getComputedStyle(target).position === 'static') {
+           const compStyle = window.getComputedStyle(target);
+           if (compStyle.position === 'static') {
              target.style.position = 'relative';
+           }
+           if (compStyle.display === 'inline') {
+             target.style.display = 'inline-block';
            }
            target.style.zIndex = '999999';
         } else {
@@ -334,6 +345,7 @@
                     if (draggedEl !== el) {
                        el.style.transition = prev.transition;
                        el.style.position = prev.position;
+                       el.style.display = prev.display;
                        el.style.zIndex = prev.zIndex;
                        originalTransform.delete(el);
                     }
