@@ -237,11 +237,13 @@
         toolCanvas.style.pointerEvents = 'auto';
         
         if (target) {
-            // Priority heuristic: If we clicked inside a card, we want the whole card, not its child paragraphs.
+            // Priority heuristic: Check for card containers first.
+            // Then check a strict whitelist of draggable semantic elements/components.
+            // This prevents grabbing giant layout divs like .section or .about-grid.
+            const draggableSelector = '.case-card, .stat-card, .tool-chip, .hero-tag, .frame-tag, .eyebrow, .hero-name__word, .scroll-hint, button, a, p, h1, h2, h3, h4, h5, h6, img, svg, li';
             target = target.closest('.case-card') || 
                      target.closest('.stat-card') || 
-                     target.closest('.tool-chip') || 
-                     target.closest('button, a, p, h1, h2, h3, h4, h5, h6') || target;
+                     target.closest(draggableSelector);
         }
         
         // Only pick up elements inside the workspace, not UI panels or the background
