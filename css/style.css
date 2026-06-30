@@ -590,9 +590,9 @@ body.fullscreen .workspace {
 }
 
 /* In fullscreen the 145px ceiling would cap the name at ~65% of the expanded area.
-   Remove it — the divisor 6.1 already guarantees the word fits within hero-avail. */
+   Using a multiplier of 0.7 targets roughly 70% width in fullscreen. */
 body.fullscreen .hero-name {
-  font-size: clamp(24px, calc(var(--hero-avail) / 6.1), 400px);
+  font-size: clamp(24px, calc(var(--hero-avail) * 0.7 / 6.1), 400px);
 }
 
 .section {
@@ -714,6 +714,13 @@ p  { color: var(--text-secondary); }
 }
 .hero-name__word:hover {
   letter-spacing: -0.01em;
+}
+
+/* Make "ADITYA" typographically narrower and lighter than "VERMA" */
+.hero-name__word:first-child {
+  font-size: 0.78em;
+  font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
 .hero-name__word--alt {
