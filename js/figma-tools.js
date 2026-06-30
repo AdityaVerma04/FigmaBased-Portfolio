@@ -258,7 +258,7 @@
              });
            }
            
-           target.style.transition = 'none';
+           target.style.transition = 'rotate 0.3s ease-out';
            const compStyle = window.getComputedStyle(target);
            if (compStyle.position === 'static') {
              target.style.position = 'relative';
@@ -267,8 +267,7 @@
              target.style.display = 'inline-block';
            }
            target.style.zIndex = '999999';
-        } else {
-           handAnchor = { cx: e.clientX, cy: e.clientY, sx: window.scrollX, sy: window.scrollY };
+           target.style.rotate = '0deg';
         }
         document.body.style.cursor = 'grabbing';
         break;
@@ -299,10 +298,17 @@
            let currentY = prev.dy + dy;
            
            draggedEl.style.transform = `translate(${currentX}px, ${currentY}px)`;
-        } else if (handAnchor) {
-           const dx = e.clientX - handAnchor.cx;
-           const dy = e.clientY - handAnchor.cy;
-           window.scrollTo(handAnchor.sx - dx, handAnchor.sy - dy);
+           
+           const movementX = e.clientX - (draggedEl.lastClientX ?? e.clientX);
+           draggedEl.lastClientX = e.clientX;
+           
+           const targetRotation = Math.max(-12, Math.min(12, movementX * 1.5));
+           draggedEl.style.rotate = `${targetRotation}deg`;
+           
+           clearTimeout(draggedEl.stopDragTimer);
+           draggedEl.stopDragTimer = setTimeout(() => {
+               if (draggedEl) draggedEl.style.rotate = '0deg';
+           }, 50);
         }
         break;
     }
@@ -332,13 +338,16 @@
            prev.dx += dx;
            prev.dy += dy;
            
+           el.lastClientX = null;
+           clearTimeout(el.stopDragTimer);
+           el.style.rotate = '0deg';
            draggedEl = null;
            
            // Keep it there for 3.5 seconds, then snap back
            setTimeout(() => {
               // Only snap back if we aren't dragging it again
               if (originalTransform.has(el) && draggedEl !== el) {
-                 el.style.transition = 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)'; 
+                 el.style.transition = 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), rotate 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)'; 
                  el.style.transform = prev.transform; 
                  
                  setTimeout(() => {
