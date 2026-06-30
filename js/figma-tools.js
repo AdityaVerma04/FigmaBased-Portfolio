@@ -41,6 +41,9 @@
   let penMouse     = null;    // rubber-band target
 
   let handAnchor   = null;    // { cx, cy, sx, sy } for hand pan
+  let draggedEl    = null;    // DOM element being dragged by the Hand tool
+  let dragStartPos = { cx: 0, cy: 0 }; 
+  let originalTransform = new Map();
 
   let commentCount = 0;
   let activeTextEl = null;
@@ -227,7 +230,31 @@
         placeText(pos); break;
 
       case T.HAND:
-        handAnchor = { cx: e.clientX, cy: e.clientY, sx: window.scrollX, sy: window.scrollY };
+        let target = document.elementFromPoint(e.clientX, e.clientY);
+        // Only pick up elements inside the workspace, not UI panels or the background
+        if (target && target !== document.body && target !== document.documentElement && target !== wsEl && !target.closest('.topbar') && !target.closest('.layers-panel') && !target.closest('.inspector') && !target.closest('.toolstrip')) {
+           draggedEl = target;
+           dragStartPos = { cx: e.clientX, cy: e.clientY };
+           
+           if (!originalTransform.has(target)) {
+             originalTransform.set(target, {
+                transform: target.style.transform || '',
+                transition: target.style.transition || '',
+                position: target.style.position || '',
+                zIndex: target.style.zIndex || '',
+                dx: 0,
+                dy: 0
+             });
+           }
+           
+           target.style.transition = 'none';
+           if (window.getComputedStyle(target).position === 'static') {
+             target.style.position = 'relative';
+           }
+           target.style.zIndex = '999999';
+        } else {
+           handAnchor = { cx: e.clientX, cy: e.clientY, sx: window.scrollX, sy: window.scrollY };
+        }
         document.body.style.cursor = 'grabbing';
         break;
 
@@ -249,10 +276,18 @@
         penMouse = pos; break;
 
       case T.HAND:
-        if (handAnchor) {
-          const dx = e.clientX - handAnchor.cx;
-          const dy = e.clientY - handAnchor.cy;
-          window.scrollTo(handAnchor.sx - dx, handAnchor.sy - dy);
+        if (draggedEl) {
+           const dx = e.clientX - dragStartPos.cx;
+           const dy = e.clientY - dragStartPos.cy;
+           let prev = originalTransform.get(draggedEl);
+           let currentX = prev.dx + dx;
+           let currentY = prev.dy + dy;
+           
+           draggedEl.style.transform = `translate(${currentX}px, ${currentY}px)`;
+        } else if (handAnchor) {
+           const dx = e.clientX - handAnchor.cx;
+           const dy = e.clientY - handAnchor.cy;
+           window.scrollTo(handAnchor.sx - dx, handAnchor.sy - dy);
         }
         break;
     }
@@ -274,7 +309,37 @@
         isDrawing = false; drawStart = null; drawCurrent = null; break;
 
       case T.HAND:
-        handAnchor = null; document.body.style.cursor = 'grab'; break;
+        if (draggedEl) {
+           const el = draggedEl;
+           const dx = e.clientX - dragStartPos.cx;
+           const dy = e.clientY - dragStartPos.cy;
+           let prev = originalTransform.get(el);
+           prev.dx += dx;
+           prev.dy += dy;
+           
+           draggedEl = null;
+           
+           // Keep it there for 3.5 seconds, then snap back
+           setTimeout(() => {
+              // Only snap back if we aren't dragging it again
+              if (originalTransform.has(el) && draggedEl !== el) {
+                 el.style.transition = 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)'; 
+                 el.style.transform = prev.transform; 
+                 
+                 setTimeout(() => {
+                    if (draggedEl !== el) {
+                       el.style.transition = prev.transition;
+                       el.style.position = prev.position;
+                       el.style.zIndex = prev.zIndex;
+                       originalTransform.delete(el);
+                    }
+                 }, 500);
+              }
+           }, 3500); 
+        }
+        handAnchor = null; 
+        document.body.style.cursor = 'grab'; 
+        break;
     }
   }
 
