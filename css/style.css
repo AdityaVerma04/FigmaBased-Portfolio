@@ -592,7 +592,7 @@ body.fullscreen .workspace {
 /* In fullscreen the 145px ceiling would cap the name at ~65% of the expanded area.
    Remove it — the divisor 6.1 already guarantees the word fits within hero-avail. */
 body.fullscreen .hero-name {
-  font-size: clamp(24px, calc(var(--hero-avail) / 6.1), 400px);
+  font-size: clamp(24px, calc(var(--hero-avail) / 6.7), 400px);
 }
 
 .section {
@@ -687,7 +687,7 @@ p  { color: var(--text-secondary); }
    * Divisor 6.1 adds a tiny safety margin.
    * Max 145px: at 1536px desktop (avail ≈ 887px), 887/6.1 ≈ 145px — perfect.
    */
-  font-size: clamp(24px, calc(var(--hero-avail) / 6.1), 145px);
+  font-size: clamp(24px, calc(var(--hero-avail) / 6.7), 145px);
   line-height: 0.92;
   letter-spacing: -0.04em;
   text-transform: uppercase;
@@ -717,13 +717,14 @@ p  { color: var(--text-secondary); }
 }
 
 .hero-name__word--alt {
-  /* Second word: slightly offset, accent-tinted */
+  /* Second word: shifted right and overlapping upwards */
   background: linear-gradient(135deg, #c4bfe8 0%, #a07bff 40%, #c084fc 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   animation-delay: 0.12s;
-  margin-left: 4px; /* subtle indent */
+  margin-left: 1.1em;
+  margin-top: -0.28em;
 }
 
 /* Ambient pulse glow behind name area */
