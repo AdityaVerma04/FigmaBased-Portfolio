@@ -80,6 +80,28 @@
       resT = setTimeout(() => { syncCanvasSize(); redraw(); }, 120);
     }, { passive: true });
 
+    window.addEventListener('scroll', () => {
+      if (activeTool === T.PEN || isDrawing) {
+         const wsRect = workspace.getBoundingClientRect();
+         if (activeTool === T.PEN) {
+           penMouse = {
+             x: lastMouseClientX - wsRect.left,
+             y: lastMouseClientY - wsRect.top,
+             cx: lastMouseClientX,
+             cy: lastMouseClientY
+           };
+         }
+         if (isDrawing) {
+           drawCurrent = {
+             x: lastMouseClientX - wsRect.left,
+             y: lastMouseClientY - wsRect.top,
+             cx: lastMouseClientX,
+             cy: lastMouseClientY
+           };
+         }
+      }
+    }, { passive: true });
+
     // Colour picker swatch button
     const swatchBtn = document.getElementById('colorSwatchBtn');
     if (swatchBtn) swatchBtn.addEventListener('click', toggleColorPicker);
@@ -216,9 +238,14 @@
     };
   }
 
+  let lastMouseClientX = 0;
+  let lastMouseClientY = 0;
+
   // ── Mouse events ───────────────────────────────────────────
   function onDown(e) {
     if (e.button !== 0) return;
+    lastMouseClientX = e.clientX;
+    lastMouseClientY = e.clientY;
     const pos = getPos(e);
 
     switch (activeTool) {
@@ -299,6 +326,8 @@
   }
 
   function onMove(e) {
+    lastMouseClientX = e.clientX;
+    lastMouseClientY = e.clientY;
     const pos = getPos(e);
 
     switch (activeTool) {
