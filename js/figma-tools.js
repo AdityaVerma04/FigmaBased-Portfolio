@@ -237,13 +237,24 @@
         toolCanvas.style.pointerEvents = 'auto';
         
         if (target) {
-            // Priority heuristic: Check for card containers first.
-            // Then check a strict whitelist of draggable semantic elements/components.
-            // This prevents grabbing giant layout divs like .section or .about-grid.
-            const draggableSelector = '.case-card, .stat-card, .tool-chip, .hero-tag, .frame-tag, .eyebrow, .hero-name__word, .scroll-hint, button, a, p, h1, h2, h3, h4, h5, h6, img, svg, li';
-            target = target.closest('.case-card') || 
-                     target.closest('.stat-card') || 
-                     target.closest(draggableSelector);
+            // 1. If they click inside a card, group the whole card.
+            let card = target.closest('.case-card, .stat-card');
+            if (card) {
+                target = card;
+            } else {
+                // 2. Prevent dragging structural background wrappers.
+                const layoutClasses = ['section', 'about-grid', 'work-grid', 'about-text', 'stat-col', 'hero-meta', 'hero-cta', 'filter-bar', 'hero', 'workspace', 'skill-cols', 'skill-group-title', 'skill-list', 'contact-grid', 'contact-info'];
+                const isLayout = layoutClasses.some(c => target.classList.contains(c)) || 
+                                 ['MAIN', 'SECTION', 'UL'].includes(target.tagName) || 
+                                 target.id === 'annotationLayer' || 
+                                 target === document.body || 
+                                 target === document.documentElement;
+                
+                if (isLayout) {
+                    target = null;
+                }
+                // 3. Otherwise, target remains EXACTLY what they clicked (e.g., <em>, .hero-name__word, <p>).
+            }
         }
         
         // Only pick up elements inside the workspace, not UI panels or the background
