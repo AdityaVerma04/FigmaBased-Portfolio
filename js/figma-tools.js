@@ -109,9 +109,11 @@
     toolCanvas.width        = wsRect.width;
     toolCanvas.height       = wsRect.height;
 
-    // Size and position annotationLayer to exactly match the workspace area
-    annoLayer.style.left   = wsRect.left   + 'px';
-    annoLayer.style.top    = wsRect.top    + 'px';
+    // Size and position annotationLayer to exactly match the workspace area (absolute to body)
+    const scrollX = window.scrollX || window.pageXOffset;
+    const scrollY = window.scrollY || window.pageYOffset;
+    annoLayer.style.left   = (wsRect.left + scrollX)   + 'px';
+    annoLayer.style.top    = (wsRect.top + scrollY)    + 'px';
     annoLayer.style.width  = wsRect.width  + 'px';
     annoLayer.style.height = wsRect.height + 'px';
   }
@@ -561,12 +563,13 @@
     el.className        = 'figma-text-node';
     el.contentEditable  = 'true';
     el.style.cssText    = `
-      position: fixed;
-      left: ${pos.cx}px;
-      top: ${pos.cy - 4}px;
+      position: absolute;
+      left: ${pos.x}px;
+      top: ${pos.y - 4}px;
       min-width: 80px;
       padding: 2px 4px;
-      font-family: 'Inter', sans-serif;
+      font-family: var(--display), sans-serif;
+      font-weight: 500;
       font-size: 15px;
       line-height: 1.5;
       color: #f1f0f5;
@@ -611,9 +614,9 @@
     const pin = document.createElement('div');
     pin.className = 'figma-comment-pin';
     pin.style.cssText = `
-      position: fixed;
-      left: ${pos.cx - 10}px;
-      top: ${pos.cy - 22}px;
+      position: absolute;
+      left: ${pos.x - 10}px;
+      top: ${pos.y - 22}px;
       width: 22px; height: 22px;
       border-radius: 50% 50% 50% 0;
       transform: rotate(-45deg);
