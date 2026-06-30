@@ -1403,7 +1403,6 @@ footer::after  { right: var(--section-px); }
 }
 
 /* CS Inspector (right panel, case study-specific) */
-.cs-inspector-content {}
 .cs-insp-label {
   font-family: var(--mono);
   font-size: 10px;
