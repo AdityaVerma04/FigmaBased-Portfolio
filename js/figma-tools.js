@@ -25,7 +25,7 @@
   let ACCENT_ALPHA = (v, mult = 1) => `rgba(${ACCENT_RGB[0]},${ACCENT_RGB[1]},${ACCENT_RGB[2]},${v * mult})`;
 
   // ── DOM ────────────────────────────────────────────────
-  let toolCanvas, toolCtx, annoLayer;
+  let workspace, toolCanvas, toolCtx, annoLayer;
 
   // Cached workspace rect (updated on resize) — canvas covers this area only
   let wsRect = { left: 0, top: 0, width: 0, height: 0 };
@@ -50,9 +50,10 @@
 
   // ── Init ───────────────────────────────────────────────────
   function init() {
+    workspace  = document.querySelector('.workspace');
     toolCanvas = document.getElementById('toolCanvas');
     annoLayer  = document.getElementById('annotationLayer');
-    if (!toolCanvas || !annoLayer) return;
+    if (!workspace || !toolCanvas || !annoLayer) return;
 
     syncCanvasSize();
 
@@ -116,12 +117,8 @@
   function syncCanvasSize() {
     // Measure the workspace element — tools should only work over the middle content area,
     // not over the left panels (tool-strip, layers) or the right inspector.
-    const workspace = document.querySelector('.workspace');
-    if (workspace) {
-      wsRect = workspace.getBoundingClientRect();
-    } else {
-      wsRect = { left: 0, top: 0, width: window.innerWidth, height: window.innerHeight };
-    }
+    if (!workspace) return;
+    wsRect = workspace.getBoundingClientRect();
 
     // Size and position toolCanvas to exactly match the workspace area (absolute to body)
     const scrollX = window.scrollX || window.pageXOffset;
