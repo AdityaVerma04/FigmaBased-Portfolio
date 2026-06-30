@@ -24,8 +24,11 @@
   let ACCENT_RGB   = [140, 111, 255];
   let ACCENT_ALPHA = (v, mult = 1) => `rgba(${ACCENT_RGB[0]},${ACCENT_RGB[1]},${ACCENT_RGB[2]},${v * mult})`;
 
-  // ── DOM ────────────────────────────────────────────────────
+  // ── DOM ────────────────────────────────────────────────
   let toolCanvas, toolCtx, annoLayer;
+
+  // Cached workspace rect (updated on resize) — canvas covers this area only
+  let wsRect = { left: 0, top: 0, width: 0, height: 0 };
 
   // ── State ──────────────────────────────────────────────────
   let activeTool   = T.MOVE;
@@ -86,12 +89,28 @@
   }
 
   function syncCanvasSize() {
-    const rect = toolCanvas.getBoundingClientRect
-      ? toolCanvas.getBoundingClientRect()
-      : { width: window.innerWidth, height: window.innerHeight };
-    // CSS handles positioning; we just sync the drawing buffer size
-    toolCanvas.width  = rect.width  || window.innerWidth;
-    toolCanvas.height = rect.height || window.innerHeight;
+    // Measure the workspace element — tools should only work over the middle content area,
+    // not over the left panels (tool-strip, layers) or the right inspector.
+    const workspace = document.querySelector('.workspace');
+    if (workspace) {
+      wsRect = workspace.getBoundingClientRect();
+    } else {
+      wsRect = { left: 0, top: 0, width: window.innerWidth, height: window.innerHeight };
+    }
+
+    // Size and position toolCanvas to exactly match the workspace area
+    toolCanvas.style.left   = wsRect.left   + 'px';
+    toolCanvas.style.top    = wsRect.top    + 'px';
+    toolCanvas.style.width  = wsRect.width  + 'px';
+    toolCanvas.style.height = wsRect.height + 'px';
+    toolCanvas.width        = wsRect.width;
+    toolCanvas.height       = wsRect.height;
+
+    // Size and position annotationLayer to exactly match the workspace area
+    annoLayer.style.left   = wsRect.left   + 'px';
+    annoLayer.style.top    = wsRect.top    + 'px';
+    annoLayer.style.width  = wsRect.width  + 'px';
+    annoLayer.style.height = wsRect.height + 'px';
   }
 
   // ── Activate tool ──────────────────────────────────────────
@@ -174,9 +193,14 @@
 
   // ── Position helpers ───────────────────────────────────────
   function getPos(e) {
-    const r = toolCanvas.getBoundingClientRect();
-    return { x: e.clientX - r.left, y: e.clientY - r.top,
-             cx: e.clientX,          cy: e.clientY };
+    // x/y are workspace-local canvas coords (for drawing on toolCanvas)
+    // cx/cy are viewport coords (for placing fixed-position DOM elements like text/comment pins)
+    return {
+      x:  e.clientX - wsRect.left,
+      y:  e.clientY - wsRect.top,
+      cx: e.clientX,
+      cy: e.clientY,
+    };
   }
 
   function normRect(a, b) {
@@ -481,7 +505,7 @@
       setTimeout(() => {
         target.style.opacity = '0';
         setTimeout(() => target.remove(), 2000);
-      }, 15000);
+      }, 6000);
     }
     activeTextEl = null;
   }
@@ -520,7 +544,7 @@
       pin.style.transition = 'opacity 2s ease, transform 0.15s, box-shadow 0.15s';
       pin.style.opacity = '0';
       setTimeout(() => { if (pin.parentNode) pin.remove(); }, 2000);
-    }, 15000);
+    }, 6000);
   }
 
   function showCommentPopup(pin, n) {
@@ -563,7 +587,7 @@
   }
 
   // ── Animation & Redraw ─────────────────────────────────────
-  const FADE_DELAY = 15000;
+  const FADE_DELAY = 6000;
   const FADE_DUR   = 2000;
 
   function getAlpha(time) {

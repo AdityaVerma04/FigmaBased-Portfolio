@@ -81,28 +81,33 @@ body {
   z-index: 0;
 }
 
-/* Tool drawing canvas (Frame, Rect, Pen) */
+/* Tool drawing canvas (Frame, Rect, Pen) — JS sizes it to match .workspace bounds */
 #toolCanvas {
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0; left: 0;
   pointer-events: none; /* toggled by JS */
-  z-index: 50;
+  z-index: 150;
 }
 
-/* Annotation layer (Text nodes, Comment pins) */
+/* Annotation layer (Text nodes, Comment pins) — JS sizes it to match .workspace bounds */
 #annotationLayer {
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0; left: 0;
   pointer-events: none;
   z-index: 155;
 }
 #annotationLayer > * { pointer-events: auto; }
 
-/* All page content sits above the canvas */
+/* Figma chrome must stay above toolCanvas (z-index:150) to remain clickable during drawing */
 .topbar,
 .tool-strip,
 .layers-panel,
-.inspector,
+.inspector {
+  position: relative;
+  z-index: 200;
+}
+
+/* Page content sits above bgCanvas but below toolCanvas */
 .workspace {
   position: relative;
   z-index: 1;
