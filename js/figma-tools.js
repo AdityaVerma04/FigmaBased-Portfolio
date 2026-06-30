@@ -82,8 +82,9 @@
     }, { passive: true });
 
     window.addEventListener('scroll', () => {
+      if (!workspace) return;
+      wsRect = workspace.getBoundingClientRect();
       if (activeTool === T.PEN || isDrawing) {
-         const wsRect = workspace.getBoundingClientRect();
          if (activeTool === T.PEN) {
            penMouse = {
              x: lastMouseClientX - wsRect.left,
