@@ -69,6 +69,7 @@
     toolCanvas.addEventListener('mousemove',  onMove,   { passive: false });
     toolCanvas.addEventListener('mouseup',    onUp,     { passive: false });
     toolCanvas.addEventListener('dblclick',   onDbl,    { passive: false });
+    toolCanvas.addEventListener('mouseleave', removeCursorLabel);
     toolCanvas.addEventListener('contextmenu', e => { e.preventDefault(); resetTool(); });
 
     // Keyboard shortcuts
