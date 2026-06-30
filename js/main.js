@@ -243,6 +243,49 @@ function initFooterTs() {
   el.textContent = `Updated ${y}`;
 }
 
+// ── Fullscreen / Presentation mode ───────────────────────
+function initFullscreen() {
+  const btn          = document.getElementById('fullscreenBtn');
+  if (!btn) return;
+  const iconExpand   = btn.querySelector('.icon-expand');
+  const iconCompress = btn.querySelector('.icon-compress');
+
+  function enter() {
+    document.body.classList.add('fullscreen');
+    btn.setAttribute('aria-pressed', 'true');
+    btn.classList.add('active');
+    iconExpand.style.display   = 'none';
+    iconCompress.style.display = '';
+    btn.title = 'Exit fullscreen (F)';
+  }
+
+  function exit() {
+    document.body.classList.remove('fullscreen');
+    btn.setAttribute('aria-pressed', 'false');
+    btn.classList.remove('active');
+    iconExpand.style.display   = '';
+    iconCompress.style.display = 'none';
+    btn.title = 'Toggle fullscreen (F)';
+  }
+
+  btn.addEventListener('click', () => {
+    document.body.classList.contains('fullscreen') ? exit() : enter();
+  });
+
+  // Keyboard shortcut: F key (when not focused on input/textarea)
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'f' || e.key === 'F') {
+      const tag = document.activeElement.tagName.toLowerCase();
+      if (tag === 'input' || tag === 'textarea' || document.activeElement.isContentEditable) return;
+      document.body.classList.contains('fullscreen') ? exit() : enter();
+    }
+    // Escape to exit fullscreen
+    if (e.key === 'Escape' && document.body.classList.contains('fullscreen')) {
+      exit();
+    }
+  });
+}
+
 // ── Boot ─────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   loadCaseStudies();
@@ -251,4 +294,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initScrollHint();
   initCopyEmail();
   initFooterTs();
+  initFullscreen();
 });

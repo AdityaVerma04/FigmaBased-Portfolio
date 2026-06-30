@@ -15,7 +15,7 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -111,6 +111,15 @@
       <div class="status-pill" role="status" aria-live="polite">
         <span class="dot" aria-hidden="true"></span>Available for work
       </div>
+      <!-- Fullscreen toggle -->
+      <button class="topbar-btn" id="fullscreenBtn" title="Toggle fullscreen (F)" aria-label="Toggle fullscreen presentation mode" aria-pressed="false">
+        <svg class="icon-expand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+          <path d="M8 3H5a2 2 0 00-2 2v3M21 8V5a2 2 0 00-2-2h-3M16 21h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/>
+        </svg>
+        <svg class="icon-compress" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" style="display:none">
+          <path d="M8 3v3a2 2 0 01-2 2H3M21 8h-3a2 2 0 01-2-2V3M3 16h3a2 2 0 012 2v3M16 21v-3a2 2 0 012-2h3"/>
+        </svg>
+      </button>
       <button class="share-btn" id="shareBtn" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">
         Get in touch ▸
       </button>
@@ -172,10 +181,23 @@
       <div class="hero-corner bl" aria-hidden="true"></div>
       <div class="hero-corner br" aria-hidden="true"></div>
 
-      <div class="hero-avatar" aria-label="Aditya Verma — initials avatar">AV</div>
-      <div class="hero-role mono" id="heroRole" aria-label="Role">UI/UX Designer · Figma · Pune, India<span class="hero-cursor" aria-hidden="true"></span></div>
-      <h1>Designing interfaces<br>people actually <em>understand.</em></h1>
-      <p class="hero-sub">I'm Aditya — a UI/UX designer who works mostly in Figma, from early wireframes through to working front-ends. I care about the version of a design that survives contact with real users and real engineering constraints.</p>
+      <!-- Meta tags row -->
+      <div class="hero-meta">
+        <span class="hero-tag mono">UI/UX Designer</span>
+        <span class="hero-tag mono">Figma · Prototyping</span>
+        <span class="hero-tag mono" id="heroRole" aria-label="Role">Pune, India<span class="hero-cursor" aria-hidden="true"></span></span>
+      </div>
+
+      <!-- Big stacked name — inspired by designbymanvir.com -->
+      <h1 class="hero-name" aria-label="Aditya Verma">
+        <span class="hero-name__word" data-text="ADITYA">ADITYA</span>
+        <span class="hero-name__word hero-name__word--alt" data-text="VERMA">VERMA</span>
+      </h1>
+
+      <!-- Tagline -->
+      <p class="hero-tagline">Designing interfaces people actually <em>understand.</em></p>
+
+      <p class="hero-sub">A UI/UX designer who works mostly in Figma — from early wireframes through to working front-ends. I care about the version of a design that survives contact with real users and real engineering constraints.</p>
       <div class="hero-cta">
         <button class="btn-primary" id="heroViewWork" onclick="document.getElementById('work').scrollIntoView({behavior:'smooth'})">
           View Case Studies
