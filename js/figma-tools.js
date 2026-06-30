@@ -266,6 +266,7 @@
              originalTransform.set(target, {
                 transform: target.style.transform || '',
                 transition: target.style.transition || '',
+                animation: target.style.animation || '',
                 position: target.style.position || '',
                 display: target.style.display || '',
                 zIndex: target.style.zIndex || '',
@@ -274,6 +275,8 @@
              });
            }
            
+           // Kill CSS animations that might lock the transform property
+           target.style.setProperty('animation', 'none', 'important');
            target.style.transition = 'none';
            const compStyle = window.getComputedStyle(target);
            if (compStyle.position === 'static') {
