@@ -10,8 +10,17 @@
       "status": "published",
       "order": 1,
       "coverImage": "assets/cover-namisite.svg",
-      "tags": ["UI Design", "Figma", "Flutter", "Pre-launch"],
-      "tools": ["Figma", "Flutter", "HTML/CSS"],
+      "tags": [
+        "UI Design",
+        "Figma",
+        "Flutter",
+        "Pre-launch"
+      ],
+      "tools": [
+        "Figma",
+        "Flutter",
+        "HTML/CSS"
+      ],
       "summary": "End-to-end UI/UX for a client application — from early wireframes through interactive Figma prototypes to a working Flutter front-end, delivered ahead of the app's public launch.",
       "problem": "Replace this with the real brief: what did the client need, and what wasn't working before this project started? What constraints (timeline, platform, audience) shaped the brief?",
       "process": "Replace this with your actual process: how did you start (desk research, user interviews, competitor audit)? How did you move through wireframes to high-fidelity in Figma? How many feedback rounds with the client? How did you hand off to — or personally build — the Flutter front-end?",
@@ -24,23 +33,51 @@
     },
     {
       "id": "cs-002",
-      "slug": "sample-case-study-2",
-      "title": "Sample case study — replace via the admin panel",
-      "client": "Client name",
-      "role": "UI/UX Designer",
-      "year": "2026",
-      "status": "draft",
+      "slug": "amazon-fashion",
+      "type": "quick",
+      "title": "Amazon Fashion Redesign",
+      "subtitle": "Landing Page UX Redesign",
+      "tagline": "Make choosing easier, not to show more things.",
+      "client": "Personal Project",
+      "role": "Product Designer",
+      "discipline": "Product · UX · Personal",
+      "year": "2024",
+      "status": "published",
       "order": 2,
-      "coverImage": "",
-      "tags": ["Sample"],
-      "tools": ["Figma"],
-      "summary": "This is placeholder content so the grid has something to render. Open admin.html to edit or replace this entry with a real case study.",
-      "problem": "What problem were you solving?",
-      "process": "How did you approach it — research, wireframes, prototyping, testing?",
-      "outcome": "What changed as a result of your design work?",
+      "coverImage": "https://picsum.photos/seed/amazon1/600/400",
+      "tags": [
+        "UX Design",
+        "Redesign",
+        "Figma"
+      ],
+      "tools": [
+        "Figma"
+      ],
+      "summary": "Reimagine the Amazon Fashion landing page to make browsing easier and reduce decision fatigue.",
+      "brief": "Reimagine the Amazon Fashion landing page to make browsing easier, reduce decision fatigue and help users discover products faster without limiting choice.",
+      "thinking": "The redesign focuses on simplifying product discovery through clearer hierarchy, intuitive navigation and progressive exploration. By reducing visual clutter and organising content around customer intent...",
+      "myRole": "Conducted research, identified user pain points, developed the UX strategy, designed user flows and wireframes, created the final UI and presented the design rationale.",
+      "screens": [
+        {
+          "src": "https://picsum.photos/seed/amazon2/1200/800",
+          "caption": "High Fidelity Mockup",
+          "wide": false
+        },
+        {
+          "src": "https://picsum.photos/seed/amazon3/1200/800",
+          "caption": "Paper Wireframes",
+          "wide": false
+        },
+        {
+          "src": "https://picsum.photos/seed/amazon4/1200/500",
+          "caption": "Component Library",
+          "wide": true
+        }
+      ],
+      "prototypeUrl": "https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Fproto%2F%3Fnode-id%3D0-1",
       "liveUrl": "",
       "figmaUrl": "",
-      "mediaAssets": [],
+      "designsUrl": "",
       "createdAt": "2026-06-01T00:00:00.000Z",
       "updatedAt": "2026-06-30T00:00:00.000Z"
     }

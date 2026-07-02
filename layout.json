@@ -1,0 +1,43 @@
+{
+  "panel": {
+    "padding": "0px",
+    "margin": "0px",
+    "width": "688px",
+    "maxWidth": "none",
+    "display": "flex",
+    "gridTemplateColumns": "none",
+    "gap": "normal",
+    "boxSizing": "border-box"
+  },
+  "hero": {
+    "padding": "0px 18px",
+    "margin": "0px",
+    "width": "800px",
+    "maxWidth": "none",
+    "display": "flex",
+    "gridTemplateColumns": "none",
+    "gap": "normal",
+    "boxSizing": "border-box"
+  },
+  "title": {
+    "padding": "0px",
+    "margin": "0px 0px 10px",
+    "width": "849.125px",
+    "maxWidth": "none",
+    "display": "block",
+    "gridTemplateColumns": "none",
+    "gap": "normal",
+    "boxSizing": "border-box"
+  },
+  "notesWrap": null,
+  "note": {
+    "padding": "22px",
+    "margin": "0px",
+    "width": "704px",
+    "maxWidth": "none",
+    "display": "block",
+    "gridTemplateColumns": "none",
+    "gap": "normal",
+    "boxSizing": "border-box"
+  }
+}

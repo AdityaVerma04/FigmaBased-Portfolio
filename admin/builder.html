@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CS Builder — Case Study Scratchpad</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* ── TOKENS ─────────────────────────────────────────────── */
+    :root {
+      --canvas:         #14131a;
+      --panel:          #1d1c26;
+      --panel-hover:    #262437;
+      --panel-border:   rgba(255,255,255,0.08);
+      --line:           rgba(255,255,255,0.06);
+      --text-primary:   #f1f0f6;
+      --text-secondary: #9b98ab;
+      --text-faint:     #6b6878;
+      --accent:         #8c6fff;
+      --accent-mid:     #a07bff;
+      --accent-soft:    rgba(140,111,255,0.14);
+      --accent-glow:    rgba(140,111,255,0.35);
+      --success:        #5fd4a4;
+      --warning:        #ffb347;
+      --mono:  'IBM Plex Mono', monospace;
+      --ui:    'Space Grotesk', sans-serif;
+      --body:  'Inter', sans-serif;
+      --ease:  cubic-bezier(0.16,1,0.3,1);
+    }
+
+    /* ── RESET ──────────────────────────────────────────────── */
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html, body { width:100%; height:100%; overflow:hidden; background:var(--canvas); }
+    body { color:var(--text-primary); font-family:var(--body); font-size:13px; -webkit-font-smoothing:antialiased; }
+
+    /* ── TOPBAR ─────────────────────────────────────────────── */
+    #topbar {
+      position:fixed; top:0; left:0; right:0; z-index:200;
+      height:48px; background:var(--panel);
+      border-bottom:1px solid var(--panel-border);
+      display:flex; align-items:center; gap:10px; padding:0 14px;
+    }
+    .tb-brand {
+      font-family:var(--mono); font-size:11.5px; color:var(--accent);
+      border:1px solid rgba(140,111,255,0.3); border-radius:4px; padding:3px 10px;
+      white-space:nowrap; flex-shrink:0;
+    }
+    .tb-sep { width:1px; height:22px; background:var(--panel-border); flex-shrink:0; }
+    #slugInput {
+      background:rgba(255,255,255,0.04); border:1px solid var(--panel-border);
+      color:var(--text-primary); font-family:var(--mono); font-size:12px;
+      padding:5px 12px; border-radius:6px; width:200px; transition:border-color 0.2s;
+    }
+    #slugInput:focus { outline:none; border-color:var(--accent); }
+    #slugInput::placeholder { color:var(--text-faint); }
+    .tb-spacer { flex:1; }
+    .tb-info { font-family:var(--mono); font-size:11px; color:var(--text-faint); white-space:nowrap; }
+    .tb-btn {
+      display:flex; align-items:center; gap:6px;
+      padding:6px 14px; border-radius:6px;
+      border:1px solid var(--panel-border); background:transparent;
+      color:var(--text-secondary); font-family:var(--ui); font-size:13px; font-weight:500;
+      cursor:pointer; transition:all 0.15s; white-space:nowrap; flex-shrink:0;
+    }
+    .tb-btn:hover { border-color:var(--accent); color:var(--text-primary); background:var(--accent-soft); }
+    .tb-btn.active { background:var(--accent-soft); border-color:var(--accent); color:var(--accent); }
+    .tb-btn.primary { background:var(--accent); border-color:var(--accent); color:#fff; }
+    .tb-btn.primary:hover { background:var(--accent-mid); }
+    .tb-btn.danger:hover { border-color:#ff5e5e; color:#ff5e5e; background:rgba(255,94,94,0.08); }
+
+    /* ── LAYOUT ─────────────────────────────────────────────── */
+    #app { display:flex; height:100vh; padding-top:48px; }
+
+    /* ── LEFT PANEL ─────────────────────────────────────────── */
+    #panel {
+      width:220px; flex-shrink:0;
+      background:var(--panel); border-right:1px solid var(--panel-border);
+      display:flex; flex-direction:column; overflow:hidden;
+    }
+    #panelScroll { flex:1; overflow-y:auto; overflow-x:hidden; }
+    #panelScroll::-webkit-scrollbar { width:3px; }
+    #panelScroll::-webkit-scrollbar-thumb { background:var(--panel-border); border-radius:2px; }
+
+    .ps { padding:13px 13px 10px; border-bottom:1px solid var(--panel-border); }
+    .ps-title {
+      font-family:var(--mono); font-size:9.5px; color:var(--text-faint);
+      text-transform:uppercase; letter-spacing:0.12em; margin-bottom:10px;
+    }
+
+    /* Palette */
+    .palette-grid { display:flex; flex-direction:column; gap:2px; }
+    .pb {
+      display:flex; align-items:center; gap:9px;
+      padding:6px 9px; border-radius:6px;
+      border:1px solid transparent; background:transparent;
+      color:var(--text-secondary); font-family:var(--body); font-size:12.5px;
+      cursor:pointer; text-align:left; width:100%; transition:all 0.12s;
+    }
+    .pb:hover { background:var(--panel-hover); color:var(--text-primary); border-color:var(--panel-border); }
+    .pb-icon { font-size:14px; width:20px; text-align:center; flex-shrink:0; opacity:0.8; }
+    .pb-label { font-size:12.5px; }
+
+    /* Properties */
+    #propsContent { padding:13px; }
+    #propsEmpty { color:var(--text-faint); font-size:12px; line-height:1.65; }
+    .pg { margin-bottom:13px; }
+    .pl {
+      display:block; font-family:var(--mono); font-size:9.5px;
+      color:var(--text-faint); margin-bottom:4px; letter-spacing:0.06em;
+      text-transform:uppercase;
+    }
+    .pi {
+      width:100%; padding:6px 9px; border-radius:6px;
+      background:rgba(255,255,255,0.04); border:1px solid var(--panel-border);
+      color:var(--text-primary); font-family:var(--body); font-size:12.5px;
+      transition:border-color 0.15s;
+    }
+    .pi:focus { outline:none; border-color:var(--accent); }
+    .pi::placeholder { color:var(--text-faint); }
+    textarea.pi { resize:vertical; min-height:72px; font-size:12px; line-height:1.55; }
+    .prg { display:flex; gap:3px; }
+    .prb {
+      flex:1; padding:5px 6px; border-radius:5px; text-align:center;
+      background:transparent; border:1px solid var(--panel-border);
+      color:var(--text-faint); font-family:var(--mono); font-size:10.5px;
+      cursor:pointer; transition:all 0.12s;
+    }
+    .prb.active { background:var(--accent-soft); border-color:var(--accent); color:var(--accent); }
+    .img-item { 
+      padding:8px; background:rgba(255,255,255,0.025);
+      border:1px solid var(--panel-border); border-radius:6px; margin-bottom:5px;
+    }
+    .img-item-label { font-family:var(--mono); font-size:9px; color:var(--text-faint); margin-bottom:5px; text-transform:uppercase; letter-spacing:0.08em; }
+    .img-item .pi { margin-bottom:4px; }
+    .img-item .pi:last-child { margin-bottom:0; }
+    .pp {
+      width:100%; padding:6px 10px; border-radius:6px;
+      background:transparent; border:1px solid var(--panel-border);
+      color:var(--text-secondary); font-family:var(--ui); font-size:12.5px;
+      cursor:pointer; transition:all 0.12s; text-align:center;
+    }
+    .pp:hover { border-color:var(--accent); color:var(--accent); background:var(--accent-soft); }
+    .pp.danger:hover { border-color:#ff5e5e; color:#ff5e5e; background:rgba(255,94,94,0.07); }
+    .prop-divider { border:none; border-top:1px solid var(--panel-border); margin:12px 0; }
+    .arrow-list { display:flex; flex-direction:column; gap:4px; }
+    .arrow-item {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:5px 8px; background:rgba(255,255,255,0.025);
+      border:1px solid var(--panel-border); border-radius:5px;
+      font-family:var(--mono); font-size:10.5px; color:var(--text-faint);
+    }
+    .arrow-item-del {
+      background:none; border:none; color:var(--text-faint);
+      cursor:pointer; font-size:13px; padding:0 2px; line-height:1;
+      transition:color 0.1s;
+    }
+    .arrow-item-del:hover { color:#ff5e5e; }
+
+    /* ── CANVAS WRAP ────────────────────────────────────────── */
+    #cw {
+      flex:1; overflow:hidden; position:relative;
+      background:var(--canvas);
+      background-image:radial-gradient(circle, rgba(255,255,255,0.10) 1px, transparent 1px);
+      background-size:20px 20px;
+      cursor:default;
+    }
+    #cw.arrow-mode { cursor:crosshair !important; }
+    #cw.is-panning { cursor:grabbing !important; }
+
+    /* ── CANVAS ─────────────────────────────────────────────── */
+    #canvas {
+      position:absolute;
+      width:6000px; height:4000px;
+      transform-origin:0 0;
+    }
+
+    /* ── SVG ARROW LAYER ────────────────────────────────────── */
+    #asvg {
+      position:absolute; top:0; left:0;
+      width:6000px; height:4000px;
+      pointer-events:none; overflow:visible;
+    }
+
+    /* ── BLOCKS ─────────────────────────────────────────────── */
+    .block {
+      position:absolute; border-radius:8px;
+      border:1.5px solid var(--panel-border);
+      background:var(--panel);
+      cursor:grab; user-select:none;
+      transition:border-color 0.15s, box-shadow 0.15s;
+    }
+    .block:hover { border-color:rgba(140,111,255,0.25); }
+    .block.selected {
+      border-color:var(--accent);
+      box-shadow:0 0 0 2.5px var(--accent-soft), 0 8px 36px rgba(0,0,0,0.5);
+    }
+    .block.arrow-src { border-color:var(--success); box-shadow:0 0 0 2px rgba(95,212,164,0.25); }
+    .block.arrow-tgt:hover { border-color:var(--success); }
+
+    /* block header */
+    .bh {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:4px 10px 4px 10px;
+      border-bottom:1px solid var(--panel-border);
+      background:rgba(255,255,255,0.015); border-radius:7px 7px 0 0;
+      gap:8px;
+    }
+    .bh-type {
+      font-family:var(--mono); font-size:9px; color:var(--text-faint);
+      text-transform:uppercase; letter-spacing:0.1em; flex-shrink:0;
+    }
+    .bh-id { font-family:var(--mono); font-size:8.5px; color:rgba(140,111,255,0.45); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+    /* block body */
+    .bb { padding:12px; }
+
+    /* ── HEADING BLOCK ── */
+    .block-heading .bb h1,.block-heading .bb h2,.block-heading .bb h3 {
+      font-family:var(--ui); font-weight:600;
+      color:var(--text-primary); letter-spacing:-0.02em;
+      outline:none; cursor:text; min-height:1em;
+    }
+    .block-heading .bb h1 { font-size:26px; }
+    .block-heading .bb h2 { font-size:20px; }
+    .block-heading .bb h3 { font-size:16px; }
+
+    /* ── PARAGRAPH BLOCK ── */
+    .block-paragraph .bb p {
+      font-size:13px; color:var(--text-secondary); line-height:1.75;
+      outline:none; cursor:text; min-height:1em; white-space:pre-wrap;
+    }
+
+    /* ── LABEL BLOCK ── */
+    .block-label .bb .ltext {
+      font-family:var(--mono); font-size:11.5px; color:var(--text-faint);
+      letter-spacing:0.04em; outline:none; cursor:text;
+    }
+
+    /* ── CALLOUT BLOCK ── */
+    .bcallout { border-radius:5px; padding:10px 12px !important; }
+    .bcallout-insight { background:var(--accent-soft); border-left:3px solid var(--accent); }
+    .bcallout-info    { background:rgba(95,212,164,0.1); border-left:3px solid var(--success); }
+    .bcallout-warning { background:rgba(255,179,71,0.1);  border-left:3px solid var(--warning); }
+    .bcallout p { font-size:13px; color:var(--text-secondary); line-height:1.7; outline:none; cursor:text; min-height:1em; }
+
+    /* ── IMAGE BLOCK ── */
+    .bimg img { width:100%; border-radius:5px; display:block; max-height:340px; object-fit:cover; }
+    .img-ph {
+      width:100%; min-height:130px; border-radius:5px;
+      border:1.5px dashed rgba(255,255,255,0.1);
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      gap:8px; color:var(--text-faint);
+      background:repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(255,255,255,0.012) 8px, rgba(255,255,255,0.012) 16px);
+    }
+    .img-ph svg { width:26px; height:26px; stroke:var(--text-faint); fill:none; stroke-width:1.5; }
+    .img-ph span { font-family:var(--mono); font-size:10.5px; text-align:center; padding:0 8px; }
+    .img-ph.sm { min-height:90px; flex:1; }
+    .bcap { font-family:var(--mono); font-size:10.5px; color:var(--text-faint); margin-top:7px; text-align:center; }
+
+    /* ── IMAGE GROUP ── */
+    .bimggroup { display:flex; gap:8px; }
+    .bimggroup img { flex:1; border-radius:5px; object-fit:cover; max-height:200px; min-width:0; }
+
+    /* ── VIDEO BLOCK ── */
+    .vthumb {
+      width:100%; min-height:160px; border-radius:5px;
+      background-size:cover; background-position:center;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .vplay {
+      width:48px; height:48px; border-radius:50%;
+      background:rgba(0,0,0,0.65); backdrop-filter:blur(4px);
+      display:flex; align-items:center; justify-content:center;
+      font-size:17px; color:#fff;
+    }
+    .vph {
+      width:100%; min-height:130px; border-radius:5px;
+      border:1.5px dashed rgba(255,255,255,0.1);
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      gap:8px; color:var(--text-faint);
+    }
+    .vph svg { width:28px; height:28px; fill:var(--text-faint); }
+    .vph span { font-family:var(--mono); font-size:10.5px; text-align:center; padding:0 12px; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+    /* ── HYPERLINK BLOCK ── */
+    .blkbtn {
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 18px; border-radius:7px;
+      background:var(--accent-soft); border:1px solid rgba(140,111,255,0.3);
+      color:var(--accent); font-family:var(--ui); font-size:13.5px; font-weight:600;
+      cursor:default; text-decoration:none;
+    }
+    .blkurl { font-family:var(--mono); font-size:10px; color:var(--text-faint); margin-top:5px; word-break:break-all; }
+
+    /* ── DIVIDER BLOCK ── */
+    .bdiv { border:none; height:2px; background:var(--line); margin:6px 0; }
+    .bdiv-dashed { background:none !important; border-top:2px dashed rgba(255,255,255,0.1) !important; }
+
+    /* ── RESIZE HANDLE ── */
+    .rh {
+      position:absolute; right:0; bottom:0;
+      width:16px; height:16px; cursor:se-resize;
+      opacity:0; transition:opacity 0.15s;
+    }
+    .rh::after {
+      content:'';
+      position:absolute; right:4px; bottom:4px;
+      width:7px; height:7px;
+      border-right:2px solid var(--accent);
+      border-bottom:2px solid var(--accent);
+      border-radius:0 0 2px 0;
+    }
+    .block.selected .rh { opacity:1; }
+
+    /* ── ARROW MODE HINT ────────────────────────────────────── */
+    #amhint {
+      position:fixed; bottom:22px; left:50%; transform:translateX(-50%);
+      background:var(--panel); border:1px solid var(--accent);
+      padding:8px 20px; border-radius:8px;
+      font-family:var(--mono); font-size:11.5px; color:var(--accent);
+      z-index:300; pointer-events:none; display:none;
+      box-shadow:0 4px 20px rgba(140,111,255,0.25);
+    }
+    #amhint.on { display:block; }
+
+    /* ── CONTEXT MENU ───────────────────────────────────────── */
+    #ctxm {
+      position:fixed; z-index:500;
+      background:var(--panel); border:1px solid var(--panel-border);
+      border-radius:9px; padding:5px;
+      box-shadow:0 10px 40px rgba(0,0,0,0.6);
+      display:none; min-width:170px;
+    }
+    .ci {
+      padding:7px 11px; border-radius:5px; cursor:pointer;
+      font-size:12.5px; color:var(--text-secondary);
+      display:flex; align-items:center; gap:8px; transition:all 0.1s;
+    }
+    .ci:hover { background:var(--panel-hover); color:var(--text-primary); }
+    .ci.del:hover { background:rgba(255,94,94,0.09); color:#ff5e5e; }
+    .cmeta { font-family:var(--mono); font-size:9.5px; color:var(--text-faint); padding:5px 11px 3px; letter-spacing:0.07em; }
+    .csep { height:1px; background:var(--panel-border); margin:4px 0; }
+
+    /* ── EXPORT MODAL ───────────────────────────────────────── */
+    #expModal {
+      position:fixed; inset:0; z-index:600;
+      background:rgba(0,0,0,0.75); backdrop-filter:blur(10px);
+      display:none; align-items:center; justify-content:center;
+    }
+    #expModal.on { display:flex; }
+    .expdlg {
+      background:var(--panel); border:1px solid var(--panel-border);
+      border-radius:14px; padding:28px;
+      width:min(740px, 92vw); max-height:85vh;
+      display:flex; flex-direction:column; gap:16px;
+      box-shadow:0 20px 80px rgba(0,0,0,0.7);
+    }
+    .expdlg h2 { font-family:var(--ui); font-size:18px; font-weight:600; }
+    .expdlg p { font-size:12.5px; color:var(--text-secondary); line-height:1.6; }
+    .expdlg p code { font-family:var(--mono); color:var(--accent); }
+    #expCode {
+      flex:1; min-height:260px; max-height:46vh; overflow-y:auto;
+      background:#0d0c12; border:1px solid var(--panel-border);
+      border-radius:8px; padding:16px;
+      font-family:var(--mono); font-size:11.5px; color:#c4bfe8;
+      white-space:pre; line-height:1.65; tab-size:2;
+    }
+    #expCode::-webkit-scrollbar { width:6px; }
+    #expCode::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.1); border-radius:3px; }
+    .expact { display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap; }
+    .ebtn {
+      padding:8px 20px; border-radius:7px; cursor:pointer;
+      font-family:var(--ui); font-size:13.5px; font-weight:500;
+    }
+    .ebtn.pri { background:var(--accent); border:none; color:#fff; transition:background 0.15s; }
+    .ebtn.pri:hover { background:var(--accent-mid); }
+    .ebtn.sec { background:transparent; border:1px solid var(--panel-border); color:var(--text-secondary); transition:all 0.15s; }
+    .ebtn.sec:hover { border-color:var(--text-secondary); color:var(--text-primary); }
+
+    /* ── STATUS BAR ─────────────────────────────────────────── */
+    #statusbar {
+      position:fixed; bottom:0; left:0; right:0; height:26px; z-index:150;
+      background:var(--panel); border-top:1px solid var(--panel-border);
+      display:flex; align-items:center; gap:16px; padding:0 14px;
+    }
+    .sb-item { font-family:var(--mono); font-size:10.5px; color:var(--text-faint); }
+    .sb-item span { color:var(--text-secondary); }
+    .sb-spacer { flex:1; }
+    .sb-hint { font-family:var(--mono); font-size:10px; color:var(--text-faint); }
+
+    /* ── TOAST ──────────────────────────────────────────────── */
+    #toast {
+      position:fixed; bottom:36px; right:20px; z-index:700;
+      background:rgba(95,212,164,0.15); border:1px solid var(--success);
+      color:var(--success); font-family:var(--mono); font-size:11.5px;
+      padding:7px 16px; border-radius:8px;
+      opacity:0; transform:translateY(6px);
+      transition:all 0.22s; pointer-events:none;
+    }
+    #toast.show { opacity:1; transform:translateY(0); }
+
+    /* ── SCROLLBAR ──────────────────────────────────────────── */
+    * { scrollbar-width:thin; scrollbar-color:var(--panel-border) transparent; }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════ TOPBAR ══════════════ -->
+<div id="topbar">
+  <span class="tb-brand">◇ CS Builder</span>
+  <div class="tb-sep"></div>
+  <input id="slugInput" type="text" placeholder="case-study-slug" spellcheck="false" title="Case study slug (used in export)">
+  <div class="tb-sep"></div>
+  <button class="tb-btn" id="btnArrow" title="Arrow connector mode (A)">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg>
+    Arrow
+  </button>
+  <button class="tb-btn active" id="btnSnap" title="Toggle snap-to-grid">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="7" height="7"/><rect x="15" y="2" width="7" height="7"/><rect x="15" y="15" width="7" height="7"/><rect x="2" y="15" width="7" height="7"/></svg>
+    Snap
+  </button>
+  <button class="tb-btn" id="btnReset" title="Reset view to origin">⊙ Reset View</button>
+  <div class="tb-spacer"></div>
+  <span class="tb-info" id="blkCount">0 blocks</span>
+  <div class="tb-sep"></div>
+  <button class="tb-btn danger" id="btnClear">Clear All</button>
+  <button class="tb-btn primary" id="btnExport">Export JSON ↗</button>
+</div>
+
+<!-- ══════════════ APP ══════════════ -->
+<div id="app">
+
+  <!-- LEFT PANEL -->
+  <aside id="panel">
+    <div id="panelScroll">
+
+      <!-- Add Blocks -->
+      <div class="ps">
+        <div class="ps-title">Add Block</div>
+        <div class="palette-grid">
+          <button class="pb" data-type="heading">
+            <span class="pb-icon">H</span><span class="pb-label">Heading</span>
+          </button>
+          <button class="pb" data-type="paragraph">
+            <span class="pb-icon">¶</span><span class="pb-label">Paragraph</span>
+          </button>
+          <button class="pb" data-type="label">
+            <span class="pb-icon">T</span><span class="pb-label">Label / Caption</span>
+          </button>
+          <button class="pb" data-type="callout">
+            <span class="pb-icon">💡</span><span class="pb-label">Callout</span>
+          </button>
+          <button class="pb" data-type="image">
+            <span class="pb-icon">🖼</span><span class="pb-label">Image</span>
+          </button>
+          <button class="pb" data-type="image-group">
+            <span class="pb-icon">⊞</span><span class="pb-label">Image Group</span>
+          </button>
+          <button class="pb" data-type="video">
+            <span class="pb-icon">▶</span><span class="pb-label">Video Embed</span>
+          </button>
+          <button class="pb" data-type="hyperlink">
+            <span class="pb-icon">↗</span><span class="pb-label">Hyperlink</span>
+          </button>
+          <button class="pb" data-type="divider">
+            <span class="pb-icon">—</span><span class="pb-label">Divider</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Arrows Section -->
+      <div class="ps" id="arrowsSection">
+        <div class="ps-title">Arrows</div>
+        <div id="arrowList" class="arrow-list"></div>
+        <div style="margin-top:6px;">
+          <button class="pp" id="btnAddArrow" style="font-size:12px;">
+            + Draw Arrow (A)
+          </button>
+        </div>
+      </div>
+
+      <!-- Properties -->
+      <div class="ps" style="border-bottom:none;">
+        <div class="ps-title">Properties</div>
+        <div id="propsContent">
+          <div id="propsEmpty">
+            Click a block to select it and edit its content here.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </aside>
+
+  <!-- CANVAS AREA -->
+  <div id="cw">
+    <div id="canvas">
+      <svg id="asvg">
+        <defs>
+          <marker id="ah" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+            <polygon points="0 0, 9 3.5, 0 7" fill="#8c6fff" opacity="0.75"/>
+          </marker>
+          <marker id="ah-g" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+            <polygon points="0 0, 9 3.5, 0 7" fill="#5fd4a4"/>
+          </marker>
+        </defs>
+      </svg>
+    </div>
+  </div>
+
+</div>
+
+<!-- Status bar -->
+<div id="statusbar">
+  <div class="sb-item">Zoom: <span id="sbZoom">100%</span></div>
+  <div class="sb-item">Pan: <span id="sbPan">0, 0</span></div>
+  <div class="sb-spacer"></div>
+  <div class="sb-hint">A = Arrow · Del = Delete · D = Duplicate · Wheel = Zoom · Alt+Drag = Pan · Esc = Deselect</div>
+</div>
+
+<!-- Arrow mode hint -->
+<div id="amhint">Arrow mode — click source block, then target block &nbsp;·&nbsp; Esc to cancel</div>
+
+<!-- Context Menu -->
+<div id="ctxm">
+  <div class="cmeta" id="ctxMeta">Block</div>
+  <div class="ci" id="ctxDup">⧉ &nbsp;Duplicate</div>
+  <div class="ci" id="ctxArrowFrom">→ &nbsp;Draw arrow from here</div>
+  <div class="csep"></div>
+  <div class="ci del" id="ctxDel">✕ &nbsp;Delete</div>
+</div>
+
+<!-- Export Modal -->
+<div id="expModal">
+  <div class="expdlg">
+    <h2>Export JSON</h2>
+    <p>Copy the <code>"blocks"</code> array and paste it into your <code>case-studies.json</code> entry. The blocks are sorted top→bottom by canvas Y position.</p>
+    <pre id="expCode"></pre>
+    <div class="expact">
+      <button class="ebtn sec" id="btnCloseExp">Close</button>
+      <button class="ebtn pri" id="btnCopyExp">📋 Copy to Clipboard</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast">Copied!</div>
+
+<!-- ══════════════ SCRIPT ══════════════ -->
+<script>
+// ═══════════════════════════════════════════════════════════
+//  CS Builder — Freeform case-study scratchpad
+//  Pure vanilla JS · No dependencies · Standalone
+// ═══════════════════════════════════════════════════════════
+
+// ── CONFIG ──────────────────────────────────────────────────
+const GRID    = 16;
+const ZOOM_MIN = 0.15;
+const ZOOM_MAX = 3;
+const ZOOM_STEP = 0.08;
+const STORAGE = 'csb_v2';
+
+// ── DOM ─────────────────────────────────────────────────────
+const cw      = document.getElementById('cw');
+const canvas  = document.getElementById('canvas');
+const asvg    = document.getElementById('asvg');
+const slugIn  = document.getElementById('slugInput');
+const blkCnt  = document.getElementById('blkCount');
+const sbZoom  = document.getElementById('sbZoom');
+const sbPan   = document.getElementById('sbPan');
+const amhint  = document.getElementById('amhint');
+const ctxm    = document.getElementById('ctxm');
+const expModal= document.getElementById('expModal');
+const expCode = document.getElementById('expCode');
+const toast   = document.getElementById('toast');
+const arrowListEl = document.getElementById('arrowList');
+
+// ── STATE ────────────────────────────────────────────────────
+const S = {
+  blocks:    [],
+  arrows:    [],
+  selected:  null,
+  pan:       { x: 240, y: 60 },
+  zoom:      1,
+  arrowMode: false,
+  arrowSrc:  null,
+  snap:      true,
+  dragging:  null,   // { id, ox, oy }
+  resizing:  null,   // { id, sx, sy, sw, sh }
+  panning:   null,   // { sx, sy, px, py }
+  ctxId:     null,
+};
+
+// ── ID ───────────────────────────────────────────────────────
+let _n = Date.now() % 9999999;
+const uid  = p => p + '-' + (++_n).toString(36);
+
+// ── ESCAPE HTML ──────────────────────────────────────────────
+const eh = s => String(s||'').replace(/[&<>"']/g, c =>
+  ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+// ── BLOCK DEFAULTS ───────────────────────────────────────────
+const DEFS = {
+  heading:      { w:500,  h:76,  text:'New Section Heading', level:'2' },
+  paragraph:    { w:500,  h:160, text:'Write your paragraph here. Double-click to edit inline, or use the Properties panel on the left.' },
+  label:        { w:320,  h:50,  text:'Caption or annotation text' },
+  callout:      { w:500,  h:110, text:'Key insight or important note goes here.', calloutType:'insight' },
+  image:        { w:500,  h:290, src:'', alt:'', caption:'' },
+  'image-group':{ w:700,  h:250, images:[{src:'',alt:''},{src:'',alt:''}], caption:'' },
+  video:        { w:520,  h:300, url:'', caption:'' },
+  hyperlink:    { w:280,  h:80,  label:'View Prototype', url:'' },
+  divider:      { w:500,  h:36,  style:'solid' },
+};
+
+// ── CREATE BLOCK ─────────────────────────────────────────────
+function createBlock(type, cx, cy) {
+  const def = DEFS[type] || { w:400, h:120 };
+  const sn  = n => S.snap ? Math.round(n / GRID) * GRID : n;
+  const b = {
+    id:          uid('blk'),
+    type,
+    x:           sn(cx - def.w / 2),
+    y:           sn(cy - 40),
+    w:           def.w,
+    h:           def.h,
+    text:        def.text   || '',
+    level:       def.level  || '2',
+    src:         def.src    || '',
+    alt:         def.alt    || '',
+    caption:     def.caption|| '',
+    images:      def.images ? JSON.parse(JSON.stringify(def.images)) : [],
+    url:         def.url    || '',
+    label:       def.label  || 'View Link',
+    style:       def.style  || 'solid',
+    calloutType: def.calloutType || 'insight',
+  };
+  S.blocks.push(b);
+  mountBlock(b);
+  syncCount();
+  save();
+  return b;
+}
+
+// ── BLOCK INNER HTML ─────────────────────────────────────────
+function blockHTML(b) {
+  const hdr = `<div class="bh"><span class="bh-type">${b.type}</span><span class="bh-id">${b.id}</span></div>`;
+
+  switch (b.type) {
+
+    case 'heading':
+      return `${hdr}<div class="bb">
+        <h${parseInt(b.level)||2} data-f="text" contenteditable="true" spellcheck="false">${eh(b.text)}</h${parseInt(b.level)||2}>
+      </div>`;
+
+    case 'paragraph':
+      return `${hdr}<div class="bb">
+        <p data-f="text" contenteditable="true" spellcheck="false">${eh(b.text)}</p>
+      </div>`;
+
+    case 'label':
+      return `${hdr}<div class="bb">
+        <span class="ltext" data-f="text" contenteditable="true" spellcheck="false">${eh(b.text)}</span>
+      </div>`;
+
+    case 'callout':
+      return `${hdr}<div class="bcallout bcallout-${b.calloutType} bb">
+        <p data-f="text" contenteditable="true" spellcheck="false">${eh(b.text)}</p>
+      </div>`;
+
+    case 'image': {
+      const img  = b.src
+        ? `<img src="${eh(b.src)}" alt="${eh(b.alt)}">`
+        : `<div class="img-ph"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span>Add image URL in Properties →</span></div>`;
+      const cap  = b.caption ? `<div class="bcap">${eh(b.caption)}</div>` : '';
+      return `${hdr}<div class="bb bimg">${img}${cap}</div>`;
+    }
+
+    case 'image-group': {
+      const imgs = b.images.map((im, i) =>
+        im.src
+          ? `<img src="${eh(im.src)}" alt="${eh(im.alt)}">`
+          : `<div class="img-ph sm"><span>Image ${i+1}</span></div>`
+      ).join('');
+      const cap = b.caption ? `<div class="bcap">${eh(b.caption)}</div>` : '';
+      return `${hdr}<div class="bb"><div class="bimggroup">${imgs}</div>${cap}</div>`;
+    }
+
+    case 'video': {
+      const th = ytThumb(b.url);
+      const prev = th
+        ? `<div class="vthumb" style="background-image:url(${th})"><div class="vplay">▶</div></div>`
+        : `<div class="vph"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg><span>${b.url ? eh(b.url) : 'Add YouTube/Vimeo URL in Properties →'}</span></div>`;
+      const cap = b.caption ? `<div class="bcap">${eh(b.caption)}</div>` : '';
+      return `${hdr}<div class="bb">${prev}${cap}</div>`;
+    }
+
+    case 'hyperlink':
+      return `${hdr}<div class="bb">
+        <a class="blkbtn" href="#" onclick="return false">${eh(b.label||'Link')} ↗</a>
+        ${b.url ? `<div class="blkurl">${eh(b.url)}</div>` : ''}
+      </div>`;
+
+    case 'divider':
+      return `${hdr}<div class="bb"><hr class="bdiv${b.style==='dashed'?' bdiv-dashed':''}"></div>`;
+
+    default:
+      return `${hdr}<div class="bb"><span style="color:var(--text-faint);font-size:11px;">Unknown type: ${b.type}</span></div>`;
+  }
+}
+
+function ytThumb(url) {
+  if (!url) return null;
+  const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([^&?/\s]{11})/);
+  return m ? `https://img.youtube.com/vi/${m[1]}/hqdefault.jpg` : null;
+}
+
+// ── MOUNT / UPDATE BLOCK DOM ──────────────────────────────────
+function mountBlock(b) {
+  let el = document.getElementById('b' + b.id);
+  const isNew = !el;
+
+  if (isNew) {
+    el = document.createElement('div');
+    el.id = 'b' + b.id;
+    el.dataset.id = b.id;
+    canvas.appendChild(el);
+    attachBlockEvents(el);
+  }
+
+  el.className = 'block block-' + b.type;
+  el.style.cssText = `left:${b.x}px;top:${b.y}px;width:${b.w}px;min-height:${b.h}px;`;
+  el.innerHTML = blockHTML(b);
+
+  // Resize handle
+  const rh = document.createElement('div');
+  rh.className = 'rh';
+  el.appendChild(rh);
+
+  // Contenteditable sync
+  el.querySelectorAll('[contenteditable][data-f]').forEach(ce => {
+    ce.addEventListener('input', () => {
+      b[ce.dataset.f] = ce.innerText;
+      updateProps(b);
+      save();
+    });
+    ce.addEventListener('mousedown', e => e.stopPropagation());
+    ce.addEventListener('keydown', e => e.stopPropagation());
+  });
+
+  el.classList.toggle('selected', S.selected === b.id);
+}
+
+// ── BLOCK EVENT BINDING ───────────────────────────────────────
+function attachBlockEvents(el) {
+  el.addEventListener('mousedown', e => {
+    if (e.button !== 0) return;
+    e.stopPropagation();
+
+    const id = el.dataset.id;
+    hideCtx();
+
+    // Arrow mode
+    if (S.arrowMode) {
+      if (!S.arrowSrc) {
+        S.arrowSrc = id;
+        el.classList.add('arrow-src');
+        amhint.textContent = 'Now click the TARGET block  ·  Esc to cancel';
+      } else if (S.arrowSrc !== id) {
+        addArrow(S.arrowSrc, id);
+        exitArrowMode();
+      }
+      return;
+    }
+
+    // Resize
+    if (e.target.classList.contains('rh')) {
+      const b = getB(id);
+      S.resizing = { id, sx:e.clientX, sy:e.clientY, sw:b.w, sh:b.h };
+      return;
+    }
+
+    // Select & drag
+    selectBlock(id);
+    const b  = getB(id);
+    const cp = s2c(e.clientX, e.clientY);
+    S.dragging = { id, ox: cp.x - b.x, oy: cp.y - b.y };
+  });
+
+  el.addEventListener('contextmenu', e => {
+    e.preventDefault(); e.stopPropagation();
+    showCtx(e.clientX, e.clientY, el.dataset.id);
+  });
+}
+
+// ── SELECTION ────────────────────────────────────────────────
+function selectBlock(id) {
+  S.selected = id;
+  document.querySelectorAll('.block').forEach(el => {
+    el.classList.toggle('selected', el.dataset.id === id);
+  });
+  const b = getB(id);
+  if (b) renderProps(b);
+}
+
+function deselect() {
+  S.selected = null;
+  document.querySelectorAll('.block.selected').forEach(el => el.classList.remove('selected'));
+  document.getElementById('propsContent').innerHTML = '<div id="propsEmpty">Click a block to select it and edit its content here.</div>';
+}
+
+// ── HELPERS ──────────────────────────────────────────────────
+const getB  = id => S.blocks.find(b => b.id === id);
+const getEl = id => document.getElementById('b' + id);
+
+function removeBlock(id) {
+  S.blocks = S.blocks.filter(b => b.id !== id);
+  S.arrows = S.arrows.filter(a => a.from !== id && a.to !== id);
+  const el = getEl(id);
+  if (el) el.remove();
+  if (S.selected === id) deselect();
+  drawArrows();
+  renderArrowList();
+  syncCount();
+  save();
+}
+
+function dupBlock(id) {
+  const b = getB(id);
+  if (!b) return;
+  const nb = JSON.parse(JSON.stringify(b));
+  nb.id = uid('blk');
+  nb.x += 24; nb.y += 24;
+  S.blocks.push(nb);
+  mountBlock(nb);
+  selectBlock(nb.id);
+  syncCount();
+  save();
+}
+
+// ── ARROWS ────────────────────────────────────────────────────
+function addArrow(from, to) {
+  S.arrows.push({ id:uid('arr'), from, to, label:'' });
+  drawArrows();
+  renderArrowList();
+  save();
+}
+
+function removeArrow(id) {
+  S.arrows = S.arrows.filter(a => a.id !== id);
+  drawArrows();
+  renderArrowList();
+  save();
+}
+
+function drawArrows() {
+  // Keep defs, remove the rest
+  Array.from(asvg.children).forEach(c => {
+    if (c.tagName !== 'defs') c.remove();
+  });
+
+  S.arrows.forEach(ar => {
+    const fb = getB(ar.from);
+    const tb = getB(ar.to);
+    if (!fb || !tb) return;
+
+    // Choose sensible connection points
+    const fx = fb.x + fb.w / 2, fy = fb.y + fb.h;
+    const tx = tb.x + tb.w / 2, ty = tb.y;
+    const my = (fy + ty) / 2;
+
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', `M${fx},${fy} C${fx},${my} ${tx},${my} ${tx},${ty}`);
+    path.setAttribute('stroke', '#8c6fff');
+    path.setAttribute('stroke-width', '2');
+    path.setAttribute('stroke-opacity', '0.65');
+    path.setAttribute('fill', 'none');
+    path.setAttribute('marker-end', 'url(#ah)');
+    path.style.pointerEvents = 'none';
+    asvg.appendChild(path);
+
+    if (ar.label) {
+      const lx = (fx + tx) / 2, ly = my;
+      const bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      bg.setAttribute('x', lx - 32); bg.setAttribute('y', ly - 9);
+      bg.setAttribute('width', 64);  bg.setAttribute('height', 18);
+      bg.setAttribute('fill', '#1d1c26'); bg.setAttribute('rx', 4);
+      asvg.appendChild(bg);
+
+      const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      txt.setAttribute('x', lx); txt.setAttribute('y', ly + 4.5);
+      txt.setAttribute('text-anchor', 'middle');
+      txt.setAttribute('fill', '#9b98ab');
+      txt.setAttribute('font-size', '10');
+      txt.setAttribute('font-family', 'IBM Plex Mono, monospace');
+      txt.textContent = ar.label;
+      asvg.appendChild(txt);
+    }
+  });
+}
+
+function renderArrowList() {
+  arrowListEl.innerHTML = '';
+  if (!S.arrows.length) {
+    arrowListEl.innerHTML = '<div style="color:var(--text-faint);font-size:11px;padding:2px 0;">No arrows yet. Press A or click \'Draw Arrow\'.</div>';
+    return;
+  }
+  S.arrows.forEach(ar => {
+    const fromB = getB(ar.from);
+    const toB   = getB(ar.to);
+    const div = document.createElement('div');
+    div.className = 'arrow-item';
+    div.innerHTML = `
+      <span>${fromB ? fromB.type : '?'} → ${toB ? toB.type : '?'}</span>
+      <button class="arrow-item-del" data-aid="${ar.id}" title="Remove arrow">×</button>
+    `;
+    div.querySelector('.arrow-item-del').addEventListener('click', () => removeArrow(ar.id));
+    arrowListEl.appendChild(div);
+  });
+}
+
+// ── ARROW MODE ────────────────────────────────────────────────
+function enterArrowMode() {
+  S.arrowMode = true; S.arrowSrc = null;
+  amhint.classList.add('on');
+  amhint.textContent = 'Arrow mode — click the SOURCE block first  ·  Esc to cancel';
+  cw.classList.add('arrow-mode');
+  document.getElementById('btnArrow').classList.add('active');
+  document.getElementById('btnAddArrow').classList.add('active');
+  deselect();
+}
+
+function exitArrowMode() {
+  S.arrowMode = false; S.arrowSrc = null;
+  amhint.classList.remove('on');
+  cw.classList.remove('arrow-mode');
+  document.getElementById('btnArrow').classList.remove('active');
+  document.getElementById('btnAddArrow').classList.remove('active');
+  document.querySelectorAll('.block.arrow-src').forEach(el => el.classList.remove('arrow-src'));
+}
+
+// ── PROPERTIES PANEL ──────────────────────────────────────────
+function renderProps(b) {
+  const pc = document.getElementById('propsContent');
+  if (!b) { pc.innerHTML = '<div id="propsEmpty">Click a block to select it.</div>'; return; }
+  pc.innerHTML = buildPropsHTML(b);
+
+  // Bind prop inputs
+  pc.querySelectorAll('[data-p]').forEach(inp => {
+    const prop = inp.dataset.p;
+    const idx  = inp.dataset.i !== undefined ? parseInt(inp.dataset.i) : null;
+    const sub  = inp.dataset.s;
+    const upd  = () => {
+      if (idx !== null && sub) { b.images[idx][sub] = inp.value; }
+      else { b[prop] = inp.value; }
+      mountBlock(b);
+      save();
+    };
+    inp.addEventListener('input', upd);
+    inp.addEventListener('change', upd);
+  });
+
+  // Bind radio buttons
+  pc.querySelectorAll('[data-rp]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      b[btn.dataset.rp] = btn.dataset.rv;
+      renderProps(b);
+      mountBlock(b);
+      save();
+    });
+  });
+
+  // Delete button
+  pc.querySelector('#propDelBtn')?.addEventListener('click', () => removeBlock(b.id));
+
+  // Add image button
+  pc.querySelector('#addImgBtn')?.addEventListener('click', () => {
+    b.images.push({ src:'', alt:'' });
+    renderProps(b);
+    mountBlock(b);
+    save();
+  });
+
+  // Remove image buttons
+  pc.querySelectorAll('[data-rmimg]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const i = parseInt(btn.dataset.rmimg);
+      b.images.splice(i, 1);
+      if (!b.images.length) b.images.push({ src:'', alt:'' });
+      renderProps(b);
+      mountBlock(b);
+      save();
+    });
+  });
+}
+
+// Update props without re-rendering (called from contenteditable input)
+function updateProps(b) {
+  // Only re-render if the currently shown props are for this block
+  if (S.selected === b.id) renderProps(b);
+}
+
+function buildPropsHTML(b) {
+  const field = (lbl, prop, type='text', ph='', val=null) => {
+    const v = val !== null ? val : (b[prop] || '');
+    if (type === 'textarea') return `
+      <div class="pg">
+        <label class="pl">${lbl}</label>
+        <textarea class="pi" data-p="${prop}" placeholder="${ph}" spellcheck="false">${eh(v)}</textarea>
+      </div>`;
+    return `
+      <div class="pg">
+        <label class="pl">${lbl}</label>
+        <input class="pi" type="${type}" data-p="${prop}" placeholder="${ph}" value="${eh(v)}">
+      </div>`;
+  };
+
+  const radio = (lbl, prop, vals, labels) => `
+    <div class="pg">
+      <label class="pl">${lbl}</label>
+      <div class="prg">
+        ${vals.map((v,i) => `<button class="prb ${String(b[prop])===String(v)?'active':''}" data-rp="${prop}" data-rv="${v}">${labels[i]}</button>`).join('')}
+      </div>
+    </div>`;
+
+  let specific = '';
+
+  switch (b.type) {
+    case 'heading':
+      specific = field('Text', 'text', 'textarea', 'Heading text')
+               + radio('Level', 'level', ['1','2','3'], ['H1','H2','H3']);
+      break;
+    case 'paragraph':
+      specific = field('Text', 'text', 'textarea', 'Paragraph body...');
+      break;
+    case 'label':
+      specific = field('Text', 'text', 'text', 'Label / caption');
+      break;
+    case 'callout':
+      specific = field('Text', 'text', 'textarea', 'Key insight...')
+               + radio('Style', 'calloutType', ['insight','info','warning'], ['💡','✓','⚠']);
+      break;
+    case 'image':
+      specific = field('Image URL', 'src', 'text', 'assets/img.jpg or https://...')
+               + field('Alt Text',  'alt', 'text', 'Describe the image')
+               + field('Caption',   'caption', 'text', 'Optional caption');
+      break;
+    case 'image-group': {
+      const imgRows = b.images.map((im, i) => `
+        <div class="img-item">
+          <div class="img-item-label">
+            Image ${i + 1}
+            ${b.images.length > 1 ? `<button data-rmimg="${i}" style="float:right;background:none;border:none;color:var(--text-faint);cursor:pointer;font-size:12px;" title="Remove">×</button>` : ''}
+          </div>
+          <input class="pi" type="text" data-p="images" data-i="${i}" data-s="src" placeholder="URL or path" value="${eh(im.src)}">
+          <input class="pi" style="margin-top:3px;" type="text" data-p="images" data-i="${i}" data-s="alt" placeholder="Alt text" value="${eh(im.alt)}">
+        </div>`).join('');
+      specific = `
+        <div class="pg">
+          <label class="pl">Images</label>
+          ${imgRows}
+          <button class="pp" id="addImgBtn" style="margin-top:4px;font-size:11.5px;">+ Add Image</button>
+        </div>
+        ${field('Caption', 'caption', 'text', 'Optional caption')}`;
+      break;
+    }
+    case 'video':
+      specific = field('Video URL', 'url', 'text', 'https://youtube.com/watch?v=...')
+               + field('Caption', 'caption', 'text', 'Optional caption');
+      break;
+    case 'hyperlink':
+      specific = field('Button Label', 'label', 'text', 'View Prototype')
+               + field('URL', 'url', 'text', 'https://...');
+      break;
+    case 'divider':
+      specific = radio('Style', 'style', ['solid','dashed'], ['Solid','Dashed']);
+      break;
+  }
+
+  return `
+    <div>
+      ${specific}
+      <hr class="prop-divider">
+      <button class="pp danger" id="propDelBtn">✕ &nbsp;Delete Block</button>
+    </div>`;
+}
+
+// ── PAN / ZOOM ────────────────────────────────────────────────
+function applyXform() {
+  canvas.style.transform = `translate(${S.pan.x}px,${S.pan.y}px) scale(${S.zoom})`;
+  const pct = Math.round(S.zoom * 100);
+  sbZoom.textContent = pct + '%';
+  sbPan.textContent  = `${Math.round(S.pan.x)}, ${Math.round(S.pan.y)}`;
+}
+
+function s2c(sx, sy) {
+  return { x: (sx - S.pan.x) / S.zoom, y: (sy - S.pan.y) / S.zoom };
+}
+
+// ── GLOBAL MOUSE ─────────────────────────────────────────────
+document.addEventListener('mousemove', e => {
+  if (S.dragging) {
+    const b   = getB(S.dragging.id);
+    const cp  = s2c(e.clientX, e.clientY);
+    const sn  = n => S.snap ? Math.round(n / GRID) * GRID : n;
+    b.x = sn(cp.x - S.dragging.ox);
+    b.y = sn(cp.y - S.dragging.oy);
+    const el = getEl(b.id);
+    if (el) { el.style.left = b.x + 'px'; el.style.top = b.y + 'px'; }
+    drawArrows();
+  }
+
+  if (S.resizing) {
+    const b  = getB(S.resizing.id);
+    const dx = (e.clientX - S.resizing.sx) / S.zoom;
+    const dy = (e.clientY - S.resizing.sy) / S.zoom;
+    b.w = Math.max(160, S.resizing.sw + dx);
+    b.h = Math.max(36,  S.resizing.sh + dy);
+    const el = getEl(b.id);
+    if (el) { el.style.width = b.w + 'px'; el.style.minHeight = b.h + 'px'; }
+  }
+
+  if (S.panning) {
+    S.pan.x = S.panning.px + (e.clientX - S.panning.sx);
+    S.pan.y = S.panning.py + (e.clientY - S.panning.sy);
+    applyXform();
+  }
+});
+
+document.addEventListener('mouseup', () => {
+  if (S.dragging) { save(); S.dragging = null; }
+  if (S.resizing) {
+    const b = getB(S.resizing.id);
+    if (b) mountBlock(b);
+    save(); S.resizing = null;
+  }
+  if (S.panning) { S.panning = null; cw.classList.remove('is-panning'); }
+});
+
+// Canvas click — deselect or start pan
+cw.addEventListener('mousedown', e => {
+  hideCtx();
+  // Middle click or Alt+LMB = pan
+  if (e.button === 1 || (e.button === 0 && e.altKey)) {
+    e.preventDefault();
+    S.panning = { sx:e.clientX, sy:e.clientY, px:S.pan.x, py:S.pan.y };
+    cw.classList.add('is-panning');
+    return;
+  }
+  if (e.button === 0 && !S.arrowMode) {
+    const t = e.target;
+    if (t === cw || t === canvas || t === asvg) deselect();
+  }
+});
+
+// Zoom with wheel
+cw.addEventListener('wheel', e => {
+  e.preventDefault();
+  const delta    = e.deltaY < 0 ? ZOOM_STEP : -ZOOM_STEP;
+  const newZoom  = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, S.zoom + delta));
+  const rect     = cw.getBoundingClientRect();
+  const mx = e.clientX - rect.left;
+  const my = e.clientY - rect.top;
+  S.pan.x  = mx - (mx - S.pan.x) * (newZoom / S.zoom);
+  S.pan.y  = my - (my - S.pan.y) * (newZoom / S.zoom);
+  S.zoom   = newZoom;
+  applyXform();
+}, { passive:false });
+
+// ── KEYBOARD ──────────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  const tag = document.activeElement.tagName;
+  const editing = tag === 'INPUT' || tag === 'TEXTAREA'
+    || document.activeElement.contentEditable === 'true';
+
+  if (e.key === 'Escape') { exitArrowMode(); hideCtx(); deselect(); return; }
+  if (editing) return;
+
+  switch (e.key) {
+    case 'a': case 'A': enterArrowMode(); break;
+    case 'Delete': case 'Backspace':
+      if (S.selected) removeBlock(S.selected); break;
+    case 'd': case 'D':
+      if (S.selected) dupBlock(S.selected); break;
+  }
+});
+
+// ── CONTEXT MENU ──────────────────────────────────────────────
+function showCtx(cx, cy, id) {
+  S.ctxId = id;
+  const b = getB(id);
+  document.getElementById('ctxMeta').textContent = b ? `${b.type} · ${b.id}` : 'Block';
+  ctxm.style.left    = cx + 'px';
+  ctxm.style.top     = cy + 'px';
+  ctxm.style.display = 'block';
+}
+function hideCtx() { ctxm.style.display = 'none'; S.ctxId = null; }
+
+document.getElementById('ctxDup').addEventListener('click', () => {
+  if (S.ctxId) dupBlock(S.ctxId); hideCtx();
+});
+document.getElementById('ctxDel').addEventListener('click', () => {
+  if (S.ctxId) removeBlock(S.ctxId); hideCtx();
+});
+document.getElementById('ctxArrowFrom').addEventListener('click', () => {
+  const id = S.ctxId; hideCtx();
+  enterArrowMode();
+  if (id) {
+    S.arrowSrc = id;
+    getEl(id)?.classList.add('arrow-src');
+    amhint.textContent = 'Now click the TARGET block  ·  Esc to cancel';
+  }
+});
+document.addEventListener('click', e => {
+  if (!ctxm.contains(e.target)) hideCtx();
+});
+
+// ── PALETTE ───────────────────────────────────────────────────
+document.querySelectorAll('.pb').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const type = btn.dataset.type;
+    const rect = cw.getBoundingClientRect();
+    const cp   = s2c(rect.left + rect.width / 2, rect.top + rect.height / 2);
+    const b    = createBlock(type, cp.x, cp.y);
+    selectBlock(b.id);
+  });
+});
+
+// ── TOPBAR BUTTONS ────────────────────────────────────────────
+document.getElementById('btnArrow').addEventListener('click', () => {
+  S.arrowMode ? exitArrowMode() : enterArrowMode();
+});
+document.getElementById('btnAddArrow').addEventListener('click', () => {
+  S.arrowMode ? exitArrowMode() : enterArrowMode();
+});
+document.getElementById('btnSnap').addEventListener('click', function() {
+  S.snap = !S.snap;
+  this.classList.toggle('active', S.snap);
+});
+document.getElementById('btnReset').addEventListener('click', () => {
+  S.pan  = { x:240, y:60 };
+  S.zoom = 1;
+  applyXform();
+});
+document.getElementById('btnClear').addEventListener('click', () => {
+  if (!confirm('Clear the entire canvas? This cannot be undone.')) return;
+  S.blocks = []; S.arrows = []; S.selected = null;
+  canvas.querySelectorAll('.block').forEach(el => el.remove());
+  drawArrows();
+  renderArrowList();
+  deselect();
+  syncCount();
+  save();
+});
+document.getElementById('btnExport').addEventListener('click', () => {
+  expCode.textContent = buildJSON();
+  expModal.classList.add('on');
+});
+document.getElementById('btnCloseExp').addEventListener('click', () => expModal.classList.remove('on'));
+expModal.addEventListener('click', e => { if (e.target === expModal) expModal.classList.remove('on'); });
+document.getElementById('btnCopyExp').addEventListener('click', () => {
+  navigator.clipboard.writeText(expCode.textContent).then(() => showToast('Copied to clipboard!'));
+});
+slugIn.addEventListener('input', save);
+
+// ── EXPORT JSON ───────────────────────────────────────────────
+function buildJSON() {
+  const sorted = [...S.blocks].sort((a, b) => a.y - b.y || a.x - b.x);
+  const blocks = sorted.map((b, i) => {
+    const base = { id:b.id, type:b.type, order:i+1 };
+    switch (b.type) {
+      case 'heading':     return { ...base, level:parseInt(b.level)||2, text:b.text };
+      case 'paragraph':   return { ...base, text:b.text };
+      case 'label':       return { ...base, text:b.text };
+      case 'callout':     return { ...base, text:b.text, calloutType:b.calloutType };
+      case 'image':       return { ...base, src:b.src, alt:b.alt, caption:b.caption };
+      case 'image-group': return { ...base, images:b.images.map(im=>({src:im.src,alt:im.alt})), caption:b.caption };
+      case 'video':       return { ...base, url:b.url, caption:b.caption };
+      case 'hyperlink':   return { ...base, label:b.label, url:b.url };
+      case 'divider':     return { ...base, style:b.style };
+      default:            return base;
+    }
+  });
+
+  const arrows = S.arrows.map(a => ({
+    id:a.id, from:a.from, to:a.to, ...(a.label?{label:a.label}:{})
+  }));
+
+  const out = {
+    slug: slugIn.value || 'my-case-study',
+    blocks,
+    ...(arrows.length ? { arrows } : {}),
+  };
+
+  return JSON.stringify(out, null, 2);
+}
+
+// ── TOAST ─────────────────────────────────────────────────────
+let toastT;
+function showToast(msg) {
+  toast.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(toastT);
+  toastT = setTimeout(() => toast.classList.remove('show'), 2400);
+}
+
+// ── COUNT ─────────────────────────────────────────────────────
+function syncCount() {
+  const n = S.blocks.length;
+  blkCnt.textContent = n + ' block' + (n === 1 ? '' : 's');
+}
+
+// ── LOCALSTORAGE ──────────────────────────────────────────────
+function save() {
+  try {
+    localStorage.setItem(STORAGE, JSON.stringify({
+      blocks: S.blocks, arrows: S.arrows,
+      pan: S.pan, zoom: S.zoom, slug: slugIn.value,
+    }));
+  } catch(e) {}
+}
+
+function load() {
+  try {
+    const raw  = localStorage.getItem(STORAGE);
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    if (data.slug)   slugIn.value = data.slug;
+    if (data.pan)    Object.assign(S.pan, data.pan);
+    if (typeof data.zoom === 'number') S.zoom = data.zoom;
+    if (Array.isArray(data.blocks)) {
+      S.blocks = data.blocks;
+      S.blocks.forEach(b => mountBlock(b));
+    }
+    if (Array.isArray(data.arrows)) S.arrows = data.arrows;
+  } catch(e) { console.warn('[CSBuilder] Could not restore state:', e); }
+}
+
+// ── BOOT ─────────────────────────────────────────────────────
+load();
+applyXform();
+drawArrows();
+renderArrowList();
+syncCount();
+</script>
+</body>
+</html>

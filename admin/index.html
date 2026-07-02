@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="../css/style.css">
   <style>
     body { background: var(--canvas); padding: 0; }
 
@@ -255,8 +255,23 @@
               <input type="text" id="f-title" required placeholder="e.g. Redesigning the onboarding flow">
             </div>
             <div class="field">
+              <label for="f-type">Type</label>
+              <select id="f-type">
+                <option value="long">Long Case Study</option>
+                <option value="quick">Quick Case Study</option>
+                <option value="scratch">Scratchpad (Builder)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
               <label for="f-client">Client</label>
               <input type="text" id="f-client" placeholder="e.g. Namisite Technologies">
+            </div>
+            <div class="field">
+              <label for="f-role">Role</label>
+              <input type="text" id="f-role" placeholder="e.g. UI/UX Designer">
             </div>
           </div>
 
@@ -312,17 +327,50 @@
             <label for="f-summary">Summary (shown on grid card)</label>
             <textarea id="f-summary" placeholder="One or two sentences describing the project."></textarea>
           </div>
-          <div class="field">
-            <label for="f-problem">The Problem</label>
+          <div class="field" data-type="quick">
+            <label for="f-subtitle">Subtitle (Quick CS)</label>
+            <input type="text" id="f-subtitle" placeholder="e.g. Mobile Landing Page">
+          </div>
+          <div class="field" data-type="quick">
+            <label for="f-tagline">Tagline (Quick CS)</label>
+            <input type="text" id="f-tagline" placeholder="e.g. Make choosing easier, not louder.">
+          </div>
+          <div class="field" data-type="quick">
+            <label for="f-discipline">Discipline (Quick CS)</label>
+            <input type="text" id="f-discipline" placeholder="e.g. Product · UX">
+          </div>
+
+          <div class="field" data-type="long">
+            <label for="f-problem">The Problem (Long CS)</label>
             <textarea id="f-problem" placeholder="What problem were you solving? What wasn't working before?"></textarea>
           </div>
-          <div class="field">
-            <label for="f-process">Process</label>
+          <div class="field" data-type="long">
+            <label for="f-process">Process (Long CS)</label>
             <textarea id="f-process" placeholder="Research, wireframes, prototyping, feedback loops, how you moved from design to build."></textarea>
           </div>
-          <div class="field">
-            <label for="f-outcome">Outcome</label>
+          <div class="field" data-type="long">
+            <label for="f-outcome">Outcome (Long CS)</label>
             <textarea id="f-outcome" placeholder="What shipped? What was the result?"></textarea>
+          </div>
+
+          <div class="field" data-type="quick">
+            <label for="f-brief">The Brief (Quick CS)</label>
+            <textarea id="f-brief" placeholder="Reimagine the landing page..."></textarea>
+          </div>
+          <div class="field" data-type="quick">
+            <label for="f-thinking">The Thinking (Quick CS)</label>
+            <textarea id="f-thinking" placeholder="The redesign focuses on..."></textarea>
+          </div>
+          <div class="field" data-type="quick">
+            <label for="f-myrole">What I did (Quick CS)</label>
+            <textarea id="f-myrole" placeholder="Conducted research, designed flows..."></textarea>
+          </div>
+
+          <div class="field" data-type="scratch">
+            <div style="background:var(--accent-soft);padding:16px;border-radius:8px;border:1px solid var(--accent);margin-bottom:16px;">
+              <p style="font-size:13px;margin-bottom:12px;">This is a scratchpad case study. Edit the layout visually in the builder.</p>
+              <button type="button" class="btn-primary" onclick="window.open('cs-builder.html', '_blank')">Open Builder</button>
+            </div>
           </div>
 
           <div class="field-row">
@@ -334,6 +382,23 @@
               <label for="f-figma">Figma file URL (optional)</label>
               <input type="url" id="f-figma" placeholder="https://figma.com/...">
             </div>
+          </div>
+
+          <div class="field-row" data-type="quick">
+            <div class="field">
+              <label for="f-prototype">Prototype URL (Quick CS - Figma Embed)</label>
+              <input type="url" id="f-prototype" placeholder="https://figma.com/embed?...">
+            </div>
+            <div class="field">
+              <label for="f-designs">Designs URL (Quick CS)</label>
+              <input type="url" id="f-designs" placeholder="https://...">
+            </div>
+          </div>
+          
+          <div class="field" data-type="quick">
+            <label for="f-screens">Screens (Quick CS - JSON Array)</label>
+            <textarea id="f-screens" placeholder='[{"src":"assets/img.jpg","caption":"Label","wide":false}]'></textarea>
+            <div style="font-size:11px;color:var(--text-faint);margin-top:4px;font-family:var(--mono)">Format: [{"src":"url","caption":"text","wide":true/false}]</div>
           </div>
 
           <div class="form-actions">

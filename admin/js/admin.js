@@ -34,7 +34,7 @@ function persist() {
 }
 
 async function loadFromServer() {
-  const res  = await fetch('data/case-studies.json');
+  const res  = await fetch('../data/case-studies.json');
   return await res.json();
 }
 
@@ -58,11 +58,23 @@ async function init() {
   document.getElementById('deleteBtn').addEventListener('click', onDelete);
   document.getElementById('downloadBtn').addEventListener('click', onDownload);
   document.getElementById('resetBtn').addEventListener('click', onReset);
+  document.getElementById('f-type').addEventListener('change', updateFormTabs);
 
   // Slug preview — auto-update as user types title (only for new entries)
   document.getElementById('f-title').addEventListener('input', () => {
     if (!activeId) {
       document.getElementById('f-slug').value = slugify(document.getElementById('f-title').value);
+    }
+  });
+}
+
+function updateFormTabs() {
+  const type = document.getElementById('f-type').value;
+  document.querySelectorAll('[data-type]').forEach(el => {
+    if (el.dataset.type === type) {
+      el.style.display = '';
+    } else {
+      el.style.display = 'none';
     }
   });
 }
@@ -97,7 +109,12 @@ function renderList() {
            aria-selected="${cs.id === activeId}"
            tabindex="0">
         <span>${escapeHtml(cs.title || 'Untitled')}</span>
-        <span class="status-dot ${cs.status || 'draft'}" title="${escapeHtml(cs.status || 'draft')}"></span>
+        <div style="display:flex;align-items:center;gap:8px;">
+          ${cs.type === 'quick' ? '<span style="font-size:10px;color:var(--success);font-weight:600">Q</span>' : ''}
+          ${cs.type === 'scratch' ? '<span style="font-size:10px;color:var(--accent);font-weight:600">S</span>' : ''}
+          ${(!cs.type || cs.type === 'long') ? '<span style="font-size:10px;color:var(--text-faint);font-weight:600">L</span>' : ''}
+          <span class="status-dot ${cs.status || 'draft'}" title="${escapeHtml(cs.status || 'draft')}"></span>
+        </div>
       </div>
     `).join('');
 
@@ -128,6 +145,8 @@ function clearForm() {
   document.getElementById('f-order').value  = (workingData.caseStudies.length + 1);
   document.getElementById('f-status').value = 'draft';
   document.getElementById('f-slug').value   = '';
+  document.getElementById('f-type').value   = 'long';
+  updateFormTabs();
 }
 
 function loadIntoForm(id) {
@@ -136,6 +155,7 @@ function loadIntoForm(id) {
   activeId = id;
 
   document.getElementById('f-title').value   = cs.title   || '';
+  document.getElementById('f-type').value    = cs.type    || 'long';
   document.getElementById('f-client').value  = cs.client  || '';
   document.getElementById('f-role').value    = cs.role    || '';
   document.getElementById('f-year').value    = cs.year    || '';
@@ -146,12 +166,27 @@ function loadIntoForm(id) {
   document.getElementById('f-tags').value    = (cs.tags   || []).join(', ');
   document.getElementById('f-tools').value   = (cs.tools  || []).join(', ');
   document.getElementById('f-summary').value = cs.summary || '';
+  
+  // Long fields
   document.getElementById('f-problem').value = cs.problem || '';
   document.getElementById('f-process').value = cs.process || '';
   document.getElementById('f-outcome').value = cs.outcome || '';
+  
+  // Quick fields
+  document.getElementById('f-subtitle').value   = cs.subtitle || '';
+  document.getElementById('f-tagline').value    = cs.tagline || '';
+  document.getElementById('f-discipline').value = cs.discipline || '';
+  document.getElementById('f-brief').value      = cs.brief || '';
+  document.getElementById('f-thinking').value   = cs.thinking || '';
+  document.getElementById('f-myrole').value     = cs.myRole || '';
+  document.getElementById('f-prototype').value  = cs.prototypeUrl || '';
+  document.getElementById('f-designs').value    = cs.designsUrl || '';
+  document.getElementById('f-screens').value    = cs.screens ? JSON.stringify(cs.screens, null, 2) : '';
+
   document.getElementById('f-live').value    = cs.liveUrl  || '';
   document.getElementById('f-figma').value   = cs.figmaUrl || '';
 
+  updateFormTabs();
   renderList();
 }
 
@@ -167,10 +202,18 @@ function onSave(e) {
   const existing  = activeId ? workingData.caseStudies.find(c => c.id === activeId) : null;
   const nowTs     = nowIso();
 
+  const screensVal = document.getElementById('f-screens').value.trim();
+  let screensParsed = existing ? (existing.screens || []) : [];
+  if (screensVal) {
+    try { screensParsed = JSON.parse(screensVal); } 
+    catch(e) { alert('Invalid JSON in screens field'); return; }
+  }
+
   const entry = {
     id:          activeId || ('cs-' + Date.now()),
     slug:        existing ? (existing.slug || slugify(title)) : slugify(title),
     title,
+    type:        document.getElementById('f-type').value,
     client:      document.getElementById('f-client').value.trim(),
     role:        document.getElementById('f-role').value.trim(),
     year:        document.getElementById('f-year').value.trim(),
@@ -180,12 +223,30 @@ function onSave(e) {
     tags:        splitCsv(document.getElementById('f-tags').value),
     tools:       splitCsv(document.getElementById('f-tools').value),
     summary:     document.getElementById('f-summary').value.trim(),
+    
+    // Long fields
     problem:     document.getElementById('f-problem').value.trim(),
     process:     document.getElementById('f-process').value.trim(),
     outcome:     document.getElementById('f-outcome').value.trim(),
+    
+    // Quick fields
+    subtitle:    document.getElementById('f-subtitle').value.trim(),
+    tagline:     document.getElementById('f-tagline').value.trim(),
+    discipline:  document.getElementById('f-discipline').value.trim(),
+    brief:       document.getElementById('f-brief').value.trim(),
+    thinking:    document.getElementById('f-thinking').value.trim(),
+    myRole:      document.getElementById('f-myrole').value.trim(),
+    prototypeUrl:document.getElementById('f-prototype').value.trim(),
+    designsUrl:  document.getElementById('f-designs').value.trim(),
+    screens:     screensParsed,
+    
+    // External links
     liveUrl:     document.getElementById('f-live').value.trim(),
     figmaUrl:    document.getElementById('f-figma').value.trim(),
+    
+    // Internals
     mediaAssets: existing ? (existing.mediaAssets || []) : [],
+    blocks:      existing ? (existing.blocks || []) : [], // Preserve builder blocks
     createdAt:   existing ? (existing.createdAt || nowTs) : nowTs,
     updatedAt:   nowTs,
   };

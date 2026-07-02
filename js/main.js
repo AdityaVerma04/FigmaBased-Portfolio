@@ -31,7 +31,7 @@ async function loadCaseStudies() {
       grid.innerHTML = `<div class="empty-state" role="status">
         No published case studies yet.<br>
         <span style="font-size:11px;margin-top:8px;display:block;">
-          Open <a href="admin.html" style="color:var(--accent)">admin.html</a> to add one.
+          Open <a href="admin/" style="color:var(--accent)">admin.html</a> to add one.
         </span>
       </div>`;
       return;
@@ -51,11 +51,24 @@ async function loadCaseStudies() {
   }
 }
 
+// Determine target URL for a case study based on its type
+function csHref(cs) {
+  return `case-study/?slug=${encodeURIComponent(cs.slug)}`;
+}
+
+// Type badge label
+function csTypeBadge(cs) {
+  const t = cs.type || 'long';
+  if (t === 'quick')  return '<span class="cs-type-badge cs-type-quick" title="Quick Case Study">Q</span>';
+  if (t === 'scratch') return '<span class="cs-type-badge cs-type-scratch" title="Scratchpad">S</span>';
+  return '<span class="cs-type-badge cs-type-long" title="Long Case Study">L</span>';
+}
+
 function renderGrid(studies) {
   const grid = document.getElementById('workGrid');
   grid.innerHTML = studies.map((cs, i) => `
     <a class="case-card"
-       href="case-study.html?slug=${encodeURIComponent(cs.slug)}"
+       href="${csHref(cs)}"
        data-tags="${escapeHtml((cs.tags || []).join(','))}"
        style="animation-delay:${i * 0.08}s"
        role="listitem"
@@ -69,6 +82,7 @@ function renderGrid(studies) {
         ${cs.coverImage
           ? `<img src="${escapeHtml(cs.coverImage)}" alt="${escapeHtml(cs.title)} — cover image" loading="lazy">`
           : `<span>${escapeHtml(cs.client || 'Case Study')}</span>`}
+        ${csTypeBadge(cs)}
       </div>
 
       <div class="case-meta">
@@ -295,4 +309,43 @@ document.addEventListener('DOMContentLoaded', () => {
   initCopyEmail();
   initFooterTs();
   initFullscreen();
+  initCursor();
 });
+
+// ── Custom Cursor ─────────────────────────────────────────
+function initCursor() {
+  if (matchMedia("(max-width: 860px)").matches) return;
+  const dot = document.querySelector(".cursor__dot"),
+        ring = document.querySelector(".cursor__ring"),
+        label = document.querySelector(".cursor__label");
+  if (!dot || !ring || !label) return;
+
+  let mx = window.innerWidth / 2, my = window.innerHeight / 2, rx = mx, ry = my;
+
+  window.addEventListener("mousemove", e => {
+    mx = e.clientX; my = e.clientY;
+    dot.style.left = mx + "px"; dot.style.top = my + "px";
+    label.style.left = mx + "px"; label.style.top = my + "px";
+  });
+
+  (function loop() {
+    rx += (mx - rx) * 0.18; ry += (my - ry) * 0.18;
+    ring.style.left = rx + "px"; ring.style.top = ry + "px";
+    requestAnimationFrame(loop);
+  })();
+
+  const hov = "a, button, .case-card, .layer-item, .tool-btn, .topbar-btn, .share-btn, .contact-link-item, [role='button'], [data-cursor]";
+  document.addEventListener("mouseover", e => {
+    const t = e.target.closest(hov);
+    if (t) {
+      document.body.classList.add("cursor-hover");
+      label.textContent = t.dataset.cursor || "";
+    }
+  });
+  document.addEventListener("mouseout", e => {
+    if (e.target.closest(hov)) {
+      document.body.classList.remove("cursor-hover");
+      label.textContent = "";
+    }
+  });
+}
