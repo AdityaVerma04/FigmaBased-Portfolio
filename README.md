@@ -2,7 +2,7 @@
 
 A personal portfolio website skinned as a Figma workspace — left layers panel, right properties inspector, frame labels, and dot-grid canvas — built with zero dependencies: pure HTML, CSS, and JavaScript.
 
-**Live:** https://adityaverma.design/ (replace with your actual URL)
+**Live:** https://adifolio.com/ (replace with your actual URL)
 
 ---
 
