@@ -9,6 +9,20 @@
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
   <style>
+    /* ── Cursor visibility fix for admin panel ── */
+    body, body * {
+      cursor: auto !important;
+    }
+    a, button, select, input[type="checkbox"], input[type="radio"], .cs-list-item, .new-btn, .btn-primary, .btn-ghost, .btn-danger {
+      cursor: pointer !important;
+    }
+    input[type="text"], input[type="url"], input[type="number"], textarea {
+      cursor: text !important;
+    }
+    input[readonly] {
+      cursor: default !important;
+    }
+
     body { background: var(--canvas); padding: 0; }
 
     /* ── Admin wrapper ── */
