@@ -8,6 +8,7 @@
       "role": "UI/UX Designer & Front-End App Developer",
       "year": "2026",
       "status": "published",
+      "isLocked": true,
       "order": 1,
       "coverImage": "assets/cover-namisite.svg",
       "tags": [
@@ -43,6 +44,7 @@
       "discipline": "Product · UX · Personal",
       "year": "2024",
       "status": "published",
+      "isLocked": true,
       "order": 2,
       "coverImage": "https://picsum.photos/seed/amazon1/600/400",
       "tags": [

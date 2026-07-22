@@ -85,11 +85,13 @@ function updateStats() {
   if (!el) return;
   const studies   = workingData.caseStudies || [];
   const published = studies.filter(c => c.status === 'published').length;
+  const locked    = studies.filter(c => c.isLocked).length;
   const draft     = studies.filter(c => c.status === 'draft').length;
   const hidden    = studies.filter(c => c.status === 'hidden').length;
   el.innerHTML = `
     <div class="admin-stat-pill"><strong>${studies.length}</strong> total</div>
     <div class="admin-stat-pill"><strong>${published}</strong> published</div>
+    ${locked ? `<div class="admin-stat-pill"><strong>${locked}</strong> 🔒 locked</div>` : ''}
     <div class="admin-stat-pill"><strong>${draft}</strong> draft</div>
     ${hidden ? `<div class="admin-stat-pill"><strong>${hidden}</strong> hidden</div>` : ''}
   `;
@@ -109,7 +111,8 @@ function renderList() {
            aria-selected="${cs.id === activeId}"
            tabindex="0">
         <span>${escapeHtml(cs.title || 'Untitled')}</span>
-        <div style="display:flex;align-items:center;gap:8px;">
+        <div style="display:flex;align-items:center;gap:6px;">
+          ${cs.isLocked ? '<span style="font-size:11px;" title="Locked (Soon to be uploaded)">🔒</span>' : ''}
           ${cs.type === 'quick' ? '<span style="font-size:10px;color:var(--success);font-weight:600">Q</span>' : ''}
           ${cs.type === 'scratch' ? '<span style="font-size:10px;color:var(--accent);font-weight:600">S</span>' : ''}
           ${(!cs.type || cs.type === 'long') ? '<span style="font-size:10px;color:var(--text-faint);font-weight:600">L</span>' : ''}
@@ -144,6 +147,7 @@ function clearForm() {
   document.getElementById('csForm').reset();
   document.getElementById('f-order').value  = (workingData.caseStudies.length + 1);
   document.getElementById('f-status').value = 'draft';
+  if (document.getElementById('f-locked')) document.getElementById('f-locked').checked = false;
   document.getElementById('f-slug').value   = '';
   document.getElementById('f-type').value   = 'long';
   updateFormTabs();
@@ -160,6 +164,7 @@ function loadIntoForm(id) {
   document.getElementById('f-role').value    = cs.role    || '';
   document.getElementById('f-year').value    = cs.year    || '';
   document.getElementById('f-status').value  = cs.status  || 'draft';
+  if (document.getElementById('f-locked')) document.getElementById('f-locked').checked = !!cs.isLocked;
   document.getElementById('f-order').value   = cs.order   || 1;
   document.getElementById('f-slug').value    = cs.slug    || '';
   document.getElementById('f-cover').value   = cs.coverImage || '';
@@ -218,6 +223,7 @@ function onSave(e) {
     role:        document.getElementById('f-role').value.trim(),
     year:        document.getElementById('f-year').value.trim(),
     status:      document.getElementById('f-status').value,
+    isLocked:    !!(document.getElementById('f-locked') && document.getElementById('f-locked').checked),
     order:       parseInt(document.getElementById('f-order').value, 10) || 1,
     coverImage:  document.getElementById('f-cover').value.trim(),
     tags:        splitCsv(document.getElementById('f-tags').value),

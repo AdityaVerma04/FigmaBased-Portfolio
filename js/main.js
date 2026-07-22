@@ -66,10 +66,13 @@ function csTypeBadge(cs) {
 
 function renderGrid(studies) {
   const grid = document.getElementById('workGrid');
-  grid.innerHTML = studies.map((cs, i) => `
-    <a class="case-card"
-       href="${csHref(cs)}"
+  grid.innerHTML = studies.map((cs, i) => {
+    const isLocked = !!cs.isLocked;
+    return `
+    <a class="case-card ${isLocked ? 'is-locked' : ''}"
+       href="${isLocked ? 'javascript:void(0);' : csHref(cs)}"
        data-tags="${escapeHtml((cs.tags || []).join(','))}"
+       ${isLocked ? 'data-locked="true" data-cursor="Locked"' : ''}
        style="animation-delay:${i * 0.08}s"
        role="listitem"
        aria-label="${escapeHtml(cs.title)}">
@@ -83,6 +86,15 @@ function renderGrid(studies) {
           ? `<img src="${escapeHtml(cs.coverImage)}" alt="${escapeHtml(cs.title)} — cover image" loading="lazy">`
           : `<span>${escapeHtml(cs.client || 'Case Study')}</span>`}
         ${csTypeBadge(cs)}
+        ${isLocked ? `
+          <div class="cs-lock-badge" title="Locked — Soon to be uploaded">
+            <span class="lock-icon">🔒</span> <span class="lock-text">Locked</span>
+          </div>
+          <div class="cs-lock-hover-overlay">
+            <span class="lock-pulse-dot"></span>
+            <span>Soon to be uploaded</span>
+          </div>
+        ` : ''}
       </div>
 
       <div class="case-meta">
@@ -93,9 +105,14 @@ function renderGrid(studies) {
           ${(cs.tags || []).map(t => `<span>${escapeHtml(t)}</span>`).join('')}
         </div>
       </div>
-      <span class="case-arrow" aria-hidden="true">↗</span>
+      <span class="case-arrow ${isLocked ? 'is-locked-arrow' : ''}" aria-hidden="true">${isLocked ? '🔒' : '↗'}</span>
     </a>
-  `).join('');
+  `;
+  }).join('');
+
+  if (typeof window.initLockedProjects === 'function') {
+    window.initLockedProjects();
+  }
 }
 
 // ── Filter bar ─────────────────────────────────────────────

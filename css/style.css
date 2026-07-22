@@ -2202,3 +2202,156 @@ footer::after {
 body.cursor-hover .cursor__ring { width: 56px; height: 56px; border-radius: 9px; }
 body.cursor-hover .cursor__label { opacity: 1; }
 @media (max-width: 860px) { .cursor { display: none; } }
+
+/* ===================================================================
+   LOCKED PROJECTS MODULE (ISOLATED)
+   Can be easily modified or removed without affecting core styles.
+   =================================================================== */
+
+.case-card.is-locked {
+  cursor: not-allowed;
+  opacity: 0.92;
+  border-color: rgba(255, 180, 0, 0.25);
+  background: linear-gradient(135deg, rgba(20, 19, 26, 0.95), rgba(28, 26, 38, 0.95));
+}
+
+.case-card.is-locked:hover {
+  border-color: rgba(255, 180, 0, 0.5);
+  box-shadow: 0 8px 30px rgba(255, 180, 0, 0.12);
+}
+
+.cs-lock-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(20, 19, 26, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 180, 0, 0.4);
+  color: #ffca28;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  z-index: 5;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.cs-lock-hover-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(14, 13, 20, 0.78);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #fff;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  opacity: 0;
+  transition: opacity 0.25s ease-in-out;
+  pointer-events: none;
+  z-index: 4;
+}
+
+.case-card.is-locked:hover .cs-lock-hover-overlay {
+  opacity: 1;
+}
+
+.lock-pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ffca28;
+  box-shadow: 0 0 8px #ffca28;
+  animation: lock-pulse 1.5s infinite alternate;
+}
+
+@keyframes lock-pulse {
+  from { opacity: 0.4; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1.2); }
+}
+
+.case-arrow.is-locked-arrow {
+  color: #ffca28;
+  font-size: 14px;
+  transform: none !important;
+}
+
+/* Toast notification styling for locked project clicks */
+.locked-toast {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 10001;
+  background: #1e1b2e;
+  border: 1px solid rgba(255, 180, 0, 0.4);
+  border-radius: 12px;
+  padding: 14px 18px;
+  color: #fff;
+  box-shadow: 0 10px 36px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 180, 0, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  opacity: 0;
+  transform: translateY(20px) scale(0.95);
+  transition: opacity 0.3s var(--ease-out), transform 0.3s var(--ease-out);
+  pointer-events: auto;
+  max-width: 380px;
+}
+
+.locked-toast.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.locked-toast-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.locked-toast-icon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.locked-toast-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.locked-toast-text strong {
+  font-family: var(--display);
+  font-size: 13.5px;
+  color: #ffca28;
+}
+
+.locked-toast-text span {
+  font-size: 12.5px;
+  color: var(--text-secondary);
+}
+
+.locked-toast-close {
+  background: transparent;
+  border: none;
+  color: var(--text-faint);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px;
+  transition: color 0.15s;
+}
+
+.locked-toast-close:hover {
+  color: #fff;
+}
