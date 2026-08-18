@@ -581,9 +581,23 @@ async function renderCaseStudy() {
   }
 
   try {
-    const res = await fetch('../data/case-studies.json');
-    const data = await res.json();
-    const cases = data.caseStudies || [];
+    const urls = [
+      '/data/case-studies.json',
+      '../data/case-studies.json',
+      'data/case-studies.json',
+      './data/case-studies.json'
+    ];
+    let data = null;
+    for (const url of urls) {
+      try {
+        const res = await fetch(url);
+        if (res.ok) {
+          data = await res.json();
+          if (data && Array.isArray(data.caseStudies) && data.caseStudies.length) break;
+        }
+      } catch (err) {}
+    }
+    const cases = (data && data.caseStudies) || [];
     const idx = cases.findIndex(c => c.slug === slug);
     const cs = cases[idx];
 

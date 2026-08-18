@@ -34,19 +34,42 @@ function persist() {
 }
 
 async function loadFromServer() {
-  const res  = await fetch('../data/case-studies.json');
-  return await res.json();
+  const urls = [
+    '/data/case-studies.json',
+    '../data/case-studies.json',
+    'data/case-studies.json',
+    './data/case-studies.json'
+  ];
+  for (const url of urls) {
+    try {
+      const res = await fetch(url);
+      if (res.ok) {
+        const json = await res.json();
+        if (json && Array.isArray(json.caseStudies) && json.caseStudies.length) {
+          return json;
+        }
+      }
+    } catch (err) {
+      // try next
+    }
+  }
+  return { caseStudies: [] };
 }
 
 // ── Initialise ────────────────────────────────────────────
 async function init() {
   const saved = localStorage.getItem(DRAFT_KEY);
   if (saved) {
-    try { workingData = JSON.parse(saved); }
-    catch { workingData = { caseStudies: [] }; }
+    try {
+      workingData = JSON.parse(saved);
+      if (!workingData || !Array.isArray(workingData.caseStudies) || !workingData.caseStudies.length) {
+        workingData = await loadFromServer();
+      }
+    } catch {
+      workingData = await loadFromServer();
+    }
   } else {
-    try   { workingData = await loadFromServer(); }
-    catch { workingData = { caseStudies: [] }; }
+    workingData = await loadFromServer();
   }
 
   renderList();

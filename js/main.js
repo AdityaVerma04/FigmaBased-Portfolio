@@ -18,9 +18,25 @@ async function loadCaseStudies() {
   const grid = document.getElementById('workGrid');
   if (!grid) return;
 
+  const urls = [
+    'data/case-studies.json',
+    '/data/case-studies.json',
+    './data/case-studies.json',
+    '../data/case-studies.json'
+  ];
+  let data = null;
+  for (const url of urls) {
+    try {
+      const res = await fetch(url);
+      if (res.ok) {
+        data = await res.json();
+        if (data && Array.isArray(data.caseStudies) && data.caseStudies.length) break;
+      }
+    } catch(e) {}
+  }
+
   try {
-    const res  = await fetch('data/case-studies.json');
-    const data = await res.json();
+    if (!data) throw new Error('Could not load case studies JSON');
 
     // Published only (excludes draft AND hidden per PRD §4.1)
     allStudies = (data.caseStudies || [])
