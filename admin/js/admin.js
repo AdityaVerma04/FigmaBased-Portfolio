@@ -89,6 +89,14 @@ async function init() {
       document.getElementById('f-slug').value = slugify(document.getElementById('f-title').value);
     }
   });
+
+  // Auto-load first detailed case study by default so form is populated immediately
+  if (workingData.caseStudies && workingData.caseStudies.length > 0) {
+    const defaultCs = workingData.caseStudies.find(c => c.type === 'detailed') || workingData.caseStudies[0];
+    loadIntoForm(defaultCs.id);
+  } else {
+    updateFormTabs();
+  }
 }
 
 function updateFormTabs() {
