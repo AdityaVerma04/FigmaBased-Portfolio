@@ -1374,6 +1374,11 @@ p {
   border-color: rgba(140, 111, 255, 0.3);
 }
 
+.cs-type-detailed {
+  color: #ff9d6c;
+  border-color: rgba(255, 157, 108, 0.3);
+}
+
 .case-meta {
   padding: 20px 22px 22px;
 }

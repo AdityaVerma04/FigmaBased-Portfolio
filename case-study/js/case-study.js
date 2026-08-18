@@ -244,9 +244,23 @@ async function renderCaseStudy() {
       show('notesSectionLabel');
       show('notes');
       document.getElementById('notes').innerHTML = `
-        <div class="note-card"><div class="note-card-border-accent"></div><div class="note-card-tag">The Brief</div><h3>Challenge</h3><p>${escapeHtml(cs.problem || '—')}</p></div>
-        <div class="note-card"><div class="note-card-border-accent"></div><div class="note-card-tag">My Role</div><h3>Process</h3><p>${escapeHtml(cs.process || '—')}</p></div>
-        <div class="note-card"><div class="note-card-border-accent"></div><div class="note-card-tag">Thinking</div><h3>Outcome</h3><p>${escapeHtml(cs.outcome || '—')}</p></div>
+        <div class="note-card"><div class="note-card-border-accent"></div><div class="note-card-tag">The Brief</div><h3>Challenge</h3><p>${escapeHtml(cs.brief || cs.problem || '—')}</p></div>
+        <div class="note-card"><div class="note-card-border-accent"></div><div class="note-card-tag">My Role</div><h3>What I Did</h3><p>${escapeHtml(cs.myRole || cs.process || '—')}</p></div>
+        <div class="note-card"><div class="note-card-border-accent"></div><div class="note-card-tag">Thinking</div><h3>The Approach</h3><p>${escapeHtml(cs.thinking || cs.outcome || '—')}</p></div>
+      `;
+    } else if (cs.type === 'detailed') {
+      // Detailed case study — same 3-note structure but uses detXxx fields
+      show('notesSectionLabel');
+      show('notes');
+      const detBrief    = cs.detBrief    || cs.brief    || cs.problem  || '—';
+      const detMyRole   = cs.detMyRole   || cs.myRole   || cs.process  || '—';
+      const detThinking = cs.detThinking || cs.thinking || cs.outcome  || '—';
+      const detOutcome  = cs.detOutcome  || cs.outcome  || '';
+      document.getElementById('notes').innerHTML = `
+        <div class="note-card"><div class="note-card-border-accent"></div><div class="note-card-tag">The Brief</div><h3>Challenge</h3><p>${escapeHtml(detBrief)}</p></div>
+        <div class="note-card"><div class="note-card-border-accent"></div><div class="note-card-tag">My Role</div><h3>What I Did</h3><p>${escapeHtml(detMyRole)}</p></div>
+        <div class="note-card"><div class="note-card-border-accent"></div><div class="note-card-tag">Thinking</div><h3>The Approach</h3><p>${escapeHtml(detThinking)}</p></div>
+        ${detOutcome ? `<div class="note-card"><div class="note-card-border-accent"></div><div class="note-card-tag">Outcome</div><h3>Result &amp; Impact</h3><p>${escapeHtml(detOutcome)}</p></div>` : ''}
       `;
     }
 
@@ -280,7 +294,7 @@ async function renderCaseStudy() {
     }
 
     // ── Gallery ──
-    const assets = cs.mediaAssets || cs.screens || [];
+    const assets = cs.mediaAssets || (cs.type === 'detailed' ? cs.detScreens : null) || cs.screens || [];
     if (assets.length) {
       show('gallerySectionLabel');
       show('galleryWrap');
@@ -310,7 +324,8 @@ async function renderCaseStudy() {
     }
 
     // ── Prototype ──
-    if (cs.prototypeUrl) {
+    const protoUrl = cs.type === 'detailed' ? (cs.detPrototypeUrl || cs.prototypeUrl) : cs.prototypeUrl;
+    if (protoUrl) {
       show('protoSectionLabel');
       show('protoWrap');
       document.getElementById('protoDevice').innerHTML = `
@@ -321,7 +336,7 @@ async function renderCaseStudy() {
           <div class="proto-label">Figma Prototype</div>
         </div>
         <div class="proto-frame">
-          <iframe src="${escapeHtml(cs.prototypeUrl)}" allowfullscreen></iframe>
+          <iframe src="${escapeHtml(protoUrl)}" allowfullscreen></iframe>
         </div>
       `;
     }

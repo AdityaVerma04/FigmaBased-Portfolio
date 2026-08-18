@@ -114,6 +114,7 @@ function renderList() {
         <div style="display:flex;align-items:center;gap:6px;">
           ${cs.isLocked ? '<span style="font-size:11px;" title="Locked (Soon to be uploaded)">🔒</span>' : ''}
           ${cs.type === 'quick' ? '<span style="font-size:10px;color:var(--success);font-weight:600">Q</span>' : ''}
+          ${cs.type === 'detailed' ? '<span style="font-size:10px;color:#ff9d6c;font-weight:600">D</span>' : ''}
           ${cs.type === 'scratch' ? '<span style="font-size:10px;color:var(--accent);font-weight:600">S</span>' : ''}
           ${(!cs.type || cs.type === 'long') ? '<span style="font-size:10px;color:var(--text-faint);font-weight:600">L</span>' : ''}
           <span class="status-dot ${cs.status || 'draft'}" title="${escapeHtml(cs.status || 'draft')}"></span>
@@ -188,6 +189,18 @@ function loadIntoForm(id) {
   document.getElementById('f-designs').value    = cs.designsUrl || '';
   document.getElementById('f-screens').value    = cs.screens ? JSON.stringify(cs.screens, null, 2) : '';
 
+  // Detailed fields
+  document.getElementById('f-det-subtitle').value   = cs.detSubtitle   || cs.subtitle   || '';
+  document.getElementById('f-det-tagline').value    = cs.detTagline    || cs.tagline    || '';
+  document.getElementById('f-det-discipline').value = cs.detDiscipline || cs.discipline || '';
+  document.getElementById('f-det-brief').value      = cs.detBrief      || cs.brief      || '';
+  document.getElementById('f-det-thinking').value   = cs.detThinking   || cs.thinking   || '';
+  document.getElementById('f-det-myrole').value     = cs.detMyRole     || cs.myRole     || '';
+  document.getElementById('f-det-outcome').value    = cs.detOutcome    || cs.outcome    || '';
+  document.getElementById('f-det-prototype').value  = cs.detPrototypeUrl || cs.prototypeUrl || '';
+  document.getElementById('f-det-designs').value    = cs.detDesignsUrl   || cs.designsUrl   || '';
+  document.getElementById('f-det-screens').value    = cs.detScreens ? JSON.stringify(cs.detScreens, null, 2) : (cs.screens ? JSON.stringify(cs.screens, null, 2) : '');
+
   document.getElementById('f-live').value    = cs.liveUrl  || '';
   document.getElementById('f-figma').value   = cs.figmaUrl || '';
 
@@ -245,6 +258,22 @@ function onSave(e) {
     prototypeUrl:document.getElementById('f-prototype').value.trim(),
     designsUrl:  document.getElementById('f-designs').value.trim(),
     screens:     screensParsed,
+
+    // Detailed fields
+    detSubtitle:    document.getElementById('f-det-subtitle').value.trim(),
+    detTagline:     document.getElementById('f-det-tagline').value.trim(),
+    detDiscipline:  document.getElementById('f-det-discipline').value.trim(),
+    detBrief:       document.getElementById('f-det-brief').value.trim(),
+    detThinking:    document.getElementById('f-det-thinking').value.trim(),
+    detMyRole:      document.getElementById('f-det-myrole').value.trim(),
+    detOutcome:     document.getElementById('f-det-outcome').value.trim(),
+    detPrototypeUrl:document.getElementById('f-det-prototype').value.trim(),
+    detDesignsUrl:  document.getElementById('f-det-designs').value.trim(),
+    detScreens: (() => {
+      const v = document.getElementById('f-det-screens').value.trim();
+      if (!v) return existing ? (existing.detScreens || []) : [];
+      try { return JSON.parse(v); } catch { return existing ? (existing.detScreens || []) : []; }
+    })(),
     
     // External links
     liveUrl:     document.getElementById('f-live').value.trim(),

@@ -82,6 +82,128 @@
       "designsUrl": "",
       "createdAt": "2026-06-01T00:00:00.000Z",
       "updatedAt": "2026-06-30T00:00:00.000Z"
+    },
+    {
+      "id": "cs-003",
+      "slug": "swiggy-instamart-ux",
+      "type": "detailed",
+      "title": "Swiggy Instamart UX Overhaul",
+      "subtitle": "10-Minute Grocery — Zero-Friction Checkout",
+      "tagline": "Speed is the feature. Every tap that slows you down is a broken promise.",
+      "client": "Personal Project",
+      "role": "UX Designer",
+      "discipline": "Product · UX · Consumer",
+      "year": "2025",
+      "status": "published",
+      "isLocked": false,
+      "order": 3,
+      "coverImage": "https://picsum.photos/seed/swiggy-cover/600/400",
+      "tags": [
+        "UX Design",
+        "Mobile",
+        "Figma",
+        "Research"
+      ],
+      "tools": [
+        "Figma",
+        "Maze",
+        "Miro"
+      ],
+      "summary": "A ground-up UX audit and redesign of the Swiggy Instamart checkout flow — reducing friction from cart to confirmation by eliminating redundant steps and surfacing trust signals at the right moments.",
+      "detSubtitle": "10-Minute Grocery — Zero-Friction Checkout",
+      "detTagline": "Speed is the feature. Every tap that slows you down is a broken promise.",
+      "detDiscipline": "Product · UX · Consumer",
+      "detBrief": "Swiggy Instamart promises 10-minute delivery, but the checkout flow — riddled with address re-confirmation loops, buried coupons, and a multi-step payment wall — consistently undermined that promise. The goal was to redesign the end-to-end cart-to-confirmation journey so that it felt as fast as the delivery itself, without sacrificing clarity or trust.",
+      "detThinking": "I started with a heuristic audit of the existing flow, mapping every screen against Nielsen's 10 usability heuristics. Three anti-patterns surfaced immediately: forced re-entry of delivery slot even when the default was valid, coupon discovery buried three taps deep, and a payment confirmation page that offered no reassurance before charging. From there I ran 6 moderated usability sessions (3 frequent users, 3 occasional), coded the sessions for task failure and hesitation moments, and built an affinity map in Miro. The redesign centred on three principles — progressive disclosure, persistent context (showing delivery ETA at every step), and a single-screen payment summary that collapsed address, slot, and payment into one scannable view.",
+      "detMyRole": "Solo project — conducted all research (heuristic audit + usability sessions), synthesised findings, defined the redesign scope, created all wireframes (lo-fi → hi-fi) in Figma, built an interactive prototype and ran a second round of unmoderated testing via Maze to validate the redesigned flow against the original.",
+      "detOutcome": "Task completion on the redesigned prototype was 94% vs 71% on the original flow (n=18, Maze). Time-to-payment dropped by an average of 38 seconds. All 6 usability participants rated the redesigned confirmation screen as more trustworthy. The project is currently being used as a portfolio piece and is under review for a potential internship engagement.",
+      "detPrototypeUrl": "https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Fproto%2Fexample",
+      "detDesignsUrl": "",
+      "detScreens": [
+        {
+          "src": "https://picsum.photos/seed/swig1/1200/800",
+          "caption": "Redesigned Cart Screen",
+          "wide": false
+        },
+        {
+          "src": "https://picsum.photos/seed/swig2/1200/800",
+          "caption": "One-Screen Payment Summary",
+          "wide": false
+        },
+        {
+          "src": "https://picsum.photos/seed/swig3/1200/500",
+          "caption": "Full User Flow — Lo-fi to Hi-fi",
+          "wide": true
+        },
+        {
+          "src": "https://picsum.photos/seed/swig4/1200/800",
+          "caption": "Confirmation & Trust Signals",
+          "wide": false
+        }
+      ],
+      "liveUrl": "",
+      "figmaUrl": "",
+      "mediaAssets": [],
+      "createdAt": "2025-11-01T00:00:00.000Z",
+      "updatedAt": "2026-07-10T00:00:00.000Z"
+    },
+    {
+      "id": "cs-004",
+      "slug": "namisite-admin-dashboard",
+      "type": "detailed",
+      "title": "Namisite Admin Dashboard",
+      "subtitle": "Internal Tool Design & Prototype",
+      "tagline": "A dashboard should answer your questions before you think to ask them.",
+      "client": "Namisite Technologies",
+      "role": "UI/UX Designer",
+      "discipline": "Product · B2B · Dashboard",
+      "year": "2026",
+      "status": "published",
+      "isLocked": true,
+      "order": 4,
+      "coverImage": "https://picsum.photos/seed/dashboard-cover/600/400",
+      "tags": [
+        "UI Design",
+        "Dashboard",
+        "Figma",
+        "B2B"
+      ],
+      "tools": [
+        "Figma",
+        "FigJam"
+      ],
+      "summary": "Designed a data-dense internal admin dashboard for Namisite's ops team — balancing information density with clarity to let admins manage clients, track activity, and action alerts without switching contexts.",
+      "detSubtitle": "Internal Tool Design & Prototype",
+      "detTagline": "A dashboard should answer your questions before you think to ask them.",
+      "detDiscipline": "Product · B2B · Dashboard",
+      "detBrief": "The Namisite ops team was managing client accounts across three separate spreadsheets and a legacy CRM. Errors were slipping through. The brief was to design a unified admin dashboard that would give the team a single source of truth for client status, recent activity, and pending actions — all within a clean, low-latency interface.",
+      "detThinking": "I spent the first week shadowing two ops team members to map their actual workflow — not what they said they did, but what they actually did. The big insight: 80% of daily admin work boiled down to three questions — who needs attention right now, what changed since yesterday, and where is my team stuck. The design response was a priority-first layout: a triage column of flagged items on the left, a live activity feed in the centre, and a client detail panel that slid in without a page load on the right. I used FigJam to workshop the IA with the team before a single frame was opened in Figma.",
+      "detMyRole": "Led the end-to-end design process — stakeholder interviews, workflow mapping, information architecture, lo-fi wireframes, design system setup (tokens, components), hi-fi UI, and a clickable Figma prototype used in two rounds of internal testing.",
+      "detOutcome": "The prototype was signed off after two feedback rounds with zero major structural changes — a first for this client. The engineering team began implementation in Q2 2026. Formal metrics pending post-launch.",
+      "detPrototypeUrl": "",
+      "detDesignsUrl": "",
+      "detScreens": [
+        {
+          "src": "https://picsum.photos/seed/dash1/1200/800",
+          "caption": "Dashboard Overview — Triage View",
+          "wide": false
+        },
+        {
+          "src": "https://picsum.photos/seed/dash2/1200/800",
+          "caption": "Client Detail Slide-in Panel",
+          "wide": false
+        },
+        {
+          "src": "https://picsum.photos/seed/dash3/1200/500",
+          "caption": "Design System — Component Library",
+          "wide": true
+        }
+      ],
+      "liveUrl": "",
+      "figmaUrl": "",
+      "mediaAssets": [],
+      "createdAt": "2026-03-01T00:00:00.000Z",
+      "updatedAt": "2026-07-15T00:00:00.000Z"
     }
   ]
-}
+}

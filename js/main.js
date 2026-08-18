@@ -59,8 +59,9 @@ function csHref(cs) {
 // Type badge label
 function csTypeBadge(cs) {
   const t = cs.type || 'long';
-  if (t === 'quick')  return '<span class="cs-type-badge cs-type-quick" title="Quick Case Study">Q</span>';
-  if (t === 'scratch') return '<span class="cs-type-badge cs-type-scratch" title="Scratchpad">S</span>';
+  if (t === 'quick')    return '<span class="cs-type-badge cs-type-quick" title="Quick Case Study">Q</span>';
+  if (t === 'detailed') return '<span class="cs-type-badge cs-type-detailed" title="Detailed Case Study">D</span>';
+  if (t === 'scratch')  return '<span class="cs-type-badge cs-type-scratch" title="Scratchpad">S</span>';
   return '<span class="cs-type-badge cs-type-long" title="Long Case Study">L</span>';
 }
 

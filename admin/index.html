@@ -273,6 +273,7 @@
               <select id="f-type">
                 <option value="long">Long Case Study</option>
                 <option value="quick">Quick Case Study</option>
+                <option value="detailed">Detailed Case Study</option>
                 <option value="scratch">Scratchpad (Builder)</option>
               </select>
             </div>
@@ -380,6 +381,51 @@
           <div class="field" data-type="quick">
             <label for="f-myrole">What I did (Quick CS)</label>
             <textarea id="f-myrole" placeholder="Conducted research, designed flows..."></textarea>
+          </div>
+
+          <!-- ── Detailed Case Study fields ── -->
+          <div class="field" data-type="detailed">
+            <label for="f-det-subtitle">Subtitle (Detailed CS)</label>
+            <input type="text" id="f-det-subtitle" placeholder="e.g. Mobile App UX Redesign">
+          </div>
+          <div class="field" data-type="detailed">
+            <label for="f-det-tagline">Tagline (Detailed CS)</label>
+            <input type="text" id="f-det-tagline" placeholder="e.g. One clear action beats ten unclear ones.">
+          </div>
+          <div class="field" data-type="detailed">
+            <label for="f-det-discipline">Discipline (Detailed CS)</label>
+            <input type="text" id="f-det-discipline" placeholder="e.g. Product · UX · Mobile">
+          </div>
+          <div class="field" data-type="detailed">
+            <label for="f-det-brief">The Brief (Detailed CS)</label>
+            <textarea id="f-det-brief" placeholder="Describe the challenge and project context..."></textarea>
+          </div>
+          <div class="field" data-type="detailed">
+            <label for="f-det-thinking">The Thinking / Process (Detailed CS)</label>
+            <textarea id="f-det-thinking" placeholder="How did you approach it? What decisions were made and why?"></textarea>
+          </div>
+          <div class="field" data-type="detailed">
+            <label for="f-det-myrole">What I Did (Detailed CS)</label>
+            <textarea id="f-det-myrole" placeholder="Research, UX strategy, UI design, prototyping, handoff..."></textarea>
+          </div>
+          <div class="field" data-type="detailed">
+            <label for="f-det-outcome">Outcome &amp; Impact (Detailed CS)</label>
+            <textarea id="f-det-outcome" placeholder="What shipped? Measurable results, stakeholder feedback, lessons learned."></textarea>
+          </div>
+          <div class="field-row" data-type="detailed">
+            <div class="field">
+              <label for="f-det-prototype">Prototype URL (Detailed CS — Figma Embed)</label>
+              <input type="url" id="f-det-prototype" placeholder="https://figma.com/embed?...">
+            </div>
+            <div class="field">
+              <label for="f-det-designs">Designs URL (Detailed CS)</label>
+              <input type="url" id="f-det-designs" placeholder="https://...">
+            </div>
+          </div>
+          <div class="field" data-type="detailed">
+            <label for="f-det-screens">Screens (Detailed CS — JSON Array)</label>
+            <textarea id="f-det-screens" placeholder='[{"src":"assets/img.jpg","caption":"Label","wide":false}]'></textarea>
+            <div style="font-size:11px;color:var(--text-faint);margin-top:4px;font-family:var(--mono)">Format: [{"src":"url","caption":"text","wide":true/false}]</div>
           </div>
 
           <div class="field" data-type="scratch">
