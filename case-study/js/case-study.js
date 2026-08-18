@@ -150,7 +150,7 @@ function initLightbox() {
   return { openLightbox };
 }
 
-// ── Scroll Reveal Observer ──────────────────────────────────
+// ── Scroll Reveal Observer ──────────────────────────────────────────
 function initScrollReveal() {
   const obs = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -159,9 +159,416 @@ function initScrollReveal() {
         obs.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.1 });
+  }, { threshold: 0.08 });
   document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 }
+
+// ── NEW 13-SECTION RENDER FUNCTIONS ────────────────────────────────
+
+// 1. Cover Image
+function renderCover(cs) {
+  if (!cs.coverImage) return;
+  show('coverWrap');
+  document.getElementById('coverWrap').innerHTML = `
+    <div class="cover-img-wrap">
+      <img src="${escapeHtml(cs.coverImage)}" alt="Cover — ${escapeHtml(cs.title)}" loading="lazy">
+    </div>
+  `;
+}
+
+// 2. Context & Problem
+function renderContextProblem(cs) {
+  if (!cs.context && !cs.problemStatement) return;
+  show('contextSectionLabel');
+  show('contextWrap');
+  const contextBlock = cs.context ? `
+    <div class="ctx-context-block">
+      <div class="cs-block-label">Context</div>
+      <p class="ctx-body">${escapeHtml(cs.context)}</p>
+    </div>` : '';
+  const problemBlock = cs.problemStatement ? `
+    <div class="ctx-problem-block" style="margin-top: 48px;">
+      <div class="cs-block-label">Problem Statement</div>
+      <div class="problem-statement-box">
+        <h2 class="problem-statement">${escapeHtml(cs.problemStatement)}</h2>
+      </div>
+    </div>` : '';
+  document.getElementById('contextWrap').innerHTML =
+    `<div class="ctx-grid">${contextBlock}${problemBlock}</div>`;
+}
+
+// 3. Solution — Mosaic Grid
+function renderSolution(cs) {
+  if (!cs.solutionScreens || !cs.solutionScreens.length) return;
+  show('solutionSectionLabel');
+  show('solutionWrap');
+  const pool = [
+    ...(cs.solutionScreens || []),
+    ...(cs.detScreens || []).map(s => ({ src: s.src, caption: s.caption }))
+  ].slice(0, 8);
+  const cellsHtml = pool.map(s => `
+    <div class="solution-mosaic-cell">
+      <img src="${escapeHtml(s.src)}" alt="${escapeHtml(s.caption || '')}" loading="lazy">
+    </div>`).join('');
+  document.getElementById('solutionWrap').innerHTML = `
+    <div class="solution-strip" style="padding: 48px 0 24px;">
+      <div class="iter-heading-row" style="margin-bottom: 24px;">
+        <span class="iter-heading">Crafted Solution</span>
+      </div>
+      <div class="solution-mosaic">${cellsHtml}</div>
+    </div>`;
+}
+
+// 4. Project Details — 2x2 Story Grid
+function renderProjectDetails(cs) {
+  if (!cs.team && !cs.timeline && !cs.role && !(cs.tools && cs.tools.length)) return;
+  show('detailsInfoSectionLabel');
+  show('detailsInfoWrap');
+  const toolsVal = cs.tools && cs.tools.length ? cs.tools.join(', ') : (cs.detDesignsUrl || '—');
+  document.getElementById('detailsInfoWrap').innerHTML = `
+    <div style="padding:48px 0;">
+      <div class="iter-heading-row" style="margin-bottom: 28px;">
+        <span class="iter-heading">Project Story</span>
+      </div>
+      <div class="story-grid">
+        <div class="story-cell">
+          <div class="story-cell-label">The Team</div>
+          <div class="story-cell-value">${escapeHtml(cs.team || '—')}</div>
+        </div>
+        <div class="story-cell">
+          <div class="story-cell-label">My Role</div>
+          <div class="story-cell-value">${escapeHtml(cs.role || cs.detMyRole || '—')}</div>
+        </div>
+        <div class="story-cell">
+          <div class="story-cell-label">Duration</div>
+          <div class="story-cell-value">${escapeHtml(cs.timeline || '—')}</div>
+        </div>
+        <div class="story-cell">
+          <div class="story-cell-label">Tools</div>
+          <div class="story-cell-value muted">${escapeHtml(toolsVal)}</div>
+        </div>
+      </div>
+    </div>`;
+}
+
+// 5. Research — Analysis Grid
+function renderResearch(cs) {
+  if (!cs.researchMethods && !cs.personas && !cs.evidenceImages) return;
+  show('researchSectionLabel');
+  show('researchWrap');
+
+  // Map data to 4 analysis quadrants
+  const methods = cs.researchMethods || [];
+  const quads = [
+    { label: methods[0] ? methods[0].name + ':' : 'Competitive Analysis:', text: methods[0] ? methods[0].description : '' },
+    { label: methods[1] ? methods[1].name + ':' : 'Use Case Analysis:',  text: methods[1] ? methods[1].description : '' },
+    { label: methods[2] ? methods[2].name + ':' : 'Pain Points',         text: methods[2] ? methods[2].description : '' },
+    { label: methods[3] ? methods[3].name + ':' : 'Target Audience',     text: methods[3] ? methods[3].description : '' },
+  ];
+  const quadHtml = quads.map(q => `
+    <div class="analysis-cell">
+      <div class="analysis-cell-label">${escapeHtml(q.label)}</div>
+      <div class="analysis-cell-text">${escapeHtml(q.text)}</div>
+    </div>`).join('');
+
+  // Evidence images for strip
+  const imgs = (cs.evidenceImages || []).slice(0, 3);
+  const stripHtml = imgs.map(e => `
+    <div class="strip-img-cell">
+      <img src="${escapeHtml(e.src)}" alt="${escapeHtml(e.caption || '')}" loading="lazy">
+    </div>`).join('');
+
+  document.getElementById('researchWrap').innerHTML = `
+    <div style="padding:48px 0;">
+      <div class="iter-heading-row" style="margin-bottom: 24px;">
+        <span class="iter-heading">Analysis</span>
+      </div>
+      <div class="analysis-grid">${quadHtml}</div>
+      ${stripHtml ? `<div class="section-img-strip">${stripHtml}</div>` : ''}
+    </div>`;
+}
+
+// 6. Ideation — 2-col cards + image strip
+function renderIdeation(cs) {
+  if (!cs.ideation) return;
+  show('ideationSectionLabel');
+  show('ideationWrap');
+
+  const solutions = cs.ideation.solutions || [];
+  const cardsHtml = `
+    <div class="ideation-cards">
+      <div class="ideation-card">
+        <div class="ideation-card-label">Your Approach</div>
+        <div class="ideation-card-text">${escapeHtml(cs.ideation.approach || '')}</div>
+      </div>
+      <div class="ideation-card">
+        <div class="ideation-card-label">Possible Solutions</div>
+        <div class="ideation-card-text">${solutions.map(s => `<strong>${escapeHtml(s.title)}</strong><br>${escapeHtml(s.description)}`).join('<br><br>')}</div>
+      </div>
+    </div>`;
+
+  // Use evidenceImages as the photo strip (or empty placeholders)
+  const imgs = (cs.evidenceImages || []).slice(0, 3);
+  const stripHtml = imgs.length
+    ? imgs.map(e => `<div class="strip-img-cell"><img src="${escapeHtml(e.src)}" alt="" loading="lazy"></div>`).join('')
+    : `<div class="strip-img-cell"></div><div class="strip-img-cell"></div><div class="strip-img-cell"></div>`;
+
+  document.getElementById('ideationWrap').innerHTML = `
+    <div style="padding:48px 0;">
+      <div class="iter-heading-row" style="margin-bottom: 24px;">
+        <span class="iter-heading">Brainstorming &amp; Ideation</span>
+      </div>
+      ${cardsHtml}
+      <div class="section-img-strip">${stripHtml}</div>
+    </div>`;
+}
+
+// 7. Wireframes
+function renderWireframes(cs) {
+  if (!cs.wireframes || !cs.wireframes.length) return;
+  show('wireframesSectionLabel');
+  show('wireframesWrap');
+  const grid = document.getElementById('wireframesGrid');
+  let html = '';
+  cs.wireframes.forEach((wf, i) => {
+    const cap = wf.caption || cs.title;
+    galleryItems.push({ url: wf.src, cap });
+    const idx = galleryItems.length - 1;
+    html += `
+      <div class="gallery-item reveal" onclick="openGallery(${idx})" style="position:relative;">
+        <div class="wf-badge ${wf.type === 'lo-fi' ? 'lo-fi' : 'hi-fi'}">${escapeHtml(wf.type || 'wireframe')}</div>
+        <img src="${escapeHtml(wf.src)}" alt="${escapeHtml(cap)}" loading="lazy">
+        <div class="gallery-overlay">
+          <div class="gallery-overlay-num">WF . ${(i+1).toString().padStart(2,'0')}</div>
+          <div class="gallery-overlay-cap">${escapeHtml(cap)}</div>
+        </div>
+      </div>`;
+  });
+  grid.innerHTML = html;
+  
+  // Add title wrapper inside wireframesWrap but around the grid
+  const wrapperHTML = `
+    <div style="padding:48px 0 0;">
+      <div class="iter-heading-row" style="margin-bottom: 24px;">
+        <span class="iter-heading">Sketches &amp; Wireframes</span>
+      </div>
+    </div>`;
+  document.getElementById('wireframesWrap').insertAdjacentHTML('afterbegin', wrapperHTML);
+}
+
+// 7b. Iterations — arrow flow
+function renderIterations(cs) {
+  if (!cs.iterations || !cs.iterations.length) return;
+  show('iterationsSectionLabel');
+  show('iterationsWrap');
+  const emojis = ['🧑🏻\u200d💻', '🧑🏽\u200d🎨', '🧑🏼\u200d💼'];
+  let flowHtml = '';
+  cs.iterations.forEach((it, i) => {
+    if (i > 0) flowHtml += `<div class="iteration-arrow">→</div>`;
+    flowHtml += `
+      <div class="iteration-item">
+        <div class="iteration-emoji">${emojis[i % emojis.length]}</div>
+        <div class="iteration-screen">
+          ${it.src ? `<img src="${escapeHtml(it.src)}" alt="Iteration ${i+1}" loading="lazy">` : ''}
+        </div>
+      </div>`;
+  });
+  document.getElementById('iterationsWrap').innerHTML = `
+    <div style="padding:48px 0 40px;">
+      <div class="iter-heading-row">
+        <span class="iter-heading">Iterations</span>
+      </div>
+      <div class="iterations-flow">${flowHtml}</div>
+    </div>`;
+}
+
+// 8. Final Design Mockups
+function renderModules(cs) {
+  if (!cs.modules || !cs.modules.length) return;
+  show('modulesSectionLabel');
+  show('modulesWrap');
+  document.getElementById('modulesWrap').innerHTML = cs.modules.map(mod => {
+    const screensHtml = mod.screens && mod.screens.length
+      ? mod.screens.map(s => `
+          <div class="module-screen-item">
+            <img src="${escapeHtml(s.src)}" alt="${escapeHtml(s.caption || mod.name)}" loading="lazy">
+            <div class="module-screen-cap">${escapeHtml(s.caption || '')}</div>
+          </div>`).join('') : '';
+    return `
+      <div class="module-section">
+        <div class="module-header">
+          <div class="cs-block-label">${escapeHtml(mod.name)}</div>
+          <div class="module-desc">${escapeHtml(mod.description || '')}</div>
+        </div>
+        <div class="module-screens">${screensHtml}</div>
+      </div>`;
+  }).join('');
+}
+
+// 9. Design System
+function renderDesignSystem(cs) {
+  const ds = cs.designSystem;
+  if (!ds) return;
+  show('dsSectionLabel');
+  show('dsWrap');
+  let html = '<div style="padding:48px 0;">';
+  if (ds.colors && ds.colors.length) {
+    html += `<div class="cs-block-label" style="margin-bottom:16px;">Color Palette</div>
+      <div class="ds-colors">${ds.colors.map(c => `
+        <div class="ds-color-chip">
+          <div class="ds-swatch" style="background:${escapeHtml(c.hex)}"></div>
+          <div>
+            <div class="ds-color-name">${escapeHtml(c.name)}</div>
+            <div class="ds-color-hex">${escapeHtml(c.hex)}</div>
+            ${c.role ? `<div class="ds-color-role">${escapeHtml(c.role)}</div>` : ''}
+          </div>
+        </div>`).join('')}</div>`;
+  }
+  if (ds.typography) {
+    html += `<div class="cs-block-label" style="margin-bottom:16px;margin-top:40px;">Typography</div>
+      <div class="ds-type-row">${Object.entries(ds.typography).map(([key, val]) => `
+        <div class="ds-type-item">
+          <div class="ds-type-label">${escapeHtml(key)}</div>
+          <div class="ds-type-specimen">Aa</div>
+          <div class="ds-type-name">${escapeHtml(val)}</div>
+        </div>`).join('')}</div>`;
+  }
+  if (ds.componentsImage) {
+    html += `<div class="cs-block-label" style="margin-bottom:16px;margin-top:40px;">Component Library</div>
+      <img class="ds-components-img" src="${escapeHtml(ds.componentsImage)}" alt="Component library" loading="lazy">`;
+  }
+  if (ds.credit) {
+    html += `<div class="ds-credit">${escapeHtml(ds.credit)}</div>`;
+  }
+  html += '</div>';
+  document.getElementById('dsWrap').innerHTML = html;
+}
+
+// 11. User Testing
+function renderUserTesting(cs) {
+  const ut = cs.userTesting;
+  if (!ut) return;
+  show('testingSectionLabel');
+  show('testingWrap');
+  let html = '<div style="padding:48px 0;">';
+  if (ut.method) html += `<div class="testing-method">${escapeHtml(ut.method)}</div>`;
+  if (ut.results && ut.results.length) {
+    html += `<div class="cs-block-label" style="margin-bottom:16px;">Results &amp; Outcomes</div>
+      <div class="testing-results">${ut.results.map(r => `
+        <div class="testing-metric">
+          <div class="testing-metric-label">${escapeHtml(r.metric)}</div>
+          <div class="testing-before-after">
+            <div class="testing-val">
+              <div class="testing-val-num before">${escapeHtml(r.before)}</div>
+              <div class="testing-val-tag">Before</div>
+            </div>
+            <div class="testing-arrow">→</div>
+            <div class="testing-val">
+              <div class="testing-val-num after">${escapeHtml(r.after)}</div>
+              <div class="testing-val-tag">After</div>
+            </div>
+          </div>
+        </div>`).join('')}</div>`;
+  }
+  if (ut.changes && ut.changes.length) {
+    html += `<div class="testing-changes-title" style="margin-top:32px;">Design Changes Made Based on Testing</div>
+      <div>${ut.changes.map(c => `<div class="testing-change-item">${escapeHtml(c)}</div>`).join('')}</div>`;
+  }
+  html += '</div>';
+  document.getElementById('testingWrap').innerHTML = html;
+}
+
+// 12. Conclusion
+function renderConclusion(cs) {
+  const con = cs.conclusion;
+  if (!con) return;
+  show('conclusionSectionLabel');
+  show('conclusionWrap');
+  document.getElementById('conclusionWrap').innerHTML = `
+    <div style="padding:48px 0;">
+      <div class="conclusion-grid">
+        <div class="conclusion-card">
+          <div class="conclusion-tag">Challenges</div>
+          <h3>Constraints &amp; Hurdles</h3>
+          <p>${escapeHtml(con.challenges || '—')}</p>
+        </div>
+        <div class="conclusion-card">
+          <div class="conclusion-tag">Outcomes</div>
+          <h3>What Was Achieved</h3>
+          <p>${escapeHtml(con.outcomes || '—')}</p>
+        </div>
+        <div class="conclusion-card">
+          <div class="conclusion-tag">Learnings</div>
+          <h3>What I'd Do Differently</h3>
+          <p>${escapeHtml(con.learnings || '—')}</p>
+        </div>
+      </div>
+    </div>`;
+}
+
+// 13. Future Scope
+function renderFutureScope(cs) {
+  if (!cs.futureScope && !cs.feedbackInvite) return;
+  show('futureSectionLabel');
+  show('futureWrap');
+  let html = '<div style="padding:48px 0;">';
+  if (cs.futureScope && cs.futureScope.length) {
+    html += `<div class="cs-block-label" style="margin-bottom:16px;">Scope of Improvements</div>
+      <ul class="future-list">${cs.futureScope.map((item, i) => `
+        <li>
+          <span class="future-num">${(i+1).toString().padStart(2,'0')}</span>
+          <span>${escapeHtml(item)}</span>
+        </li>`).join('')}</ul>`;
+  }
+  if (cs.feedbackInvite) {
+    html += `
+      <div class="feedback-box">
+        <p>${escapeHtml(cs.feedbackInvite)}</p>
+        <a class="fl-btn primary" href="mailto:adityaverma0424@gmail.com">Get in touch ↗</a>
+      </div>`;
+  }
+  html += '</div>';
+  document.getElementById('futureWrap').innerHTML = html;
+}
+
+
+// ── Visibility Manager ─────────────────────────────────────────────
+const ADMIN_SECTIONS = [
+  { key: 'cover',      ids: ['coverWrap'] },
+  { key: 'context',    ids: ['contextSectionLabel','contextWrap'] },
+  { key: 'solution',   ids: ['solutionSectionLabel','solutionWrap'] },
+  { key: 'details',    ids: ['detailsInfoSectionLabel','detailsInfoWrap'] },
+  { key: 'overview',   ids: ['notesSectionLabel','notes'] },
+  { key: 'research',   ids: ['researchSectionLabel','researchWrap'] },
+  { key: 'ideation',   ids: ['ideationSectionLabel','ideationWrap'] },
+  { key: 'wireframes', ids: ['wireframesSectionLabel','wireframesWrap'] },
+  { key: 'iterations', ids: ['iterationsSectionLabel','iterationsWrap'] },
+  { key: 'mockups',    ids: ['modulesSectionLabel','modulesWrap'] },
+  { key: 'designsys',  ids: ['dsSectionLabel','dsWrap'] },
+  { key: 'prototype',  ids: ['protoWrap'] },
+  { key: 'testing',    ids: ['testingSectionLabel','testingWrap'] },
+  { key: 'conclusion', ids: ['conclusionSectionLabel','conclusionWrap'] },
+  { key: 'future',     ids: ['futureSectionLabel','futureWrap'] },
+];
+
+function applyVisibility(cs) {
+  const v = cs.visibility || {};
+  ADMIN_SECTIONS.forEach(sec => {
+    const on = v[sec.key] !== false; // default ON
+    sec.ids.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && el.style.display !== 'none') {
+        el.style.visibility = on ? '' : 'hidden';
+        el.style.height = on ? '' : '0';
+        el.style.overflow = on ? '' : 'hidden';
+        el.style.padding = on ? '' : '0';
+        el.style.margin = on ? '' : '0';
+        el.style.borderTop = on ? '' : 'none';
+      }
+    });
+  });
+}
+
 
 // ── Main Render ─────────────────────────────────────────────
 async function renderCaseStudy() {
@@ -226,7 +633,14 @@ async function renderCaseStudy() {
     if (cs.tools && cs.tools.length) metaHtml += `<div class="hero-meta-item"><div class="hero-meta-label">Tools</div><div class="hero-meta-value">${escapeHtml(cs.tools.join(', '))}</div></div>`;
     metaWrap.innerHTML = metaHtml;
 
-    // ── 3-Notes Section (for Quick cases, but can fallback for others) ──
+    // ── Render new sections: after hero meta ──
+    renderCover(cs);
+    renderContextProblem(cs);
+    renderSolution(cs);
+    renderProjectDetails(cs);
+
+    // ── 3-Notes Section ── (skip for detailed if new 13-section fields exist)
+    const hasNewSections = cs.context || cs.solutionScreens || cs.researchMethods;
     if (cs.notes && cs.notes.length) {
       show('notesSectionLabel');
       show('notes');
@@ -248,8 +662,8 @@ async function renderCaseStudy() {
         <div class="note-card"><div class="note-card-border-accent"></div><div class="note-card-tag">My Role</div><h3>What I Did</h3><p>${escapeHtml(cs.myRole || cs.process || '—')}</p></div>
         <div class="note-card"><div class="note-card-border-accent"></div><div class="note-card-tag">Thinking</div><h3>The Approach</h3><p>${escapeHtml(cs.thinking || cs.outcome || '—')}</p></div>
       `;
-    } else if (cs.type === 'detailed') {
-      // Detailed case study — same 3-note structure but uses detXxx fields
+    } else if (cs.type === 'detailed' && !hasNewSections) {
+      // Detailed case study without new fields — show legacy notes
       show('notesSectionLabel');
       show('notes');
       const detBrief    = cs.detBrief    || cs.brief    || cs.problem  || '—';
@@ -263,6 +677,14 @@ async function renderCaseStudy() {
         ${detOutcome ? `<div class="note-card"><div class="note-card-border-accent"></div><div class="note-card-tag">Outcome</div><h3>Result &amp; Impact</h3><p>${escapeHtml(detOutcome)}</p></div>` : ''}
       `;
     }
+
+    // ── Render new research/design sections: after notes ──
+    renderResearch(cs);
+    renderIdeation(cs);
+    renderWireframes(cs);
+    renderIterations(cs);
+    renderModules(cs);
+    renderDesignSystem(cs);
 
     // ── Details Section (Legacy text & Scratchpad blocks) ──
     let hasBlocks = false;
@@ -294,7 +716,10 @@ async function renderCaseStudy() {
     }
 
     // ── Gallery ──
-    const assets = cs.mediaAssets || (cs.type === 'detailed' ? cs.detScreens : null) || cs.screens || [];
+    const assets = (cs.mediaAssets && cs.mediaAssets.length ? cs.mediaAssets : null)
+      || (cs.type === 'detailed' ? cs.detScreens : null)
+      || cs.screens
+      || [];
     if (assets.length) {
       show('gallerySectionLabel');
       show('galleryWrap');
@@ -355,6 +780,11 @@ async function renderCaseStudy() {
     flHtml += `<a class="fl-btn primary" href="../index.html#work">All Projects ↗</a>`;
     fl.innerHTML = flHtml;
 
+    // ── Render post-prototype sections ──
+    renderUserTesting(cs);
+    renderConclusion(cs);
+    renderFutureScope(cs);
+
     // ── Prev / Next Navigation ──
     if (cases.length > 1) {
       show('projectNav');
@@ -370,6 +800,7 @@ async function renderCaseStudy() {
       `;
     }
 
+    applyVisibility(cs);
     initScrollReveal();
 
   } catch (e) {

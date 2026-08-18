@@ -118,6 +118,26 @@
       margin-bottom: 64px;
       opacity: 0; animation: fadeUp 0.8s var(--ease) 0.28s forwards;
     }
+    /* ── SECTION EYEBROW ──────────────────────────────────────────── */
+    .section-eyebrow {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--accent);
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      padding: 72px 40px 20px;
+      border-top: 1px solid var(--border);
+      margin-top: 16px;
+    }
+    /* ── PAGE CONTENT GLOBAL ────────────────────────────────────── */
+    #coverWrap, #contextWrap, #solutionWrap, #detailsInfoWrap,
+    #researchWrap, #ideationWrap, #wireframesWrap, #iterationsWrap,
+    #modulesWrap, #dsWrap, #testingWrap, #conclusionWrap, #futureWrap,
+    #csBlocks, #notes {
+      padding-left: 40px;
+      padding-right: 40px;
+    }
+    /* ── HERO REFINED ────────────────────────────────────────────── */
     .hero-meta {
       display: flex; gap: 60px; flex-wrap: wrap;
       opacity: 0; animation: fadeUp 0.8s var(--ease) 0.35s forwards;
@@ -162,11 +182,9 @@
       text-transform: uppercase; margin-bottom: 12px;
     }
     /* ── THREE NOTES ──────────────────────────────────────── */
-    #notes {
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-    }
+    #notes { display: flex; flex-direction: column; gap: 0; }
+    /* ── CONTEXT & PROBLEM (stacked) ──────────────────────── */
+    .ctx-grid { display: block; }
     .note-card {
       padding: 32px 0;
       border-bottom: 1px solid var(--border);
@@ -352,6 +370,334 @@
     .fl-btn.primary:hover { background: #a07bff; border-color: #a07bff; }
     .fl-spacer { flex: 1; }
 
+
+    /* ── COVER IMAGE ────────────────────────────────────────────── */
+    .cover-img-wrap {
+      margin: 40px 0 0 0;
+      border: 1px solid var(--border-hi);
+      border-radius: 10px;
+      overflow: hidden;
+      background: var(--panel);
+    }
+    .cover-img-wrap img {
+      width: 100%; height: 460px;
+      object-fit: cover; display: block;
+      filter: brightness(0.82);
+      transition: filter 0.4s;
+    }
+    .cover-img-wrap img:hover { filter: brightness(0.92); }
+
+    /* ── CONTEXT & PROBLEM ──────────────────────────────────────── */
+    .ctx-grid {
+      display: block;
+      padding: 32px 0;
+    }
+    .ctx-body { font-size: 16px; color: var(--text-2); line-height: 1.85; }
+    .problem-statement {
+      font-family: var(--display); font-size: clamp(24px, 3vw, 40px);
+      font-weight: 800; color: var(--text); line-height: 1.2;
+      letter-spacing: -0.02em;
+      border-left: 4px solid var(--accent);
+      padding-left: 24px; margin-top: 16px;
+    }
+
+    /* ── SOLUTION MOSAIC ───────────────────────────────────────── */
+    .solution-strip { padding: 0; background: none; border: none; border-radius: 0; }
+    .solution-strip-intro { font-size: 14px; color: var(--text-2); margin: 8px 0 20px 0; }
+    .solution-mosaic {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(3, 155px);
+      grid-template-areas:
+        "a b c d"
+        "a e e d"
+        "f f g h";
+      gap: 8px;
+      margin-bottom: 0;
+    }
+    .solution-mosaic-cell { background: var(--panel); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .solution-mosaic-cell img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .solution-mosaic-cell:nth-child(1) { grid-area: a; }
+    .solution-mosaic-cell:nth-child(2) { grid-area: b; }
+    .solution-mosaic-cell:nth-child(3) { grid-area: c; }
+    .solution-mosaic-cell:nth-child(4) { grid-area: d; }
+    .solution-mosaic-cell:nth-child(5) { grid-area: e; }
+    .solution-mosaic-cell:nth-child(6) { grid-area: f; }
+    .solution-mosaic-cell:nth-child(7) { grid-area: g; }
+    .solution-mosaic-cell:nth-child(8) { grid-area: h; }
+    /* removed: solution-full-banner */
+
+    .solution-screens { display: none; }
+    .solution-screen-item { display: none; }
+
+    /* ── PROJECT STORY GRID (2x2) ──────────────────────────────── */
+    .story-heading {
+      font-family: var(--display); font-size: clamp(22px, 2.4vw, 34px);
+      font-weight: 800; color: var(--text); letter-spacing: -0.02em;
+      margin-bottom: 28px;
+    }
+    .story-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .story-cell {
+      background: var(--panel);
+      padding: 28px 32px;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .story-cell:nth-child(even) { border-right: none; }
+    .story-cell:nth-last-child(-n+2) { border-bottom: none; }
+    .story-cell-label {
+      font-family: var(--mono); font-size: 10.5px;
+      color: var(--text-3); letter-spacing: 0.2em;
+      text-transform: uppercase; margin-bottom: 12px;
+    }
+    .story-cell-value {
+      font-family: var(--ui); font-size: 15px;
+      font-weight: 500; color: var(--text); line-height: 1.5;
+    }
+    .story-cell-value.muted { color: var(--text-2); font-weight: 400; font-size: 14px; }
+
+
+    .analysis-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+    .analysis-cell {
+      background: var(--panel);
+      padding: 24px 28px;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .analysis-cell:nth-child(even) { border-right: none; }
+    .analysis-cell:nth-last-child(-n+2) { border-bottom: none; }
+    .analysis-cell-label {
+      font-family: var(--ui); font-size: 14px; font-weight: 600;
+      color: var(--text); margin-bottom: 10px;
+    }
+    .analysis-cell-text {
+      font-size: 13px; color: var(--text-2); line-height: 1.7;
+    }
+    /* hide old research layout */
+    .research-methods { display: none; }
+    .personas-grid { display: none; }
+    .evidence-strip { display: none; }
+    .persona-card { display: none; }
+    .method-card { display: none; }
+    /* ── IDEATION (new layout) ──────────────────────────────── */
+    .section-big-heading {
+      font-family: var(--display); font-size: clamp(28px, 3.5vw, 48px);
+      font-weight: 800; color: var(--text); letter-spacing: -0.025em;
+      margin-bottom: 24px;
+    }
+    .ideation-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .ideation-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 22px 24px;
+    }
+    .ideation-card-label {
+      font-family: var(--mono); font-size: 11px;
+      color: var(--text-3); letter-spacing: 0.18em;
+      text-transform: uppercase; margin-bottom: 14px;
+    }
+    .ideation-card-text { font-size: 14px; color: var(--text-2); line-height: 1.75; }
+    .section-img-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .strip-img-cell {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      aspect-ratio: 4/3;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .strip-img-cell img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .section-img-caption { font-family: var(--mono); font-size: 11px; color: var(--text-3); padding: 4px 0 8px; }
+    /* suppress old ideation classes */
+    .ideation-approach { display: none; }
+    .solution-options { display: none; }
+    .solution-option { display: none; }
+
+    /* ── WIREFRAME BADGES ───────────────────────────────────────── */
+    .wf-badge {
+      position: absolute; top: 12px; left: 12px; z-index: 2;
+      font-family: var(--mono); font-size: 9.5px;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      padding: 3px 9px; border-radius: 4px;
+    }
+    .wf-badge.lo-fi { background: rgba(80,78,100,0.9); color: var(--text-2); }
+    .wf-badge.hi-fi { background: rgba(140,111,255,0.85); color: #fff; }
+
+    /* ── ITERATIONS ─────────────────────────────────────────── */
+    .iter-heading-row {
+      display: flex; align-items: baseline; gap: 14px; margin-bottom: 32px;
+    }
+    .iter-heading {
+      font-family: var(--display); font-size: clamp(28px, 3.5vw, 48px);
+      font-weight: 800; color: var(--text); letter-spacing: -0.025em;
+    }
+    .iter-subtitle {
+      font-family: var(--body); font-size: 14px; color: var(--text-3); font-style: italic;
+    }
+    .iterations-flow {
+      display: flex; align-items: flex-start; gap: 0;
+      overflow-x: auto; padding-bottom: 4px;
+    }
+    .iteration-item {
+      flex: 0 0 220px; position: relative;
+    }
+    .iteration-emoji {
+      position: absolute; top: -18px; right: 4px;
+      font-size: 26px; line-height: 1; z-index: 2;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.25));
+    }
+    .iteration-screen {
+      width: 100%;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      aspect-ratio: 9/16;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .iteration-screen img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+    }
+    .iteration-arrow {
+      flex: 0 0 44px; display: flex; align-items: center;
+      justify-content: center; padding-top: 40px;
+      font-size: 22px; color: var(--text-2); flex-shrink: 0;
+    }
+    .iter-caption {
+      font-family: var(--mono); font-size: 11px;
+      color: var(--text-3); margin-top: 14px; padding: 2px 0;
+    }
+
+    /* ── MODULES (FINAL DESIGNS) ────────────────────────────────── */
+    .module-section {
+      border-bottom: 1px solid var(--border);
+      padding: 48px 0;
+    }
+    .module-section:last-child { border-bottom: none; }
+    .module-header { margin-bottom: 28px; }
+    .module-title { font-family: var(--ui); font-size: 20px; font-weight: 600; color: var(--text); letter-spacing: -0.01em; margin-bottom: 8px; }
+    .module-desc { font-size: 15px; color: var(--text-2); line-height: 1.7; max-width: 600px; }
+    .module-screens { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 4px; }
+    .module-screen-item { flex: 0 0 200px; text-align: center; }
+    .module-screen-item img {
+      width: 100%; border-radius: 14px;
+      border: 1px solid var(--border); display: block;
+      margin-bottom: 10px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+    }
+    .module-screen-cap { font-family: var(--mono); font-size: 11px; color: var(--text-3); }
+
+    /* ── DESIGN SYSTEM ──────────────────────────────────────────── */
+    .ds-colors { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 40px; }
+    .ds-color-chip {
+      display: flex; align-items: center; gap: 14px;
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 8px; padding: 14px 18px;
+      min-width: 170px;
+    }
+    .ds-swatch {
+      width: 38px; height: 38px; border-radius: 7px; flex-shrink: 0;
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    .ds-color-name { font-family: var(--ui); font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+    .ds-color-hex { font-family: var(--mono); font-size: 11px; color: var(--text-3); }
+    .ds-color-role { font-size: 11px; color: var(--text-2); margin-top: 2px; }
+    .ds-type-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 16px; margin-bottom: 40px;
+    }
+    .ds-type-item {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 8px; padding: 20px;
+    }
+    .ds-type-label { font-family: var(--mono); font-size: 10px; color: var(--text-3); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 8px; }
+    .ds-type-specimen { font-size: 28px; color: var(--text); line-height: 1; margin-bottom: 8px; }
+    .ds-type-name { font-size: 12px; color: var(--text-2); }
+    .ds-components-img {
+      width: 100%; border-radius: 10px;
+      border: 1px solid var(--border); display: block; margin-bottom: 12px;
+    }
+    .ds-credit { font-family: var(--mono); font-size: 11px; color: var(--text-3); font-style: italic; }
+
+    /* ── USER TESTING ───────────────────────────────────────────── */
+    .testing-method { font-family: var(--mono); font-size: 12px; color: var(--accent); letter-spacing: 0.08em; margin-bottom: 28px; }
+    .testing-results { display: flex; gap: 20px; margin-bottom: 44px; flex-wrap: wrap; }
+    .testing-metric {
+      flex: 1; min-width: 190px;
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 10px; padding: 24px;
+    }
+    .testing-metric-label { font-family: var(--mono); font-size: 10px; color: var(--text-3); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 16px; }
+    .testing-before-after { display: flex; align-items: center; gap: 14px; }
+    .testing-val { text-align: center; }
+    .testing-val-num { font-family: var(--display); font-size: 26px; font-weight: 800; line-height: 1; }
+    .testing-val-num.before { color: var(--text-3); }
+    .testing-val-num.after { color: var(--success); }
+    .testing-val-tag { font-family: var(--mono); font-size: 9px; color: var(--text-3); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 5px; }
+    .testing-arrow { color: var(--accent); font-size: 18px; flex-shrink: 0; }
+    .testing-changes-title { font-family: var(--mono); font-size: 10px; color: var(--text-3); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 14px; }
+    .testing-change-item {
+      display: flex; gap: 12px; padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px; color: var(--text-2); line-height: 1.65;
+    }
+    .testing-change-item::before { content: '→'; color: var(--success); flex-shrink: 0; margin-top: 2px; }
+
+    /* ── CONCLUSION ─────────────────────────────────────────────── */
+    .conclusion-grid {
+      display: grid; grid-template-columns: 1fr 1fr 1fr;
+      border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+    }
+    .conclusion-card {
+      padding: 32px;
+      border-right: 1px solid var(--border);
+    }
+    .conclusion-card:last-child { border-right: none; }
+    .conclusion-tag { font-family: var(--mono); font-size: 10px; color: var(--accent); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 12px; }
+    .conclusion-card h3 { font-family: var(--ui); font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 12px; }
+    .conclusion-card p { font-size: 14px; color: var(--text-2); line-height: 1.75; }
+
+    /* ── FUTURE SCOPE ───────────────────────────────────────────── */
+    .future-list { list-style: none; margin-bottom: 44px; }
+    .future-list li {
+      display: flex; gap: 20px; align-items: flex-start;
+      padding: 18px 0; border-bottom: 1px solid var(--border);
+      font-size: 15px; color: var(--text-2); line-height: 1.6;
+    }
+    .future-num { font-family: var(--mono); font-size: 12px; color: var(--text-3); flex-shrink: 0; width: 24px; margin-top: 3px; }
+    .feedback-box {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 12px; padding: 48px; text-align: center;
+    }
+    .feedback-box p { font-size: 18px; color: var(--text-2); line-height: 1.65; margin-bottom: 28px; max-width: 560px; margin-left: auto; margin-right: auto; }
+
     /* ── SCROLL REVEAL ────────────────────────────────────── */
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(20px); }
@@ -380,6 +726,85 @@
       .fl-btn { font-size: 13px; padding: 9px 16px; }
       .hero-meta { gap: 28px; }
     }
+    /* ── ADMIN PANEL ───────────────────────────────────────────── */
+    #adminOverlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.4);
+      z-index: 900; display: none; backdrop-filter: blur(2px);
+    }
+    #adminOverlay.open { display: block; }
+    #adminPanel {
+      position: fixed; top: 0; right: -320px; width: 300px; height: 100vh;
+      background: var(--bg); border-left: 1px solid var(--border-hi);
+      z-index: 901; display: flex; flex-direction: column;
+      transition: right 0.3s cubic-bezier(0.4,0,0.2,1);
+      overflow: hidden;
+    }
+    #adminPanel.open { right: 0; }
+    .admin-panel-head {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .admin-panel-head-title {
+      font-family: var(--mono); font-size: 11px;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--text-2);
+    }
+    .admin-close-btn {
+      background: none; border: none; color: var(--text-3);
+      font-size: 16px; cursor: pointer; padding: 2px 6px;
+      border-radius: 4px; transition: color 0.15s;
+    }
+    .admin-close-btn:hover { color: var(--text); }
+    .admin-section-list {
+      flex: 1; overflow-y: auto; padding: 12px 0;
+    }
+    .admin-section-list::-webkit-scrollbar { width: 4px; }
+    .admin-section-list::-webkit-scrollbar-thumb { background: var(--border-hi); border-radius: 2px; }
+    .admin-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .admin-row:last-child { border-bottom: none; }
+    .admin-row-label {
+      font-family: var(--ui); font-size: 13px; color: var(--text);
+    }
+    .admin-row-num {
+      font-family: var(--mono); font-size: 10px; color: var(--text-3);
+      margin-right: 6px;
+    }
+    /* iOS-style toggle */
+    .admin-toggle { position: relative; display: inline-block; width: 38px; height: 22px; flex-shrink: 0; }
+    .admin-toggle input { opacity: 0; width: 0; height: 0; }
+    .admin-toggle-slider {
+      position: absolute; inset: 0; border-radius: 22px;
+      background: var(--border-hi);
+      transition: background 0.2s;
+      cursor: pointer;
+    }
+    .admin-toggle-slider::before {
+      content: ''; position: absolute;
+      width: 16px; height: 16px; border-radius: 50%;
+      background: var(--text-3); left: 3px; top: 3px;
+      transition: transform 0.2s, background 0.2s;
+    }
+    .admin-toggle input:checked + .admin-toggle-slider { background: var(--accent); }
+    .admin-toggle input:checked + .admin-toggle-slider::before {
+      transform: translateX(16px); background: #fff;
+    }
+    #adminBtn {
+      background: none; border: 1px solid var(--border);
+      border-radius: 6px; color: var(--text-2);
+      font-family: var(--mono); font-size: 11px;
+      padding: 4px 12px; cursor: pointer;
+      display: flex; align-items: center; gap: 6px;
+      transition: all 0.15s; letter-spacing: 0.05em;
+    }
+    #adminBtn:hover { border-color: var(--accent); color: var(--accent); }
+    .tb-spacer { flex: 1; }
+
   </style>
 </head>
 <body>
@@ -394,7 +819,18 @@
   </div>
   <span class="tb-tags" id="tbTags"></span>
   <div class="tb-spacer"></div>
-  <button id="closeBtn" onclick="window.location.href='index.html#work'">Close ✕</button>
+  <button id="adminBtn" onclick="openAdmin()">⚙️ Sections</button>
+  <button id="closeBtn" onclick="window.location.href='../index.html#work'">Close ✕</button>
+</div>
+
+<!-- ── ADMIN PANEL ── -->
+<div id="adminOverlay" onclick="closeAdmin()"></div>
+<div id="adminPanel">
+  <div class="admin-panel-head">
+    <span class="admin-panel-head-title">Section Visibility</span>
+    <button class="admin-close-btn" onclick="closeAdmin()">✕</button>
+  </div>
+  <div class="admin-section-list" id="adminSectionList"></div>
 </div>
 
 <!-- ============ CUSTOM CURSOR ============ -->
@@ -415,11 +851,51 @@
     <div class="hero-meta" id="heroMeta"></div>
   </section>
 
-  <!-- ── THE BRIEF / THINKING / ROLE ── -->
+  <!-- ── 1. COVER IMAGE ── -->
+  <div id="coverWrap" style="display:none" class="reveal"></div>
+
+  <!-- ── 2. CONTEXT & PROBLEM ── -->
+  <div class="section-eyebrow reveal" id="contextSectionLabel" style="display:none">02 · Context &amp; Problem</div>
+  <div id="contextWrap" class="reveal" style="display:none"></div>
+
+  <!-- ── 3. THE SOLUTION — SNEAK PEEK ── -->
+  <div class="section-eyebrow reveal" id="solutionSectionLabel" style="display:none">03 · The Solution</div>
+  <div id="solutionWrap" class="reveal" style="display:none"></div>
+
+  <!-- ── 4. PROJECT DETAILS ── -->
+  <div class="section-eyebrow reveal" id="detailsInfoSectionLabel" style="display:none">04 · Project Details</div>
+  <div id="detailsInfoWrap" class="reveal" style="display:none"></div>
+
+  <!-- ── OVERVIEW NOTES (Brief / Role / Thinking / Outcome) ── -->
   <div class="section-eyebrow reveal" id="notesSectionLabel" style="display:none">Overview</div>
   <div id="notes" class="reveal" style="display:none">
     <!-- populated by JS -->
   </div>
+
+  <!-- ── 5. RESEARCH PHASE ── -->
+  <div class="section-eyebrow reveal" id="researchSectionLabel" style="display:none">05 · Research</div>
+  <div id="researchWrap" class="reveal" style="display:none"></div>
+
+  <!-- ── 6. IDEATION ── -->
+  <div class="section-eyebrow reveal" id="ideationSectionLabel" style="display:none">06 · Ideation &amp; Brainstorming</div>
+  <div id="ideationWrap" class="reveal" style="display:none"></div>
+
+  <!-- ── 7. WIREFRAMES ── -->
+  <div class="section-eyebrow reveal" id="wireframesSectionLabel" style="display:none">07 · Sketches &amp; Wireframes</div>
+  <div id="wireframesWrap" class="reveal" style="display:none">
+    <div class="gallery-grid" id="wireframesGrid"></div>
+  </div>
+  <!-- ── 7b. ITERATIONS ── -->
+  <div class="section-eyebrow reveal" id="iterationsSectionLabel" style="display:none">07b · Iterations</div>
+  <div id="iterationsWrap" class="reveal" style="display:none"></div>
+
+  <!-- ── 8. FINAL DESIGN MOCKUPS ── -->
+  <div class="section-eyebrow reveal" id="modulesSectionLabel" style="display:none">08 · Final Design Mockups</div>
+  <div id="modulesWrap" class="reveal" style="display:none"></div>
+
+  <!-- ── 9. DESIGN SYSTEM ── -->
+  <div class="section-eyebrow reveal" id="dsSectionLabel" style="display:none">09 · Design System &amp; Style Guide</div>
+  <div id="dsWrap" class="reveal" style="display:none"></div>
 
   <!-- ── LEGACY SCRATCHPAD / LONG BLOCKS ── -->
   <div class="section-eyebrow reveal" id="blocksSectionLabel" style="display:none">Details</div>
@@ -433,11 +909,23 @@
     <div class="gallery-grid" id="galleryGrid"></div>
   </div>
 
-  <!-- ── PROTOTYPE ── -->
-  <div class="section-eyebrow reveal" id="protoSectionLabel" style="display:none">Prototype</div>
+  <!-- ── 10. PROTOTYPE ── -->
+  <div class="section-eyebrow reveal" id="protoSectionLabel" style="display:none">10 · Prototype</div>
   <div id="protoWrap" class="reveal" style="display:none">
     <div class="proto-device" id="protoDevice"></div>
   </div>
+
+  <!-- ── 11. USER TESTING ── -->
+  <div class="section-eyebrow reveal" id="testingSectionLabel" style="display:none">11 · User Testing</div>
+  <div id="testingWrap" class="reveal" style="display:none"></div>
+
+  <!-- ── 12. CONCLUSION ── -->
+  <div class="section-eyebrow reveal" id="conclusionSectionLabel" style="display:none">12 · Conclusion &amp; Reflections</div>
+  <div id="conclusionWrap" class="reveal" style="display:none"></div>
+
+  <!-- ── 13. FUTURE SCOPE ── -->
+  <div class="section-eyebrow reveal" id="futureSectionLabel" style="display:none">13 · Future Scope &amp; Feedback</div>
+  <div id="futureWrap" class="reveal" style="display:none"></div>
 
   <!-- ── PREV / NEXT PROJECTS ── -->
   <div class="project-nav reveal" id="projectNav" style="display:none">

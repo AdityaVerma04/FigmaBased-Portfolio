@@ -110,37 +110,190 @@
         "Miro"
       ],
       "summary": "A ground-up UX audit and redesign of the Swiggy Instamart checkout flow — reducing friction from cart to confirmation by eliminating redundant steps and surfacing trust signals at the right moments.",
-      "detSubtitle": "10-Minute Grocery — Zero-Friction Checkout",
-      "detTagline": "Speed is the feature. Every tap that slows you down is a broken promise.",
-      "detDiscipline": "Product · UX · Consumer",
-      "detBrief": "Swiggy Instamart promises 10-minute delivery, but the checkout flow — riddled with address re-confirmation loops, buried coupons, and a multi-step payment wall — consistently undermined that promise. The goal was to redesign the end-to-end cart-to-confirmation journey so that it felt as fast as the delivery itself, without sacrificing clarity or trust.",
-      "detThinking": "I started with a heuristic audit of the existing flow, mapping every screen against Nielsen's 10 usability heuristics. Three anti-patterns surfaced immediately: forced re-entry of delivery slot even when the default was valid, coupon discovery buried three taps deep, and a payment confirmation page that offered no reassurance before charging. From there I ran 6 moderated usability sessions (3 frequent users, 3 occasional), coded the sessions for task failure and hesitation moments, and built an affinity map in Miro. The redesign centred on three principles — progressive disclosure, persistent context (showing delivery ETA at every step), and a single-screen payment summary that collapsed address, slot, and payment into one scannable view.",
-      "detMyRole": "Solo project — conducted all research (heuristic audit + usability sessions), synthesised findings, defined the redesign scope, created all wireframes (lo-fi → hi-fi) in Figma, built an interactive prototype and ran a second round of unmoderated testing via Maze to validate the redesigned flow against the original.",
-      "detOutcome": "Task completion on the redesigned prototype was 94% vs 71% on the original flow (n=18, Maze). Time-to-payment dropped by an average of 38 seconds. All 6 usability participants rated the redesigned confirmation screen as more trustworthy. The project is currently being used as a portfolio piece and is under review for a potential internship engagement.",
-      "detPrototypeUrl": "https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Fproto%2Fexample",
-      "detDesignsUrl": "",
-      "detScreens": [
+      "context": "Swiggy Instamart entered the 10-minute grocery delivery space with an aggressive promise — but the checkout experience hadn't kept up. Users were abandoning carts at the payment step, not because they didn't want to buy, but because the flow made them work too hard. The tension between speed-as-brand and slowness-as-UX was undercutting trust at the exact moment the product needed to deliver on its core promise.",
+      "problemStatement": "How do we make the checkout feel as fast as the delivery — from cart to confirmation in under 4 taps?",
+      "solutionScreens": [
+        { "src": "https://picsum.photos/seed/swig-sol1/400/700", "caption": "Collapsed cart view" },
+        { "src": "https://picsum.photos/seed/swig-sol2/600/400", "caption": "Persistent ETA bar" },
+        { "src": "https://picsum.photos/seed/swig-sol3/600/400", "caption": "Inline coupon discovery" },
+        { "src": "https://picsum.photos/seed/swig-sol4/400/700", "caption": "One-screen payment summary" },
+        { "src": "https://picsum.photos/seed/swig-sol5/800/400", "caption": "Expanded coupon panel" },
+        { "src": "https://picsum.photos/seed/swig-sol6/800/400", "caption": "Address + slot confirmation" },
+        { "src": "https://picsum.photos/seed/swig-sol7/600/400", "caption": "Order confirmed screen" },
+        { "src": "https://picsum.photos/seed/swig-sol8/600/400", "caption": "Empty cart state" }
+      ],
+      "team": "Solo — end-to-end",
+      "timeline": "6 weeks · Nov – Dec 2025",
+      "goals": [
+        "Reduce checkout steps from 7 to 4",
+        "Surface coupons before the payment screen",
+        "Show persistent delivery ETA at every checkout step",
+        "Validate redesign via unmoderated usability testing (Maze)"
+      ],
+      "researchMethods": [
         {
-          "src": "https://picsum.photos/seed/swig1/1200/800",
-          "caption": "Redesigned Cart Screen",
-          "wide": false
+          "name": "Heuristic Audit",
+          "description": "Mapped every screen of the existing checkout flow against Nielsen's 10 usability heuristics. Identified 3 major anti-patterns including forced address re-entry and buried coupon discovery."
         },
         {
-          "src": "https://picsum.photos/seed/swig2/1200/800",
-          "caption": "One-Screen Payment Summary",
-          "wide": false
+          "name": "Moderated Usability Sessions",
+          "description": "6 sessions (3 frequent users, 3 occasional buyers). Coded recordings for task failure and hesitation moments to identify the highest-friction points."
         },
         {
-          "src": "https://picsum.photos/seed/swig3/1200/500",
-          "caption": "Full User Flow — Lo-fi to Hi-fi",
-          "wide": true
+          "name": "Affinity Mapping",
+          "description": "Session findings synthesised in Miro into an affinity map revealing 3 core user frustrations: uncertainty, extra steps, and hidden value."
         },
         {
-          "src": "https://picsum.photos/seed/swig4/1200/800",
-          "caption": "Confirmation & Trust Signals",
-          "wide": false
+          "name": "Competitor Analysis",
+          "description": "Audited checkout flows of Blinkit, Zepto, and BigBasket to identify best-in-class patterns and industry benchmarks for quick-commerce checkout."
         }
       ],
+      "personas": [
+        {
+          "name": "Shreya, 27",
+          "type": "Frequent buyer · 4–5 orders/week",
+          "quote": "I just want it to be done. I know what I want — don't make me re-confirm my address every single time.",
+          "painPoints": [
+            "Forced address re-confirmation every order",
+            "Coupons hidden until the payment screen",
+            "Too many steps between cart and confirmation"
+          ]
+        },
+        {
+          "name": "Arjun, 34",
+          "type": "Occasional buyer · 1–2 orders/month",
+          "quote": "I'm never sure my order actually went through until I see the confirmation. The whole thing feels uncertain.",
+          "painPoints": [
+            "No reassurance during the checkout process",
+            "Payment page too cluttered — hard to verify order",
+            "Unclear order confirmation state"
+          ]
+        }
+      ],
+      "evidenceImages": [
+        {
+          "src": "https://picsum.photos/seed/swig-ev1/600/380",
+          "caption": "Miro affinity map — session synthesis"
+        },
+        {
+          "src": "https://picsum.photos/seed/swig-ev2/600/380",
+          "caption": "Heuristic audit spreadsheet"
+        },
+        {
+          "src": "https://picsum.photos/seed/swig-ev3/600/380",
+          "caption": "Competitor checkout flow comparison"
+        }
+      ],
+      "ideation": {
+        "approach": "After research synthesis, three design principles emerged: progressive disclosure (show only what's needed at each step), persistent context (delivery ETA visible at all times), and a collapsed payment summary that consolidates address, slot, and payment into one scannable view. I sketched 6 layout directions and narrowed to 2 viable options before committing to the final direction.",
+        "solutions": [
+          {
+            "title": "Option A — Single-scroll checkout",
+            "description": "Everything on one vertical scroll — cart, address, coupon, payment. Minimal taps but high cognitive load upfront. Testing showed users felt overwhelmed and skipped the coupon section entirely.",
+            "chosen": false
+          },
+          {
+            "title": "Option B — Progressive disclosure",
+            "description": "Three focused screens: Cart → Address + Slot → Payment Summary. Each screen handles one decision. Chosen for its lower cognitive load, better error recovery, and significantly higher coupon discovery rate in early testing.",
+            "chosen": true
+          }
+        ]
+      },
+      "wireframes": [
+        {
+          "src": "https://picsum.photos/seed/swig-wf1/600/900",
+          "type": "lo-fi",
+          "caption": "Cart screen — paper sketch"
+        },
+        {
+          "src": "https://picsum.photos/seed/swig-wf2/600/900",
+          "type": "lo-fi",
+          "caption": "Payment summary — paper sketch"
+        },
+        {
+          "src": "https://picsum.photos/seed/swig-wf3/600/900",
+          "type": "hi-fi",
+          "caption": "Cart screen — Figma wireframe v2"
+        },
+        {
+          "src": "https://picsum.photos/seed/swig-wf4/600/900",
+          "type": "hi-fi",
+          "caption": "Payment summary — Figma wireframe v2"
+        }
+      ],
+      "iterations": [
+        { "src": "https://picsum.photos/seed/swig-iter1/400/700", "label": "v1 — Initial lo-fi sketch" },
+        { "src": "https://picsum.photos/seed/swig-iter2/400/700", "label": "v2 — After first review" },
+        { "src": "https://picsum.photos/seed/swig-iter3/400/700", "label": "v3 — Final hi-fi" }
+      ],
+      "modules": [
+        {
+          "name": "Cart Screen",
+          "description": "Reorganised cart with a persistent ETA bar at the top, inline item editing, and coupon discovery moved above the fold — before the user even thinks about payment.",
+          "screens": [
+            { "src": "https://picsum.photos/seed/swig-m1a/380/660", "caption": "Default cart state" },
+            { "src": "https://picsum.photos/seed/swig-m1b/380/660", "caption": "With coupon applied" }
+          ]
+        },
+        {
+          "name": "Address & Delivery Slot",
+          "description": "Combined address confirmation and delivery slot selection into one screen. When the default slot is valid, it's pre-selected — the user can confirm in a single tap.",
+          "screens": [
+            { "src": "https://picsum.photos/seed/swig-m2a/380/660", "caption": "Address confirmation" },
+            { "src": "https://picsum.photos/seed/swig-m2b/380/660", "caption": "Slot selection expanded" }
+          ]
+        },
+        {
+          "name": "Payment Summary",
+          "description": "A single-screen payment view consolidating address, delivery slot, order total, and payment method. The full order is visible and verifiable before the card is charged.",
+          "screens": [
+            { "src": "https://picsum.photos/seed/swig-m3a/380/660", "caption": "Payment summary screen" },
+            { "src": "https://picsum.photos/seed/swig-m3b/380/660", "caption": "Order confirmed state" }
+          ]
+        }
+      ],
+      "designSystem": {
+        "colors": [
+          { "name": "Instamart Orange", "hex": "#FC8019", "role": "Primary CTA, key actions" },
+          { "name": "Dark Text", "hex": "#1C1C1C", "role": "Body text, headings" },
+          { "name": "Surface", "hex": "#F5F5F5", "role": "Page background" },
+          { "name": "Muted Text", "hex": "#686B78", "role": "Secondary labels" },
+          { "name": "Success Green", "hex": "#1BA672", "role": "Confirmation, success states" }
+        ],
+        "typography": {
+          "Heading": "Meto Sans · Bold · 20–28px",
+          "Body": "Meto Sans · Regular · 14–16px",
+          "Caption": "SF Mono · Regular · 11–12px"
+        },
+        "componentsImage": "https://picsum.photos/seed/swig-ds/1200/450",
+        "credit": "Built on top of Swiggy's existing design language and component library. Color tokens and typeface follow Swiggy's public brand guidelines."
+      },
+      "userTesting": {
+        "method": "Unmoderated usability testing via Maze · n = 18 participants",
+        "results": [
+          { "metric": "Task completion rate", "before": "71%", "after": "94%" },
+          { "metric": "Time to payment", "before": "2m 14s", "after": "1m 36s" },
+          { "metric": "Confirmation trust score", "before": "3.1 / 5", "after": "4.6 / 5" }
+        ],
+        "changes": [
+          "Added persistent delivery ETA bar — first-round participants expressed uncertainty about their delivery window mid-checkout",
+          "Moved coupon field above payment method — 4 of 6 first-round participants completely missed it at the bottom",
+          "Added item count badge to the confirmation header — 2 participants wanted to verify their cart before the order was finalised"
+        ]
+      },
+      "conclusion": {
+        "challenges": "Working without access to Swiggy's real analytics meant every assumption had to be validated independently. The n=18 sample size is too small for statistical significance — findings are directional, not definitive. A real production test would require much larger sample sizes and instrumented analytics.",
+        "outcomes": "The redesigned prototype met all 4 project goals. Task completion improved from 71% to 94%, time-to-payment dropped by 38 seconds, and trust ratings for the confirmation screen jumped from 3.1 to 4.6 out of 5.",
+        "learnings": "The coupon placement discovery was the biggest surprise — it wasn't just a convenience issue, it was a trust issue. Users felt Swiggy was 'hiding' savings from them. In future projects I'd frame coupon and discount discoverability as a trust signal from the start, not purely a UX convenience."
+      },
+      "futureScope": [
+        "Integrate loyalty rewards directly within the cart screen (not as a separate post-purchase flow)",
+        "Personalised delivery slot suggestions based on a user's past order timing patterns",
+        "Voice-assisted checkout as an accessibility and speed improvement",
+        "A/B test the progressive disclosure flow vs. single-scroll approach with real production traffic",
+        "Saved address shortcuts for frequently used delivery locations (home, office)"
+      ],
+      "feedbackInvite": "Have thoughts on the design decisions or research approach? I'd love a conversation — reach out via email or LinkedIn.",
       "liveUrl": "",
       "figmaUrl": "",
       "mediaAssets": [],

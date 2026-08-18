@@ -108,6 +108,19 @@
       border-radius: 50%; margin-left: 5px;
     }
 
+    /* ── Dynamic Builders ── */
+    .dynamic-builder { display: flex; flex-direction: column; gap: 12px; margin-top: 8px; }
+    .builder-item { background: rgba(255,255,255,0.02); border: 1px solid var(--panel-border); border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 10px; position: relative; }
+    .builder-item-header { display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-weight: 600; font-family: var(--mono); color: var(--text-faint); margin-bottom: 4px; text-transform: uppercase; }
+    .builder-remove-btn { background: none; border: none; color: #ff4c4c; font-size: 11px; cursor: pointer; opacity: 0.6; padding: 0; }
+    .builder-remove-btn:hover { opacity: 1; }
+    .builder-row { display: flex; gap: 10px; align-items: center; }
+    .builder-row > * { flex: 1; }
+    .builder-row > input[type="checkbox"] { flex: 0 0 auto; width: auto; }
+    .builder-add-btn { background: rgba(255,255,255,0.05); border: 1px dashed var(--panel-border); color: var(--text-secondary); padding: 8px; border-radius: 6px; font-size: 12px; cursor: pointer; text-align: center; transition: all 0.2s; margin-top: 4px; }
+    .builder-add-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(255,255,255,0.08); }
+    .builder-nested { border-left: 2px solid var(--panel-border); padding-left: 12px; margin-top: 6px; display: flex; flex-direction: column; gap: 8px; }
+
     /* ── Admin grid layout ── */
     .admin-grid {
       display: grid;
@@ -158,18 +171,19 @@
       color: var(--text-faint); text-transform: uppercase;
       letter-spacing: 0.06em; margin-bottom: 6px;
     }
-    .field input, .field textarea, .field select {
+    .field input, .field textarea, .field select,
+    .builder-item input[type="text"], .builder-item textarea, .builder-val, .dynamic-builder input[type="text"], .dynamic-builder textarea {
       width: 100%; background: var(--canvas-soft);
       border: 1px solid var(--panel-border); border-radius: 7px;
-      padding: 10px 13px; color: var(--text-primary);
-      font-family: var(--body); font-size: 14px;
-      transition: border-color 0.18s;
+      color: var(--text-main); font-family: var(--body);
+      font-size: 14px; padding: 10px 14px; outline: none; transition: all 0.2s;
     }
     .field input[readonly] { color: var(--text-faint); cursor: default; }
     .field textarea { min-height: 96px; resize: vertical; }
     .field input:focus,
     .field textarea:focus,
-    .field select:focus { outline: none; border-color: var(--accent); }
+    .field select:focus,
+    .builder-item input[type="text"]:focus, .builder-item textarea:focus, .builder-val:focus, .dynamic-builder input[type="text"]:focus, .dynamic-builder textarea:focus { outline: none; border-color: var(--accent); }
     .field select option { background: var(--canvas-soft); }
 
     .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -328,6 +342,25 @@
               <input type="text" id="f-cover" placeholder="assets/cover-myproject.svg">
             </div>
           </div>
+          
+          <div class="field" style="background:var(--canvas-soft); border:1px solid var(--panel-border); border-radius:8px; padding:16px; margin-bottom:16px;">
+            <label style="margin-bottom:12px; font-weight:600; font-size:12px; color:var(--text-primary);">SECTION VISIBILITY (ON/OFF)</label>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;" id="visibilityToggles">
+              <label style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;text-transform:none;letter-spacing:0;font-size:12.5px;color:var(--text-secondary);background:rgba(255,255,255,0.02);padding:6px 10px;border-radius:6px;border:1px solid var(--panel-border);">Cover Image <input type="checkbox" id="v-cover" checked></label>
+              <label style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;text-transform:none;letter-spacing:0;font-size:12.5px;color:var(--text-secondary);background:rgba(255,255,255,0.02);padding:6px 10px;border-radius:6px;border:1px solid var(--panel-border);">Context &amp; Problem <input type="checkbox" id="v-context" checked></label>
+              <label style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;text-transform:none;letter-spacing:0;font-size:12.5px;color:var(--text-secondary);background:rgba(255,255,255,0.02);padding:6px 10px;border-radius:6px;border:1px solid var(--panel-border);">Crafted Solution <input type="checkbox" id="v-solution" checked></label>
+              <label style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;text-transform:none;letter-spacing:0;font-size:12.5px;color:var(--text-secondary);background:rgba(255,255,255,0.02);padding:6px 10px;border-radius:6px;border:1px solid var(--panel-border);">Project Details <input type="checkbox" id="v-details" checked></label>
+              <label style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;text-transform:none;letter-spacing:0;font-size:12.5px;color:var(--text-secondary);background:rgba(255,255,255,0.02);padding:6px 10px;border-radius:6px;border:1px solid var(--panel-border);">Analysis / Research <input type="checkbox" id="v-research" checked></label>
+              <label style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;text-transform:none;letter-spacing:0;font-size:12.5px;color:var(--text-secondary);background:rgba(255,255,255,0.02);padding:6px 10px;border-radius:6px;border:1px solid var(--panel-border);">Brainstorming <input type="checkbox" id="v-ideation" checked></label>
+              <label style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;text-transform:none;letter-spacing:0;font-size:12.5px;color:var(--text-secondary);background:rgba(255,255,255,0.02);padding:6px 10px;border-radius:6px;border:1px solid var(--panel-border);">Wireframes <input type="checkbox" id="v-wireframes" checked></label>
+              <label style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;text-transform:none;letter-spacing:0;font-size:12.5px;color:var(--text-secondary);background:rgba(255,255,255,0.02);padding:6px 10px;border-radius:6px;border:1px solid var(--panel-border);">Iterations <input type="checkbox" id="v-iterations" checked></label>
+              <label style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;text-transform:none;letter-spacing:0;font-size:12.5px;color:var(--text-secondary);background:rgba(255,255,255,0.02);padding:6px 10px;border-radius:6px;border:1px solid var(--panel-border);">Final Mockups <input type="checkbox" id="v-mockups" checked></label>
+              <label style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;text-transform:none;letter-spacing:0;font-size:12.5px;color:var(--text-secondary);background:rgba(255,255,255,0.02);padding:6px 10px;border-radius:6px;border:1px solid var(--panel-border);">Design System <input type="checkbox" id="v-designsys" checked></label>
+              <label style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;text-transform:none;letter-spacing:0;font-size:12.5px;color:var(--text-secondary);background:rgba(255,255,255,0.02);padding:6px 10px;border-radius:6px;border:1px solid var(--panel-border);">User Testing <input type="checkbox" id="v-testing" checked></label>
+              <label style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;text-transform:none;letter-spacing:0;font-size:12.5px;color:var(--text-secondary);background:rgba(255,255,255,0.02);padding:6px 10px;border-radius:6px;border:1px solid var(--panel-border);">Conclusion <input type="checkbox" id="v-conclusion" checked></label>
+              <label style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;text-transform:none;letter-spacing:0;font-size:12.5px;color:var(--text-secondary);background:rgba(255,255,255,0.02);padding:6px 10px;border-radius:6px;border:1px solid var(--panel-border);">Future Scope <input type="checkbox" id="v-future" checked></label>
+            </div>
+          </div>
 
           <div class="field-row">
             <div class="field">
@@ -384,50 +417,121 @@
           </div>
 
           <!-- ── Detailed Case Study fields ── -->
+          <div class="field" data-type="detailed" style="margin-top:32px; padding-top:24px; border-top:1px solid var(--panel-border);">
+            <label style="color:var(--accent); margin-bottom:16px;">▶ Detailed Case Study Content</label>
+          </div>
+          
           <div class="field" data-type="detailed">
-            <label for="f-det-subtitle">Subtitle (Detailed CS)</label>
+            <label for="f-det-context">Context</label>
+            <textarea id="f-det-context" placeholder="Background story..."></textarea>
+          </div>
+          <div class="field" data-type="detailed">
+            <label for="f-det-problem">Problem Statement</label>
+            <textarea id="f-det-problem" placeholder="Explicit problem statement (large font)..."></textarea>
+          </div>
+          
+          <div class="field" data-type="detailed">
+            <label>Solution Screens</label>
+            <div id="builder-det-screens" class="dynamic-builder"></div>
+            <div style="font-size:11px;color:var(--text-faint);margin-top:4px;font-family:var(--mono)">The 8-cell bento grid screens</div>
+          </div>
+          
+          <div class="field" data-type="detailed">
+            <label>Research &amp; Analysis</label>
+            <div id="builder-det-research" class="dynamic-builder"></div>
+          </div>
+          
+          <div class="field" data-type="detailed">
+            <label>Brainstorming &amp; Ideation</label>
+            <div id="builder-det-ideation" class="dynamic-builder"></div>
+          </div>
+          
+          <div class="field" data-type="detailed">
+            <label>Wireframes</label>
+            <div id="builder-det-wireframes" class="dynamic-builder"></div>
+          </div>
+          
+          <div class="field" data-type="detailed">
+            <label>Iterations</label>
+            <div id="builder-det-iterations" class="dynamic-builder"></div>
+          </div>
+          
+          <div class="field" data-type="detailed">
+            <label>Final Mockups/Modules</label>
+            <div id="builder-det-modules" class="dynamic-builder"></div>
+          </div>
+          
+          <div class="field" data-type="detailed">
+            <label>Design System</label>
+            <div id="builder-det-designsys" class="dynamic-builder"></div>
+          </div>
+          
+          <div class="field" data-type="detailed">
+            <label>User Testing</label>
+            <div id="builder-det-testing" class="dynamic-builder"></div>
+          </div>
+          
+          <div class="field" data-type="detailed">
+            <label>Conclusion</label>
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <textarea id="f-con-challenges" placeholder="Constraints & Hurdles..."></textarea>
+              <textarea id="f-con-outcomes" placeholder="What Was Achieved..."></textarea>
+              <textarea id="f-con-learnings" placeholder="What I'd Do Differently..."></textarea>
+            </div>
+          </div>
+          
+          <div class="field" data-type="detailed">
+            <label>Future Scope</label>
+            <div id="builder-det-future" class="dynamic-builder"></div>
+          </div>
+          
+          <div class="field" data-type="detailed">
+            <label for="f-det-feedback">Feedback Invite (Text)</label>
+            <textarea id="f-det-feedback" placeholder='I am looking for feedback on...'></textarea>
+          </div>
+          
+          <!-- Legacy / extra detailed fields -->
+          <div class="field" data-type="detailed" style="margin-top:24px; opacity:0.6;">
+            <label>Extra / Legacy Fields</label>
+          </div>
+          <div class="field" data-type="detailed">
+            <label for="f-det-subtitle">Subtitle</label>
             <input type="text" id="f-det-subtitle" placeholder="e.g. Mobile App UX Redesign">
           </div>
           <div class="field" data-type="detailed">
-            <label for="f-det-tagline">Tagline (Detailed CS)</label>
+            <label for="f-det-tagline">Tagline</label>
             <input type="text" id="f-det-tagline" placeholder="e.g. One clear action beats ten unclear ones.">
           </div>
           <div class="field" data-type="detailed">
-            <label for="f-det-discipline">Discipline (Detailed CS)</label>
+            <label for="f-det-discipline">Discipline</label>
             <input type="text" id="f-det-discipline" placeholder="e.g. Product · UX · Mobile">
           </div>
           <div class="field" data-type="detailed">
-            <label for="f-det-brief">The Brief (Detailed CS)</label>
+            <label for="f-det-brief">The Brief</label>
             <textarea id="f-det-brief" placeholder="Describe the challenge and project context..."></textarea>
           </div>
           <div class="field" data-type="detailed">
-            <label for="f-det-thinking">The Thinking / Process (Detailed CS)</label>
+            <label for="f-det-thinking">The Thinking / Process</label>
             <textarea id="f-det-thinking" placeholder="How did you approach it? What decisions were made and why?"></textarea>
           </div>
           <div class="field" data-type="detailed">
-            <label for="f-det-myrole">What I Did (Detailed CS)</label>
+            <label for="f-det-myrole">What I Did</label>
             <textarea id="f-det-myrole" placeholder="Research, UX strategy, UI design, prototyping, handoff..."></textarea>
           </div>
           <div class="field" data-type="detailed">
-            <label for="f-det-outcome">Outcome &amp; Impact (Detailed CS)</label>
+            <label for="f-det-outcome">Outcome &amp; Impact</label>
             <textarea id="f-det-outcome" placeholder="What shipped? Measurable results, stakeholder feedback, lessons learned."></textarea>
           </div>
           <div class="field-row" data-type="detailed">
             <div class="field">
-              <label for="f-det-prototype">Prototype URL (Detailed CS — Figma Embed)</label>
+              <label for="f-det-prototype">Prototype URL (Figma Embed)</label>
               <input type="url" id="f-det-prototype" placeholder="https://figma.com/embed?...">
             </div>
             <div class="field">
-              <label for="f-det-designs">Designs URL (Detailed CS)</label>
+              <label for="f-det-designs">Designs URL</label>
               <input type="url" id="f-det-designs" placeholder="https://...">
             </div>
           </div>
-          <div class="field" data-type="detailed">
-            <label for="f-det-screens">Screens (Detailed CS — JSON Array)</label>
-            <textarea id="f-det-screens" placeholder='[{"src":"assets/img.jpg","caption":"Label","wide":false}]'></textarea>
-            <div style="font-size:11px;color:var(--text-faint);margin-top:4px;font-family:var(--mono)">Format: [{"src":"url","caption":"text","wide":true/false}]</div>
-          </div>
-
           <div class="field" data-type="scratch">
             <div style="background:var(--accent-soft);padding:16px;border-radius:8px;border:1px solid var(--accent);margin-bottom:16px;">
               <p style="font-size:13px;margin-bottom:12px;">This is a scratchpad case study. Edit the layout visually in the builder.</p>
@@ -458,9 +562,8 @@
           </div>
           
           <div class="field" data-type="quick">
-            <label for="f-screens">Screens (Quick CS - JSON Array)</label>
-            <textarea id="f-screens" placeholder='[{"src":"assets/img.jpg","caption":"Label","wide":false}]'></textarea>
-            <div style="font-size:11px;color:var(--text-faint);margin-top:4px;font-family:var(--mono)">Format: [{"src":"url","caption":"text","wide":true/false}]</div>
+            <label>Screens (Quick CS)</label>
+            <div id="builder-quick-screens" class="dynamic-builder"></div>
           </div>
 
           <div class="form-actions">
