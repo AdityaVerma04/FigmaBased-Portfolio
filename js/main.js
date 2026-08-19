@@ -354,15 +354,14 @@ function initSplashScreen() {
   if (!splash || !textEl) return;
 
   // ══════════════════════════════════════════════════════════════
-  //  SPLASH SCREEN SPEED CONFIGURATION:
-  //  • WORD_SPEED_MS : Milliseconds per word (lower = faster)
-  //                    e.g. 180 = ultra fast, 220 = brisk/snappy, 350 = relaxed
-  //  • FADE_SPEED_MS : Duration of opacity fade between words
-  //  • EXIT_DELAY_MS : Brief pause on the final greeting before dissolving
+  //  SPLASH SCREEN TIMING (4.0s Total Runtime):
+  //  • WORD_SPEED_MS : Duration for international greetings (290ms each)
+  //  • FINAL_HOLD_MS : Extra hold time on "स्वागत है आपका!" (1100ms)
+  //  • FADE_SPEED_MS : Smooth crossfade duration (80ms)
   // ══════════════════════════════════════════════════════════════
-  const WORD_SPEED_MS = 250;
+  const WORD_SPEED_MS = 290;
+  const FINAL_HOLD_MS = 1100;
   const FADE_SPEED_MS = 80;
-  const EXIT_DELAY_MS = 480;
 
   const greetings = [
     "Hello",
@@ -380,43 +379,46 @@ function initSplashScreen() {
 
   let currentIndex = 0;
   let isExiting = false;
+  let timerId = null;
 
   function dismissSplash() {
     if (isExiting) return;
     isExiting = true;
+    if (timerId) clearTimeout(timerId);
     splash.classList.add('splash-hidden');
     setTimeout(() => {
       try { splash.remove(); } catch(e) {}
-    }, 850);
+    }, 900);
   }
 
   // Click / tap to skip immediately
   splash.addEventListener('click', dismissSplash);
   splash.addEventListener('touchstart', dismissSplash, { passive: true });
 
-  const timer = setInterval(() => {
-    if (isExiting) {
-      clearInterval(timer);
-      return;
-    }
-
+  function showNextGreeting() {
+    if (isExiting) return;
     currentIndex++;
 
     if (currentIndex >= greetings.length) {
-      clearInterval(timer);
-      setTimeout(dismissSplash, EXIT_DELAY_MS);
+      dismissSplash();
       return;
     }
 
-    // Pure smooth opacity crossfade
+    // Smooth opacity crossfade
     textEl.classList.add('splash-text-fade');
 
     setTimeout(() => {
+      if (isExiting) return;
       textEl.textContent = greetings[currentIndex];
       textEl.classList.remove('splash-text-fade');
-    }, FADE_SPEED_MS);
 
-  }, WORD_SPEED_MS);
+      const isLast = (currentIndex === greetings.length - 1);
+      const delay = isLast ? FINAL_HOLD_MS : WORD_SPEED_MS;
+      timerId = setTimeout(showNextGreeting, delay);
+    }, FADE_SPEED_MS);
+  }
+
+  timerId = setTimeout(showNextGreeting, WORD_SPEED_MS);
 }
 
 // ── Custom Cursor ─────────────────────────────────────────
