@@ -382,7 +382,7 @@ function initSplashScreen() {
   splash.addEventListener('click', dismissSplash);
   splash.addEventListener('touchstart', dismissSplash, { passive: true });
 
-  const intervalMs = 420; // Smooth Apple pacing
+  const intervalMs = 400; // Smooth pacing
 
   const timer = setInterval(() => {
     if (isExiting) {
@@ -394,19 +394,17 @@ function initSplashScreen() {
 
     if (currentIndex >= greetings.length) {
       clearInterval(timer);
-      setTimeout(dismissSplash, 480);
+      setTimeout(dismissSplash, 420);
       return;
     }
 
-    // Smooth slip text out
-    textEl.classList.remove('splash-text-in');
-    textEl.classList.add('splash-text-out');
+    // Pure smooth opacity fade (no choppy scaling or jumping)
+    textEl.classList.add('splash-text-fade');
 
     setTimeout(() => {
       textEl.textContent = greetings[currentIndex];
-      textEl.classList.remove('splash-text-out');
-      textEl.classList.add('splash-text-in');
-    }, 140);
+      textEl.classList.remove('splash-text-fade');
+    }, 130);
 
   }, intervalMs);
 }
