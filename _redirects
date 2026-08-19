@@ -1,2 +1,6 @@
-/admin          /admin/index.html   200
-/case-study     /case-study/index.html 200
+/admin                  /admin/index.html            200
+/case-study             /case-study/index.html       200
+/case-study/amazon      /case-study/amazon/index.html 200
+/case-study/swiggy      /case-study/swiggy/index.html 200
+/case-study/namisite    /case-study/namisite/index.html 200
+/case-study/graphic/*   /case-study/graphic/:splat   200
