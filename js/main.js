@@ -409,10 +409,15 @@ function initSplashScreen() {
 
     setTimeout(() => {
       if (isExiting) return;
+      const isLast = (currentIndex === greetings.length - 1);
+      if (isLast) {
+        textEl.classList.add('splash-text-accent');
+      } else {
+        textEl.classList.remove('splash-text-accent');
+      }
       textEl.textContent = greetings[currentIndex];
       textEl.classList.remove('splash-text-fade');
 
-      const isLast = (currentIndex === greetings.length - 1);
       const delay = isLast ? FINAL_HOLD_MS : WORD_SPEED_MS;
       timerId = setTimeout(showNextGreeting, delay);
     }, FADE_SPEED_MS);
