@@ -792,10 +792,16 @@ async function renderCaseStudy() {
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+function bootCaseStudy() {
   renderCaseStudy();
   initCursor();
-});
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', bootCaseStudy);
+} else {
+  bootCaseStudy();
+}
 
 // ── Custom Cursor ─────────────────────────────────────────
 function initCursor() {
