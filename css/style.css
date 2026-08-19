@@ -1452,57 +1452,116 @@ p {
 }
 
 /* ------------------------------------------------------------------ */
-/*  12. TOOLKIT / SKILLS                                               */
+/*  12. TOOLKIT / TOOLS GRID                                           */
 /* ------------------------------------------------------------------ */
-.skill-cols {
+.tools-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+  margin-top: 24px;
 }
 
-.skill-group-title {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--accent);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-bottom: 16px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--panel-border);
-}
-
-.skill-list {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.skill-item {
+.tool-card {
+  position: relative;
+  background: rgba(26, 25, 36, 0.6);
+  border: 1px solid var(--panel-border);
+  border-radius: 14px;
+  padding: 18px 20px;
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px 14px;
-  border-radius: 8px;
-  background: var(--panel);
-  border: 1px solid var(--panel-border);
-  font-size: 13.5px;
-  color: var(--text-secondary);
-  transition: border-color 0.2s, color 0.2s, transform 0.2s var(--ease-snap);
+  gap: 16px;
+  cursor: default;
+  transition: transform 0.28s var(--ease-out), border-color 0.25s, background 0.25s, box-shadow 0.28s;
+  overflow: hidden;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
-.skill-item:hover {
-  border-color: var(--accent);
-  color: var(--text-primary);
-  transform: translateX(4px);
+.tool-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, transparent 65%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
 }
 
-.skill-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--accent);
+.tool-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(140, 111, 255, 0.4);
+  background: rgba(35, 33, 50, 0.75);
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.4), 0 0 24px rgba(140, 111, 255, 0.14);
+}
+
+.tool-card-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
-  opacity: 0.6;
+  transition: transform 0.28s var(--ease-snap), background 0.25s, border-color 0.25s;
+}
+
+.tool-card:hover .tool-card-icon {
+  transform: scale(1.08) rotate(2deg);
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+.tool-card-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.tool-card-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.tool-card-name {
+  font-family: var(--ui);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 3px;
+  letter-spacing: -0.01em;
+}
+
+.tool-card-role {
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  line-height: 1.35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tool-card-badge {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid rgba(140, 111, 255, 0.22);
+  padding: 3px 8px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  flex-shrink: 0;
+}
+
+@media (max-width: 680px) {
+  .tools-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ------------------------------------------------------------------ */
