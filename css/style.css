@@ -2449,7 +2449,7 @@ body.cursor-hover .cursor__label { opacity: 1; }
   line-height: 1.1;
   text-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
   opacity: 1;
-  transition: opacity 0.08s ease-in-out;
+  transition: opacity 0.09s ease-in-out;
   will-change: opacity;
 }
 

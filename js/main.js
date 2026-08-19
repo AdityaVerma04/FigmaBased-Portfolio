@@ -360,8 +360,8 @@ function initSplashScreen() {
   //  • FADE_SPEED_MS : Duration of opacity fade between words
   //  • EXIT_DELAY_MS : Brief pause on the final greeting before dissolving
   // ══════════════════════════════════════════════════════════════
-  const WORD_SPEED_MS = 260;
-  const FADE_SPEED_MS = 80;
+  const WORD_SPEED_MS = 340;
+  const FADE_SPEED_MS = 90;
   const EXIT_DELAY_MS = 250;
 
   const greetings = [
@@ -370,11 +370,7 @@ function initSplashScreen() {
     "سلام",
     "Hola",
     "Bonjour",
-    "Ciao",
-    "こんにちは",
-    "Olá",
-    "안녕하세요",
-    "Guten Tag"
+    "Ciao"
   ];
 
   let currentIndex = 0;
