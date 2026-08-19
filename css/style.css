@@ -2459,12 +2459,12 @@ body.cursor-hover .cursor__label { opacity: 1; }
 }
 
 .splash-text.splash-text-accent {
-  background: linear-gradient(135deg, #fff59d 0%, #ffca28 50%, #ffa000 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #ffca28;
+  background: none;
+  -webkit-text-fill-color: #ffca28;
   font-weight: 600;
   text-shadow: none;
-  filter: drop-shadow(0 4px 24px rgba(255, 202, 40, 0.45));
+  filter: none;
 }
 
 .splash-text.splash-text-fade {
