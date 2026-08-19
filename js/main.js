@@ -359,8 +359,8 @@ function initSplashScreen() {
   //  • FINAL_HOLD_MS : Extra hold time on "स्वागत है आपका!" (1100ms)
   //  • FADE_SPEED_MS : Smooth crossfade duration (80ms)
   // ══════════════════════════════════════════════════════════════
-  const WORD_SPEED_MS = 290;
-  const FINAL_HOLD_MS = 1100;
+  const WORD_SPEED_MS = 280;
+  const FINAL_HOLD_MS = 1200;
   const FADE_SPEED_MS = 80;
 
   const greetings = [
