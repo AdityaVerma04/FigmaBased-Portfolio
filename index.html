@@ -26,6 +26,25 @@
 
 <body>
 
+  <!-- ============ IOS MULTILINGUAL SPLASH SCREEN ============ -->
+  <div id="splashScreen" class="splash-screen" aria-label="Welcome screen">
+    <div class="splash-ambient-orb splash-ambient-1"></div>
+    <div class="splash-ambient-orb splash-ambient-2"></div>
+    
+    <div class="splash-content">
+      <div class="splash-greeting-wrap">
+        <span class="splash-dot"></span>
+        <h1 id="splashText" class="splash-text splash-text-in">Hello</h1>
+      </div>
+      <div class="splash-sub-bar">
+        <div class="splash-progress">
+          <div class="splash-progress-fill" id="splashProgress"></div>
+        </div>
+        <span class="splash-hint">Tap anywhere to skip</span>
+      </div>
+    </div>
+  </div>
+
   <!-- Interactive dot-grid background canvas -->
   <canvas id="bgCanvas" aria-hidden="true"></canvas>
 

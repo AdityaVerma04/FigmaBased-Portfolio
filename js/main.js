@@ -336,6 +336,7 @@ function initFullscreen() {
 
 // ── Boot ─────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
+  initSplashScreen();
   loadCaseStudies();
   initInspector();
   initLayerNav();
@@ -345,6 +346,75 @@ document.addEventListener('DOMContentLoaded', () => {
   initFullscreen();
   initCursor();
 });
+
+// ── iOS Multilingual Splash Screen ─────────────────────────
+function initSplashScreen() {
+  const splash = document.getElementById('splashScreen');
+  const textEl = document.getElementById('splashText');
+  const progressEl = document.getElementById('splashProgress');
+  if (!splash || !textEl) return;
+
+  const greetings = [
+    "Hello",
+    "नमस्ते",
+    "Hola",
+    "Bonjour",
+    "Ciao",
+    "こんにちは",
+    "Olá",
+    "안녕하세요",
+    "Guten Tag",
+    "Aditya Verma"
+  ];
+
+  let currentIndex = 0;
+  let isExiting = false;
+
+  function dismissSplash() {
+    if (isExiting) return;
+    isExiting = true;
+    splash.classList.add('splash-hidden');
+    setTimeout(() => {
+      try { splash.remove(); } catch(e) {}
+    }, 950);
+  }
+
+  // Click / tap to skip immediately
+  splash.addEventListener('click', dismissSplash);
+  splash.addEventListener('touchstart', dismissSplash, { passive: true });
+
+  const totalSteps = greetings.length;
+  const intervalMs = 230;
+
+  const timer = setInterval(() => {
+    if (isExiting) {
+      clearInterval(timer);
+      return;
+    }
+
+    currentIndex++;
+    if (progressEl) {
+      progressEl.style.width = Math.min(100, Math.round((currentIndex / (totalSteps - 1)) * 100)) + '%';
+    }
+
+    if (currentIndex >= greetings.length) {
+      clearInterval(timer);
+      setTimeout(dismissSplash, 400);
+      return;
+    }
+
+    // Slip text out
+    textEl.classList.remove('splash-text-in');
+    textEl.classList.add('splash-text-out');
+
+    setTimeout(() => {
+      textEl.textContent = greetings[currentIndex];
+      textEl.classList.remove('splash-text-out');
+      textEl.classList.add('splash-text-in');
+    }, 100);
+
+  }, intervalMs);
+}
 
 // ── Custom Cursor ─────────────────────────────────────────
 function initCursor() {

@@ -2359,4 +2359,156 @@ body.cursor-hover .cursor__label { opacity: 1; }
 
 .locked-toast-close:hover {
   color: #fff;
+}
+
+/* ===================================================================
+   iOS MULTILINGUAL SPLASH SCREEN
+   =================================================================== */
+.splash-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(12, 11, 18, 0.82);
+  backdrop-filter: blur(48px) saturate(180%);
+  -webkit-backdrop-filter: blur(48px) saturate(180%);
+  user-select: none;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.9s cubic-bezier(0.76, 0, 0.24, 1),
+              opacity 0.85s cubic-bezier(0.76, 0, 0.24, 1);
+  will-change: transform, opacity;
+}
+
+.splash-screen.splash-hidden {
+  transform: translateY(-100%) scale(1.02);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Background luminous orbs */
+.splash-ambient-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  pointer-events: none;
+  opacity: 0.6;
+  animation: splashOrbFloat 8s ease-in-out infinite alternate;
+}
+
+.splash-ambient-1 {
+  width: 420px;
+  height: 420px;
+  top: 15%;
+  left: 20%;
+  background: radial-gradient(circle, rgba(140, 111, 255, 0.32) 0%, rgba(140, 111, 255, 0) 70%);
+}
+
+.splash-ambient-2 {
+  width: 380px;
+  height: 380px;
+  bottom: 20%;
+  right: 22%;
+  background: radial-gradient(circle, rgba(252, 128, 25, 0.22) 0%, rgba(252, 128, 25, 0) 70%);
+  animation-delay: -4s;
+}
+
+@keyframes splashOrbFloat {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(40px, -30px) scale(1.15); }
+}
+
+.splash-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 28px;
+}
+
+.splash-greeting-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  min-height: 90px;
+}
+
+.splash-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 20px var(--accent), 0 0 40px rgba(140, 111, 255, 0.6);
+  flex-shrink: 0;
+  animation: splashDotPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes splashDotPulse {
+  0%, 100% { transform: scale(1); opacity: 0.85; }
+  50% { transform: scale(1.35); opacity: 1; box-shadow: 0 0 28px var(--accent); }
+}
+
+.splash-text {
+  font-family: var(--display), -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+  font-size: clamp(3rem, 7vw, 5.2rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1;
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+  transition: opacity 0.24s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.24s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity, filter;
+}
+
+.splash-text.splash-text-out {
+  opacity: 0;
+  transform: translateY(-16px) scale(0.96);
+  filter: blur(6px);
+}
+
+.splash-text.splash-text-in {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0px);
+}
+
+/* Subtle progress bar at bottom of greeting */
+.splash-sub-bar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.splash-progress {
+  width: 120px;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.splash-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent) 0%, #ff8a65 100%);
+  border-radius: 999px;
+  transition: width 0.25s linear;
+}
+
+.splash-hint {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.35);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
