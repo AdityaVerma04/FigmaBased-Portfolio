@@ -360,9 +360,9 @@ function initSplashScreen() {
   //  • FADE_SPEED_MS : Duration of opacity fade between words
   //  • EXIT_DELAY_MS : Brief pause on the final greeting before dissolving
   // ══════════════════════════════════════════════════════════════
-  const WORD_SPEED_MS = 190;
-  const FADE_SPEED_MS = 60;
-  const EXIT_DELAY_MS = 160;
+  const WORD_SPEED_MS = 275;
+  const FADE_SPEED_MS = 80;
+  const EXIT_DELAY_MS = 250;
 
   const greetings = [
     "Hello",
