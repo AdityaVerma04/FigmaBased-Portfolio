@@ -115,17 +115,80 @@
     }
 
     /* ── Dynamic Builders ── */
-    .dynamic-builder { display: flex; flex-direction: column; gap: 12px; margin-top: 8px; }
-    .builder-item { background: rgba(255,255,255,0.02); border: 1px solid var(--panel-border); border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 10px; position: relative; }
-    .builder-item-header { display: flex; justify-content: space-between; align-items: center; font-size: 11px; font-weight: 600; font-family: var(--mono); color: var(--text-faint); margin-bottom: 4px; text-transform: uppercase; }
-    .builder-remove-btn { background: none; border: none; color: #ff4c4c; font-size: 11px; cursor: pointer; opacity: 0.6; padding: 0; }
-    .builder-remove-btn:hover { opacity: 1; }
-    .builder-row { display: flex; gap: 10px; align-items: center; }
-    .builder-row > * { flex: 1; }
-    .builder-row > input[type="checkbox"] { flex: 0 0 auto; width: auto; }
-    .builder-add-btn { background: rgba(255,255,255,0.05); border: 1px dashed var(--panel-border); color: var(--text-secondary); padding: 8px; border-radius: 6px; font-size: 12px; cursor: pointer; text-align: center; transition: all 0.2s; margin-top: 4px; }
-    .builder-add-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(255,255,255,0.08); }
-    .builder-nested { border-left: 2px solid var(--panel-border); padding-left: 12px; margin-top: 6px; display: flex; flex-direction: column; gap: 8px; }
+    .dynamic-builder {
+      display: flex; flex-direction: column; gap: 16px;
+      margin-top: 12px; margin-bottom: 20px;
+    }
+    .builder-items {
+      display: flex; flex-direction: column; gap: 16px;
+    }
+    .builder-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--panel-border);
+      border-radius: 10px;
+      padding: 20px 22px;
+      display: flex; flex-direction: column; gap: 16px;
+      position: relative; transition: all 0.2s ease;
+    }
+    .builder-item:hover {
+      background: rgba(255, 255, 255, 0.045);
+      border-color: rgba(255, 255, 255, 0.16);
+    }
+    .builder-item-header {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 12px; font-weight: 700; font-family: var(--mono);
+      color: #94a3b8; padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px;
+    }
+    .builder-remove-btn {
+      background: rgba(255, 76, 76, 0.08);
+      border: 1px solid rgba(255, 76, 76, 0.25);
+      color: #ff6b6b; font-size: 11px; font-weight: 600;
+      font-family: var(--mono); cursor: pointer;
+      padding: 4px 10px; border-radius: 5px; transition: all 0.2s;
+    }
+    .builder-remove-btn:hover {
+      background: rgba(255, 76, 76, 0.2);
+      border-color: #ff6b6b; color: #ffffff;
+    }
+    .builder-row {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 18px;
+      align-items: center;
+    }
+    @media (max-width: 600px) {
+      .builder-row { grid-template-columns: 1fr; gap: 6px; }
+    }
+    .builder-row > label {
+      font-family: var(--mono); font-size: 11.5px; font-weight: 600;
+      color: #94a3b8 !important; text-transform: uppercase;
+      letter-spacing: 0.05em; margin: 0 !important; line-height: 1.4;
+    }
+    .builder-row > input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-color: var(--accent); }
+    .builder-add-btn {
+      background: rgba(140, 111, 255, 0.06);
+      border: 1px dashed rgba(140, 111, 255, 0.35);
+      color: var(--accent);
+      padding: 12px 20px; border-radius: 8px;
+      font-size: 13px; font-weight: 600; font-family: var(--body);
+      cursor: pointer; text-align: center;
+      transition: all 0.2s ease; margin-top: 8px; user-select: none;
+    }
+    .builder-add-btn:hover {
+      background: rgba(140, 111, 255, 0.14);
+      border-color: var(--accent); color: #ffffff;
+      box-shadow: 0 4px 16px rgba(140, 111, 255, 0.15);
+    }
+    .builder-nested {
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-left: 3px solid var(--accent);
+      border-radius: 8px;
+      padding: 16px 18px; margin-top: 10px;
+      display: flex; flex-direction: column; gap: 14px;
+    }
 
     /* ── Admin grid layout ── */
     .admin-grid {
