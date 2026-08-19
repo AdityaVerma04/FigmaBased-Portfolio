@@ -689,22 +689,45 @@ function getTestingData(containerId) {
 }
 
 
-// ── Form helpers ──────────────────────────────────────────
 function clearForm() {
   document.getElementById('csForm').reset();
   document.getElementById('f-order').value  = (workingData.caseStudies.length + 1);
   document.getElementById('f-status').value = 'draft';
   if (document.getElementById('f-locked')) document.getElementById('f-locked').checked = false;
   document.getElementById('f-slug').value   = '';
-  document.getElementById('f-type').value   = 'long';
+  document.getElementById('f-type').value   = 'detailed';
   
-  // Clear dynamic builders
-  const builders = ['builder-quick-screens', 'builder-det-screens', 'builder-det-research', 'builder-det-ideation', 'builder-det-iterations', 'builder-det-wireframes', 'builder-det-modules', 'builder-det-designsys', 'builder-det-testing', 'builder-det-future'];
-  builders.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.innerHTML = '';
-  });
-  
+  // Set all visibility checkboxes to checked by default
+  document.querySelectorAll('#csForm input[type="checkbox"][id^="v-"]').forEach(cb => cb.checked = true);
+
+  // Initialize all dynamic builders with empty state so "+ Add" buttons and inputs are always present
+  renderObjectArrayBuilder('builder-quick-screens', [], [
+    {key:'src', label:'Image URL'}, {key:'caption', label:'Caption'}, {key:'wide', label:'Wide Layout?', type:'checkbox'}
+  ], 'Screen');
+
+  renderObjectArrayBuilder('builder-det-screens', [], [
+    {key:'src', label:'Image URL'}, {key:'caption', label:'Caption'}
+  ], 'Screen');
+
+  renderObjectArrayBuilder('builder-det-research', [], [
+    {key:'name', label:'Method Name'}, {key:'description', label:'Description', type:'textarea'}
+  ], 'Method');
+
+  renderIdeationBuilder('builder-det-ideation', {});
+
+  renderObjectArrayBuilder('builder-det-iterations', [], [
+    {key:'src', label:'Image URL'}, {key:'label', label:'Label'}
+  ], 'Iteration');
+
+  renderObjectArrayBuilder('builder-det-wireframes', [], [
+    {key:'src', label:'Image URL'}, {key:'caption', label:'Caption'}, {key:'type', label:'Type (lo-fi/hi-fi)'}
+  ], 'Wireframe');
+
+  renderModulesBuilder('builder-det-modules', []);
+  renderDesignSysBuilder('builder-det-designsys', {});
+  renderTestingBuilder('builder-det-testing', {});
+  renderStringArrayBuilder('builder-det-future', [], 'Future Scope Item');
+
   updateFormTabs();
 }
 
