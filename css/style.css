@@ -2371,20 +2371,22 @@ body.cursor-hover .cursor__label { opacity: 1; }
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(12, 11, 18, 0.82);
-  backdrop-filter: blur(48px) saturate(180%);
-  -webkit-backdrop-filter: blur(48px) saturate(180%);
+  background: rgba(12, 11, 18, 0.86);
+  backdrop-filter: blur(54px) saturate(180%);
+  -webkit-backdrop-filter: blur(54px) saturate(180%);
   user-select: none;
   cursor: pointer;
   overflow: hidden;
-  transition: transform 0.9s cubic-bezier(0.76, 0, 0.24, 1),
-              opacity 0.85s cubic-bezier(0.76, 0, 0.24, 1);
-  will-change: transform, opacity;
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, filter, transform;
 }
 
 .splash-screen.splash-hidden {
-  transform: translateY(-100%) scale(1.02);
   opacity: 0;
+  filter: blur(32px);
+  transform: scale(1.06);
   pointer-events: none;
 }
 
@@ -2428,15 +2430,14 @@ body.cursor-hover .cursor__label { opacity: 1; }
   align-items: center;
   justify-content: center;
   text-align: center;
-  gap: 28px;
 }
 
 .splash-greeting-wrap {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  min-height: 90px;
+  gap: 18px;
+  min-height: 110px;
 }
 
 .splash-dot {
@@ -2446,7 +2447,7 @@ body.cursor-hover .cursor__label { opacity: 1; }
   background: var(--accent);
   box-shadow: 0 0 20px var(--accent), 0 0 40px rgba(140, 111, 255, 0.6);
   flex-shrink: 0;
-  animation: splashDotPulse 1.8s ease-in-out infinite;
+  animation: splashDotPulse 2s ease-in-out infinite;
 }
 
 @keyframes splashDotPulse {
@@ -2456,59 +2457,27 @@ body.cursor-hover .cursor__label { opacity: 1; }
 
 .splash-text {
   font-family: var(--display), -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
-  font-size: clamp(3rem, 7vw, 5.2rem);
+  font-size: clamp(3.2rem, 7.5vw, 5.5rem);
   font-weight: 800;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.03em;
   color: #ffffff;
   margin: 0;
-  line-height: 1;
+  line-height: 1.1;
   text-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
-  transition: opacity 0.24s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.24s cubic-bezier(0.16, 1, 0.3, 1),
-              filter 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.32s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, opacity, filter;
 }
 
 .splash-text.splash-text-out {
   opacity: 0;
-  transform: translateY(-16px) scale(0.96);
-  filter: blur(6px);
+  transform: translateY(-14px) scale(0.97);
+  filter: blur(8px);
 }
 
 .splash-text.splash-text-in {
   opacity: 1;
   transform: translateY(0) scale(1);
   filter: blur(0px);
-}
-
-/* Subtle progress bar at bottom of greeting */
-.splash-sub-bar {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-}
-
-.splash-progress {
-  width: 120px;
-  height: 3px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 999px;
-  overflow: hidden;
-}
-
-.splash-progress-fill {
-  height: 100%;
-  width: 0%;
-  background: linear-gradient(90deg, var(--accent) 0%, #ff8a65 100%);
-  border-radius: 999px;
-  transition: width 0.25s linear;
-}
-
-.splash-hint {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.35);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
 }

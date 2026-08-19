@@ -351,20 +351,19 @@ document.addEventListener('DOMContentLoaded', () => {
 function initSplashScreen() {
   const splash = document.getElementById('splashScreen');
   const textEl = document.getElementById('splashText');
-  const progressEl = document.getElementById('splashProgress');
   if (!splash || !textEl) return;
 
   const greetings = [
     "Hello",
     "नमस्ते",
+    "سلام",
     "Hola",
     "Bonjour",
     "Ciao",
     "こんにちは",
     "Olá",
     "안녕하세요",
-    "Guten Tag",
-    "Aditya Verma"
+    "Guten Tag"
   ];
 
   let currentIndex = 0;
@@ -376,15 +375,14 @@ function initSplashScreen() {
     splash.classList.add('splash-hidden');
     setTimeout(() => {
       try { splash.remove(); } catch(e) {}
-    }, 950);
+    }, 900);
   }
 
   // Click / tap to skip immediately
   splash.addEventListener('click', dismissSplash);
   splash.addEventListener('touchstart', dismissSplash, { passive: true });
 
-  const totalSteps = greetings.length;
-  const intervalMs = 230;
+  const intervalMs = 420; // Smooth Apple pacing
 
   const timer = setInterval(() => {
     if (isExiting) {
@@ -393,17 +391,14 @@ function initSplashScreen() {
     }
 
     currentIndex++;
-    if (progressEl) {
-      progressEl.style.width = Math.min(100, Math.round((currentIndex / (totalSteps - 1)) * 100)) + '%';
-    }
 
     if (currentIndex >= greetings.length) {
       clearInterval(timer);
-      setTimeout(dismissSplash, 400);
+      setTimeout(dismissSplash, 480);
       return;
     }
 
-    // Slip text out
+    // Smooth slip text out
     textEl.classList.remove('splash-text-in');
     textEl.classList.add('splash-text-out');
 
@@ -411,7 +406,7 @@ function initSplashScreen() {
       textEl.textContent = greetings[currentIndex];
       textEl.classList.remove('splash-text-out');
       textEl.classList.add('splash-text-in');
-    }, 100);
+    }, 140);
 
   }, intervalMs);
 }
