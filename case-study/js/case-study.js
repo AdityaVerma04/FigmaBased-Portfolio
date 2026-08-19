@@ -647,28 +647,26 @@ async function renderCaseStudy() {
     if (cs.tools && cs.tools.length) metaHtml += `<div class="hero-meta-item"><div class="hero-meta-label">Tools</div><div class="hero-meta-value">${escapeHtml(cs.tools.join(', '))}</div></div>`;
     metaWrap.innerHTML = metaHtml;
 
-    // ── Render new sections: after hero meta ──
-    renderCover(cs);
-    renderContextProblem(cs);
-    renderSolution(cs);
-    renderProjectDetails(cs);
+    const caseType = cs.type || 'long';
 
-    // ── 3-Notes Section ── (skip for detailed if new 13-section fields exist)
-    const hasNewSections = cs.context || cs.solutionScreens || cs.researchMethods;
-    if (cs.notes && cs.notes.length) {
-      show('notesSectionLabel');
-      show('notes');
-      const tags = ['The Brief', 'My Role', 'Thinking'];
-      document.getElementById('notes').innerHTML = cs.notes.map((n, i) => `
-        <div class="note-card">
-          <div class="note-card-border-accent"></div>
-          <div class="note-card-tag">${tags[i] || 'Note'}</div>
-          <h3>${escapeHtml(n.title)}</h3>
-          <p>${escapeHtml(n.body)}</p>
-        </div>
-      `).join('');
-    } else if (cs.type === 'quick') {
-      // Fallback if notes array doesn't exist but it's a quick template
+    if (caseType === 'detailed') {
+      // ── Detailed Case Study format (12 modular sections) ──
+      renderCover(cs);
+      renderContextProblem(cs);
+      renderSolution(cs);
+      renderProjectDetails(cs);
+      renderResearch(cs);
+      renderIdeation(cs);
+      renderWireframes(cs);
+      renderIterations(cs);
+      renderModules(cs);
+      renderDesignSystem(cs);
+      renderUserTesting(cs);
+      renderConclusion(cs);
+      renderFutureScope(cs);
+    } else if (caseType === 'quick') {
+      // ── Quick Case Study format (3-notes + screens) ──
+      renderCover(cs);
       show('notesSectionLabel');
       show('notes');
       document.getElementById('notes').innerHTML = `
@@ -676,57 +674,28 @@ async function renderCaseStudy() {
         <div class="note-card"><div class="note-card-border-accent"></div><div class="note-card-tag">My Role</div><h3>What I Did</h3><p>${escapeHtml(cs.myRole || cs.process || '—')}</p></div>
         <div class="note-card"><div class="note-card-border-accent"></div><div class="note-card-tag">Thinking</div><h3>The Approach</h3><p>${escapeHtml(cs.thinking || cs.outcome || '—')}</p></div>
       `;
-    } else if (cs.type === 'detailed' && !hasNewSections) {
-      // Detailed case study without new fields — show legacy notes
-      show('notesSectionLabel');
-      show('notes');
-      const detBrief    = cs.detBrief    || cs.brief    || cs.problem  || '—';
-      const detMyRole   = cs.detMyRole   || cs.myRole   || cs.process  || '—';
-      const detThinking = cs.detThinking || cs.thinking || cs.outcome  || '—';
-      const detOutcome  = cs.detOutcome  || cs.outcome  || '';
-      document.getElementById('notes').innerHTML = `
-        <div class="note-card"><div class="note-card-border-accent"></div><div class="note-card-tag">The Brief</div><h3>Challenge</h3><p>${escapeHtml(detBrief)}</p></div>
-        <div class="note-card"><div class="note-card-border-accent"></div><div class="note-card-tag">My Role</div><h3>What I Did</h3><p>${escapeHtml(detMyRole)}</p></div>
-        <div class="note-card"><div class="note-card-border-accent"></div><div class="note-card-tag">Thinking</div><h3>The Approach</h3><p>${escapeHtml(detThinking)}</p></div>
-        ${detOutcome ? `<div class="note-card"><div class="note-card-border-accent"></div><div class="note-card-tag">Outcome</div><h3>Result &amp; Impact</h3><p>${escapeHtml(detOutcome)}</p></div>` : ''}
-      `;
-    }
-
-    // ── Render new research/design sections: after notes ──
-    renderResearch(cs);
-    renderIdeation(cs);
-    renderWireframes(cs);
-    renderIterations(cs);
-    renderModules(cs);
-    renderDesignSystem(cs);
-
-    // ── Details Section (Legacy text & Scratchpad blocks) ──
-    let hasBlocks = false;
-    let blockHtml = '';
-
-    if (cs.blocks && cs.blocks.length) {
-      // Scratchpad format
-      hasBlocks = true;
-      blockHtml = cs.blocks
-        .slice()
-        .sort((a, b) => (a.order || 0) - (b.order || 0))
-        .map(b => renderBlock(b))
-        .join('');
-    } else if (cs.type !== 'quick') {
-      // Legacy format (long text fields)
-      hasBlocks = true;
-      blockHtml = [
+    } else if (caseType === 'scratch') {
+      // ── Scratchpad format (custom builder blocks) ──
+      if (cs.blocks && cs.blocks.length) {
+        show('blocksSectionLabel');
+        show('csBlocks');
+        document.getElementById('csBlocks').innerHTML = cs.blocks
+          .slice()
+          .sort((a, b) => (a.order || 0) - (b.order || 0))
+          .map(b => renderBlock(b))
+          .join('');
+      }
+    } else {
+      // ── Long Case Study format (default: Overview, Problem, Process, Outcome) ──
+      renderCover(cs);
+      show('blocksSectionLabel');
+      show('csBlocks');
+      document.getElementById('csBlocks').innerHTML = [
         buildLegacySection('cs-overview', 'Overview',    cs.summary),
         buildLegacySection('cs-problem',  'The Problem', cs.problem),
         buildLegacySection('cs-process',  'Process',     cs.process),
         buildLegacySection('cs-outcome',  'Outcome',     cs.outcome),
       ].join('');
-    }
-
-    if (hasBlocks) {
-      show('blocksSectionLabel');
-      show('csBlocks');
-      document.getElementById('csBlocks').innerHTML = blockHtml;
     }
 
     // ── Gallery ──

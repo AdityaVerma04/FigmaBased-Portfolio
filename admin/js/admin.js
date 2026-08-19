@@ -33,6 +33,187 @@ function persist() {
   localStorage.setItem(DRAFT_KEY, JSON.stringify(workingData));
 }
 
+const SEED_DATA = {
+  "caseStudies": [
+    {
+      "id": "cs-001",
+      "slug": "namisite-client-app",
+      "title": "Designing a client-facing app from zero to first build",
+      "client": "Namisite Technologies",
+      "role": "UI/UX Designer & Front-End App Developer",
+      "year": "2026",
+      "status": "published",
+      "isLocked": true,
+      "order": 1,
+      "coverImage": "assets/cover-namisite.svg",
+      "tags": ["UI Design", "Figma", "Flutter", "Pre-launch"],
+      "tools": ["Figma", "Flutter", "HTML/CSS"],
+      "summary": "End-to-end UI/UX for a client application — from early wireframes through interactive Figma prototypes to a working Flutter front-end, delivered ahead of the app's public launch.",
+      "problem": "Replace this with the real brief: what did the client need, and what wasn't working before this project started? What constraints (timeline, platform, audience) shaped the brief?",
+      "process": "Replace this with your actual process: how did you start (desk research, user interviews, competitor audit)? How did you move through wireframes to high-fidelity in Figma? How many feedback rounds with the client? How did you hand off to — or personally build — the Flutter front-end?",
+      "outcome": "Replace this with the real result: what shipped, any measurable impact, what the client said, and what you'd do differently next time.",
+      "liveUrl": "",
+      "figmaUrl": "",
+      "mediaAssets": []
+    },
+    {
+      "id": "cs-002",
+      "slug": "amazon-fashion",
+      "type": "quick",
+      "title": "Amazon Fashion Redesign",
+      "subtitle": "Landing Page UX Redesign",
+      "tagline": "Make choosing easier, not to show more things.",
+      "client": "Personal Project",
+      "role": "Product Designer",
+      "discipline": "Product · UX · Personal",
+      "year": "2024",
+      "status": "published",
+      "isLocked": true,
+      "order": 2,
+      "coverImage": "https://picsum.photos/seed/amazon1/600/400",
+      "tags": ["UX Design", "Redesign", "Figma"],
+      "tools": ["Figma"],
+      "summary": "Reimagine the Amazon Fashion landing page to make browsing easier and reduce decision fatigue.",
+      "brief": "Reimagine the Amazon Fashion landing page to make browsing easier, reduce decision fatigue and help users discover products faster without limiting choice.",
+      "thinking": "The redesign focuses on simplifying product discovery through clearer hierarchy, intuitive navigation and progressive exploration. By reducing visual clutter and organising content around customer intent...",
+      "myRole": "Conducted research, identified user pain points, developed the UX strategy, designed user flows and wireframes, created the final UI and presented the design rationale.",
+      "screens": [
+        { "src": "https://picsum.photos/seed/amazon2/1200/800", "caption": "High Fidelity Mockup", "wide": false },
+        { "src": "https://picsum.photos/seed/amazon3/1200/800", "caption": "Paper Wireframes", "wide": false },
+        { "src": "https://picsum.photos/seed/amazon4/1200/500", "caption": "Component Library", "wide": true }
+      ],
+      "prototypeUrl": "https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Fproto%2F%3Fnode-id%3D0-1",
+      "liveUrl": "",
+      "figmaUrl": "",
+      "designsUrl": ""
+    },
+    {
+      "id": "cs-003",
+      "slug": "swiggy-instamart-ux",
+      "type": "detailed",
+      "title": "Swiggy Instamart UX Overhaul",
+      "subtitle": "10-Minute Grocery — Zero-Friction Checkout",
+      "tagline": "Speed is the feature. Every tap that slows you down is a broken promise.",
+      "client": "Personal Project",
+      "role": "UX Designer",
+      "discipline": "Product · UX · Consumer",
+      "year": "2025",
+      "status": "published",
+      "isLocked": false,
+      "order": 3,
+      "coverImage": "https://picsum.photos/seed/swiggy-cover/600/400",
+      "tags": ["UX Design", "Mobile", "Figma", "Research"],
+      "tools": ["Figma", "Maze", "Miro"],
+      "summary": "A ground-up UX audit and redesign of the Swiggy Instamart checkout flow — reducing friction from cart to confirmation by eliminating redundant steps and surfacing trust signals at the right moments.",
+      "context": "Swiggy Instamart entered the 10-minute grocery delivery space with an aggressive promise — but the checkout experience hadn't kept up. Users were abandoning carts at the payment step, not because they didn't want to buy, but because the flow made them work too hard. The tension between speed-as-brand and slowness-as-UX was undercutting trust at the exact moment the product needed to deliver on its core promise.",
+      "problemStatement": "How do we make the checkout feel as fast as the delivery — from cart to confirmation in under 4 taps?",
+      "solutionScreens": [
+        { "src": "https://picsum.photos/seed/swig-sol1/400/700", "caption": "Collapsed cart view" },
+        { "src": "https://picsum.photos/seed/swig-sol2/600/400", "caption": "Persistent ETA bar" },
+        { "src": "https://picsum.photos/seed/swig-sol3/600/400", "caption": "Inline coupon discovery" },
+        { "src": "https://picsum.photos/seed/swig-sol4/400/700", "caption": "One-screen payment summary" },
+        { "src": "https://picsum.photos/seed/swig-sol5/800/400", "caption": "Expanded coupon panel" },
+        { "src": "https://picsum.photos/seed/swig-sol6/800/400", "caption": "Address + slot confirmation" },
+        { "src": "https://picsum.photos/seed/swig-sol7/600/400", "caption": "Order confirmed screen" },
+        { "src": "https://picsum.photos/seed/swig-sol8/600/400", "caption": "Empty cart state" }
+      ],
+      "researchMethods": [
+        { "name": "Heuristic Audit", "description": "Mapped every screen of the existing checkout flow against Nielsen's 10 usability heuristics. Identified 3 major anti-patterns including forced address re-entry and buried coupon discovery." },
+        { "name": "Moderated Usability Sessions", "description": "6 sessions (3 frequent users, 3 occasional buyers). Coded recordings for task failure and hesitation moments to identify the highest-friction points." },
+        { "name": "Affinity Mapping", "description": "Session findings synthesised in Miro into an affinity map revealing 3 core user frustrations: uncertainty, extra steps, and hidden value." },
+        { "name": "Competitor Analysis", "description": "Audited checkout flows of Blinkit, Zepto, and BigBasket to identify best-in-class patterns and industry benchmarks for quick-commerce checkout." }
+      ],
+      "ideation": {
+        "approach": "After research synthesis, three design principles emerged: progressive disclosure, persistent context, and a collapsed payment summary. Sketched 6 directions and narrowed to 2 viable options.",
+        "solutions": [
+          { "title": "Option A — Single-scroll checkout", "description": "Everything on one vertical scroll. High cognitive load upfront.", "chosen": false },
+          { "title": "Option B — Progressive disclosure", "description": "Three focused screens: Cart → Address + Slot → Payment Summary. Chosen for lower cognitive load.", "chosen": true }
+        ]
+      },
+      "wireframes": [
+        { "src": "https://picsum.photos/seed/swig-wf1/600/900", "type": "lo-fi", "caption": "Cart screen — paper sketch" },
+        { "src": "https://picsum.photos/seed/swig-wf2/600/900", "type": "lo-fi", "caption": "Payment summary — paper sketch" },
+        { "src": "https://picsum.photos/seed/swig-wf3/600/900", "type": "hi-fi", "caption": "Cart screen — Figma wireframe v2" },
+        { "src": "https://picsum.photos/seed/swig-wf4/600/900", "type": "hi-fi", "caption": "Payment summary — Figma wireframe v2" }
+      ],
+      "iterations": [
+        { "src": "https://picsum.photos/seed/swig-iter1/400/700", "label": "v1 — Initial lo-fi sketch" },
+        { "src": "https://picsum.photos/seed/swig-iter2/400/700", "label": "v2 — After first review" },
+        { "src": "https://picsum.photos/seed/swig-iter3/400/700", "label": "v3 — Final hi-fi" }
+      ],
+      "modules": [
+        {
+          "name": "Cart Screen",
+          "description": "Reorganised cart with a persistent ETA bar at the top, inline item editing, and coupon discovery moved above the fold.",
+          "screens": [
+            { "src": "https://picsum.photos/seed/swig-m1a/380/660", "caption": "Default cart state" },
+            { "src": "https://picsum.photos/seed/swig-m1b/380/660", "caption": "With coupon applied" }
+          ]
+        },
+        {
+          "name": "Address & Delivery Slot",
+          "description": "Combined address confirmation and delivery slot selection into one screen.",
+          "screens": [
+            { "src": "https://picsum.photos/seed/swig-m2a/380/660", "caption": "Address confirmation" },
+            { "src": "https://picsum.photos/seed/swig-m2b/380/660", "caption": "Slot selection expanded" }
+          ]
+        },
+        {
+          "name": "Payment Summary",
+          "description": "A single-screen payment view consolidating address, delivery slot, order total, and payment method.",
+          "screens": [
+            { "src": "https://picsum.photos/seed/swig-m3a/380/660", "caption": "Payment summary screen" },
+            { "src": "https://picsum.photos/seed/swig-m3b/380/660", "caption": "Order confirmed state" }
+          ]
+        }
+      ],
+      "designSystem": {
+        "colors": [
+          { "name": "Instamart Orange", "hex": "#FC8019", "role": "Primary CTA, key actions" },
+          { "name": "Dark Text", "hex": "#1C1C1C", "role": "Body text, headings" },
+          { "name": "Surface", "hex": "#F5F5F5", "role": "Page background" },
+          { "name": "Muted Text", "hex": "#686B78", "role": "Secondary labels" },
+          { "name": "Success Green", "hex": "#1BA672", "role": "Confirmation, success states" }
+        ],
+        "typography": {
+          "Heading": "Meto Sans · Bold · 20–28px",
+          "Body": "Meto Sans · Regular · 14–16px",
+          "Caption": "SF Mono · Regular · 11–12px"
+        },
+        "componentsImage": "https://picsum.photos/seed/swig-ds/1200/450",
+        "credit": "Built on top of Swiggy's existing design language and component library. Color tokens and typeface follow Swiggy's public brand guidelines."
+      },
+      "userTesting": {
+        "method": "Unmoderated usability testing via Maze · n = 18 participants",
+        "results": [
+          { "metric": "Task completion rate", "before": "71%", "after": "94%" },
+          { "metric": "Time to payment", "before": "2m 14s", "after": "1m 36s" },
+          { "metric": "Confirmation trust score", "before": "3.1 / 5", "after": "4.6 / 5" }
+        ],
+        "changes": [
+          "Added persistent delivery ETA bar mid-checkout",
+          "Moved coupon field above payment method",
+          "Added item count badge to confirmation header"
+        ]
+      },
+      "conclusion": {
+        "challenges": "Working without access to Swiggy's real analytics meant every assumption had to be validated independently.",
+        "outcomes": "Task completion improved from 71% to 94%, time-to-payment dropped by 38 seconds.",
+        "learnings": "Coupon placement discovery was a trust issue, not just convenience."
+      },
+      "futureScope": [
+        "Integrate loyalty rewards directly within the cart screen",
+        "Personalised delivery slot suggestions",
+        "Voice-assisted checkout"
+      ],
+      "feedbackInvite": "Have thoughts on the design decisions or research approach? Reach out via email or LinkedIn.",
+      "liveUrl": "",
+      "figmaUrl": "",
+      "mediaAssets": []
+    }
+  ]
+};
+
 async function loadFromServer() {
   const urls = [
     '/data/case-studies.json',
@@ -53,7 +234,7 @@ async function loadFromServer() {
       // try next
     }
   }
-  return { caseStudies: [] };
+  return SEED_DATA;
 }
 
 // ── Initialise ────────────────────────────────────────────
