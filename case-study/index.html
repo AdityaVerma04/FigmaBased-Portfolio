@@ -13,6 +13,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script>
+    if (window.location.pathname.endsWith('/case-study')) {
+      window.history.replaceState(null, '', window.location.pathname + '/' + window.location.search + window.location.hash);
+    }
+  </script>
   <style>
     /* ── TOKENS ────────────────────────────────────────────── */
     :root {
@@ -951,6 +957,23 @@
   <div id="lbCaption"></div>
 </div>
 
-<script src="js/case-study.js"></script>
+<script>
+  (function() {
+    function loadScript(src, fallback) {
+      var s = document.createElement('script');
+      s.src = src;
+      s.onerror = function() {
+        if (fallback) {
+          var fb = document.createElement('script');
+          fb.src = fallback;
+          document.body.appendChild(fb);
+        }
+      };
+      document.body.appendChild(s);
+    }
+    // Handles adifolio.com/case-study, adifolio.com/case-study/, and local file/server paths
+    loadScript('js/case-study.js', '/case-study/js/case-study.js');
+  })();
+</script>
 </body>
 </html>

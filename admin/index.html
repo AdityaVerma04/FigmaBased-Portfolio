@@ -8,6 +8,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <script>
+    if (window.location.pathname.endsWith('/admin')) {
+      window.history.replaceState(null, '', window.location.pathname + '/' + window.location.search + window.location.hash);
+    }
+  </script>
   <style>
     /* ── Cursor visibility fix for admin panel ── */
     body, body * {
@@ -794,6 +800,23 @@
 
 </div><!-- /admin-wrap -->
 
-<script src="js/admin.js"></script>
+<script>
+  (function() {
+    function loadScript(src, fallback) {
+      var s = document.createElement('script');
+      s.src = src;
+      s.onerror = function() {
+        if (fallback) {
+          var fb = document.createElement('script');
+          fb.src = fallback;
+          document.body.appendChild(fb);
+        }
+      };
+      document.body.appendChild(s);
+    }
+    // Handles adifolio.com/admin, adifolio.com/admin/, and local file/server paths
+    loadScript('js/admin.js', '/admin/js/admin.js');
+  })();
+</script>
 </body>
 </html>
