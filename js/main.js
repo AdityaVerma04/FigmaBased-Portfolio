@@ -353,6 +353,17 @@ function initSplashScreen() {
   const textEl = document.getElementById('splashText');
   if (!splash || !textEl) return;
 
+  // ══════════════════════════════════════════════════════════════
+  //  SPLASH SCREEN SPEED CONFIGURATION:
+  //  • WORD_SPEED_MS : Milliseconds per word (lower = faster)
+  //                    e.g. 180 = ultra fast, 220 = brisk/snappy, 350 = relaxed
+  //  • FADE_SPEED_MS : Duration of opacity fade between words
+  //  • EXIT_DELAY_MS : Brief pause on the final greeting before dissolving
+  // ══════════════════════════════════════════════════════════════
+  const WORD_SPEED_MS = 220;
+  const FADE_SPEED_MS = 80;
+  const EXIT_DELAY_MS = 250;
+
   const greetings = [
     "Hello",
     "नमस्ते",
@@ -375,14 +386,12 @@ function initSplashScreen() {
     splash.classList.add('splash-hidden');
     setTimeout(() => {
       try { splash.remove(); } catch(e) {}
-    }, 900);
+    }, 850);
   }
 
   // Click / tap to skip immediately
   splash.addEventListener('click', dismissSplash);
   splash.addEventListener('touchstart', dismissSplash, { passive: true });
-
-  const intervalMs = 400; // Smooth pacing
 
   const timer = setInterval(() => {
     if (isExiting) {
@@ -394,19 +403,19 @@ function initSplashScreen() {
 
     if (currentIndex >= greetings.length) {
       clearInterval(timer);
-      setTimeout(dismissSplash, 420);
+      setTimeout(dismissSplash, EXIT_DELAY_MS);
       return;
     }
 
-    // Pure smooth opacity fade (no choppy scaling or jumping)
+    // Pure smooth opacity crossfade
     textEl.classList.add('splash-text-fade');
 
     setTimeout(() => {
       textEl.textContent = greetings[currentIndex];
       textEl.classList.remove('splash-text-fade');
-    }, 130);
+    }, FADE_SPEED_MS);
 
-  }, intervalMs);
+  }, WORD_SPEED_MS);
 }
 
 // ── Custom Cursor ─────────────────────────────────────────
