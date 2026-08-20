@@ -1119,6 +1119,22 @@ p {
   -webkit-user-drag: none;
 }
 
+.hero-character-blink-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+  object-position: bottom center;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  opacity: 0;
+  z-index: 2;
+}
+
 /* Bottom Bar: CTAs & Socials
  * Figma: Frame 22, bottom of artboard, gap 824px between CTA and socials
  */

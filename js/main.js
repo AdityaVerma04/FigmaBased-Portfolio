@@ -352,18 +352,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ── Character Eye Blink Cycle ──────────────────────────────
 // Intervals: 1.8s, 2.6s, 1.4s, 3.1s loop
-// Transition: Open -> Half closed -> Closed -> Half open -> Open
+// Transition: Open (overlay transparent) -> Half closed -> Closed -> Half open -> Open
 function initEyeBlink() {
-  const charImg = document.getElementById('heroCharacterImg');
-  if (!charImg) return;
+  const overlay = document.getElementById('heroCharacterOverlay');
+  if (!overlay) return;
 
   const frames = {
-    open: 'assets/aditya-character-open.png',
     half: 'assets/aditya-character-half.png',
     closed: 'assets/aditya-character-closed.png'
   };
 
-  // Pre-instantiate Image objects in memory for instant synchronous frame swap
+  // Pre-instantiate Image objects in memory for instant synchronous overlay frame swap
   Object.values(frames).forEach(src => {
     const img = new Image();
     img.src = src;
@@ -375,19 +374,20 @@ function initEyeBlink() {
 
   function performBlink() {
     // Stage 1: Half closed (40ms)
-    charImg.src = frames.half;
+    overlay.src = frames.half;
+    overlay.style.opacity = '1';
 
     setTimeout(() => {
       // Stage 2: Fully closed (70ms)
-      charImg.src = frames.closed;
+      overlay.src = frames.closed;
 
       setTimeout(() => {
         // Stage 3: Half open (40ms)
-        charImg.src = frames.half;
+        overlay.src = frames.half;
 
         setTimeout(() => {
-          // Stage 4: Fully open
-          charImg.src = frames.open;
+          // Stage 4: Fully open (hide overlay to expose base open eyes seamlessly)
+          overlay.style.opacity = '0';
 
           // Schedule next blink from the interval pattern
           const nextDelay = intervals[intervalIdx % intervals.length];
@@ -425,9 +425,9 @@ function initMagneticElements() {
 // ── Hero Subtle Interactive Parallax ────────────────────────
 function initHeroParallax() {
   const hero = document.getElementById('hero');
-  const character = document.getElementById('heroCharacterImg');
+  const charLayer = document.querySelector('.hero-character-layer');
   const wordmark = document.getElementById('heroWordmark') || document.querySelector('.hero-wordmark-container');
-  if (!hero || !character || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (!hero || !charLayer || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
   let targetX = 0, targetY = 0;
   let currentX = 0, currentY = 0;
@@ -449,8 +449,8 @@ function initHeroParallax() {
     currentX += (targetX - currentX) * 0.08;
     currentY += (targetY - currentY) * 0.08;
 
-    if (character) {
-      character.style.transform = `translate3d(${(currentX * 16).toFixed(2)}px, ${(currentY * 8).toFixed(2)}px, 0)`;
+    if (charLayer) {
+      charLayer.style.transform = `translateX(calc(-50% + ${(currentX * 16).toFixed(2)}px)) translateY(${(currentY * 8).toFixed(2)}px)`;
     }
     if (wordmark) {
       wordmark.style.transform = `translate3d(${(-currentX * 10).toFixed(2)}px, calc(-50% + ${(-currentY * 5).toFixed(2)}px), 0)`;

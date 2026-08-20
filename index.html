@@ -21,9 +21,9 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Smooch&family=Poppins:wght@400;500;600;700&family=Syne:wght@700;800&family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=55">
+  <link rel="stylesheet" href="css/style.css?v=56">
   <!-- Preload hero character animation frames for flicker-free blinking -->
-  <link rel="preload" as="image" href="assets/aditya-character-open.png">
+  <link rel="preload" as="image" href="assets/aditya-character-base.png">
   <link rel="preload" as="image" href="assets/aditya-character-half.png">
   <link rel="preload" as="image" href="assets/aditya-character-closed.png">
 </head>
@@ -261,10 +261,12 @@
         </div>
       </div>
 
-      <!-- Character portrait: Figma centered, bottom-anchored -->
+      <!-- Character portrait: Figma centered, bottom-anchored with face blink overlay -->
       <div class="hero-character-layer">
-        <img src="assets/aditya-character.png" alt="Aditya Verma - UX Designer" class="hero-character-img"
-          id="heroCharacterImg" width="572" height="859" loading="eager">
+        <img src="assets/aditya-character-base.png" alt="Aditya Verma - UX Designer" class="hero-character-img"
+          id="heroCharacterImg" width="544" height="816" loading="eager">
+        <img src="" alt="" class="hero-character-blink-overlay"
+          id="heroCharacterOverlay" width="544" height="816" aria-hidden="true">
       </div>
 
       <!-- Bottom bar: CTAs + Socials -->
