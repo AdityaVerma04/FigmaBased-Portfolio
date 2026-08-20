@@ -346,8 +346,62 @@ document.addEventListener('DOMContentLoaded', () => {
   initFullscreen();
   initCursor();
   initHeroParallax();
+  initEyeBlink();
   initMagneticElements();
 });
+
+// ── Character Eye Blink Cycle ──────────────────────────────
+// Intervals: 1.8s, 2.6s, 1.4s, 3.1s loop
+// Transition: Open -> Half closed -> Closed -> Half open -> Open
+function initEyeBlink() {
+  const charImg = document.getElementById('heroCharacterImg');
+  if (!charImg) return;
+
+  const frames = {
+    open: 'assets/aditya-character-open.png',
+    half: 'assets/aditya-character-half.png',
+    closed: 'assets/aditya-character-closed.png'
+  };
+
+  // Pre-instantiate Image objects in memory for instant synchronous frame swap
+  Object.values(frames).forEach(src => {
+    const img = new Image();
+    img.src = src;
+  });
+
+  const intervals = [1800, 2600, 1400, 3100];
+  let intervalIdx = 0;
+  let blinkTimeout = null;
+
+  function performBlink() {
+    // Stage 1: Half closed (40ms)
+    charImg.src = frames.half;
+
+    setTimeout(() => {
+      // Stage 2: Fully closed (70ms)
+      charImg.src = frames.closed;
+
+      setTimeout(() => {
+        // Stage 3: Half open (40ms)
+        charImg.src = frames.half;
+
+        setTimeout(() => {
+          // Stage 4: Fully open
+          charImg.src = frames.open;
+
+          // Schedule next blink from the interval pattern
+          const nextDelay = intervals[intervalIdx % intervals.length];
+          intervalIdx++;
+          blinkTimeout = setTimeout(performBlink, nextDelay);
+        }, 40);
+      }, 70);
+    }, 40);
+  }
+
+  // Initial blink trigger after first interval (1.8s)
+  blinkTimeout = setTimeout(performBlink, intervals[0]);
+  intervalIdx = 1;
+}
 
 // ── Magnetic Button & Icon Micro-interactions ─────────────
 function initMagneticElements() {

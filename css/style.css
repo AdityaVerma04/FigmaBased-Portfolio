@@ -2763,7 +2763,7 @@ footer::after {
 
   /* ── PHONE MOBILE HERO FRAME CONTROLS (-10%) ── */
   .hero-frame-15 {
-    top:10%;
+    top: 10%;
     width: 409px;
     height: 191px;
     transform: translateX(-50%) scale(calc((100vw - 20px) / 409));
