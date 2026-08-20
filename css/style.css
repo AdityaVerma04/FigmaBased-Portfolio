@@ -2658,7 +2658,7 @@ footer::after {
    ═══════════════════════════════════════════════════════════════ */
 @media (min-width: 591px) and (max-width: 699px) {
   .hero-frame-15 {
-    top: 15%;
+    top: 12%;
     width: 500px;
     height: 233px;
     transform: translateX(-50%) scale(calc((100vw - 20px) / 500));
@@ -2709,7 +2709,7 @@ footer::after {
    ═══════════════════════════════════════════════════════════════ */
 @media (min-width: 481px) and (max-width: 590px) {
   .hero-frame-15 {
-    top: 15%;
+    top: 8%;
     width: 486px;
     height: 227px;
     transform: translateX(-50%) scale(calc((100vw - 20px) / 486));
@@ -2763,7 +2763,7 @@ footer::after {
 
   /* ── PHONE MOBILE HERO FRAME CONTROLS (-10%) ── */
   .hero-frame-15 {
-    top: 15%;
+    top: 6%;
     width: 409px;
     height: 191px;
     transform: translateX(-50%) scale(calc((100vw - 20px) / 409));
