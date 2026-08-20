@@ -345,7 +345,68 @@ document.addEventListener('DOMContentLoaded', () => {
   initFooterTs();
   initFullscreen();
   initCursor();
+  initHeroParallax();
+  initMagneticElements();
 });
+
+// ── Magnetic Button & Icon Micro-interactions ─────────────
+function initMagneticElements() {
+  if (matchMedia("(max-width: 860px)").matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const magnets = document.querySelectorAll('.hero-btn-primary, .hero-btn-ghost, .social-circle, .tool-btn');
+  
+  magnets.forEach(el => {
+    el.addEventListener('mousemove', e => {
+      const rect = el.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      el.style.transform = `translate(${x * 0.10}px, ${y * 0.10}px)`;
+    });
+
+    el.addEventListener('mouseleave', () => {
+      el.style.transform = '';
+    });
+  });
+}
+
+// ── Hero Subtle Interactive Parallax ────────────────────────
+function initHeroParallax() {
+  const hero = document.getElementById('hero');
+  const character = document.getElementById('heroCharacterImg');
+  const wordmark = document.getElementById('heroWordmark') || document.querySelector('.hero-wordmark-container');
+  if (!hero || !character || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  let targetX = 0, targetY = 0;
+  let currentX = 0, currentY = 0;
+
+  hero.addEventListener('mousemove', (e) => {
+    const rect = hero.getBoundingClientRect();
+    const nx = (e.clientX - rect.left) / rect.width - 0.5;
+    const ny = (e.clientY - rect.top) / rect.height - 0.5;
+    targetX = nx;
+    targetY = ny;
+  });
+
+  hero.addEventListener('mouseleave', () => {
+    targetX = 0;
+    targetY = 0;
+  });
+
+  function update() {
+    currentX += (targetX - currentX) * 0.08;
+    currentY += (targetY - currentY) * 0.08;
+
+    if (character) {
+      character.style.transform = `translate3d(${(currentX * 16).toFixed(2)}px, ${(currentY * 8).toFixed(2)}px, 0)`;
+    }
+    if (wordmark) {
+      wordmark.style.transform = `translate3d(${(-currentX * 10).toFixed(2)}px, calc(-50% + ${(-currentY * 5).toFixed(2)}px), 0)`;
+    }
+
+    requestAnimationFrame(update);
+  }
+
+  requestAnimationFrame(update);
+}
 
 // ── iOS Multilingual Splash Screen ─────────────────────────
 function initSplashScreen() {
