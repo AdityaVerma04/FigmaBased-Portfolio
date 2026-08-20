@@ -336,7 +336,7 @@ function initFullscreen() {
 
 // ── Boot ─────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-  initSplashScreen();
+  // initSplashScreen();
   loadCaseStudies();
   initInspector();
   initLayerNav();
