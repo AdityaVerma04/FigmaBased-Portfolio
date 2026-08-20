@@ -786,6 +786,8 @@ function loadIntoForm(id) {
   ], 'Screen');
 
   // Detailed fields
+  if (document.getElementById('f-det-team'))     document.getElementById('f-det-team').value     = cs.team     || '';
+  if (document.getElementById('f-det-timeline')) document.getElementById('f-det-timeline').value = cs.timeline || '';
   document.getElementById('f-det-subtitle').value   = cs.detSubtitle   || cs.subtitle   || '';
   document.getElementById('f-det-tagline').value    = cs.detTagline    || cs.tagline    || '';
   document.getElementById('f-det-discipline').value = cs.detDiscipline || cs.discipline || '';
@@ -900,6 +902,8 @@ function onSave(e) {
     screens:     screensParsed,
 
     // Detailed fields
+    team:           document.getElementById('f-det-team') ? document.getElementById('f-det-team').value.trim() : '',
+    timeline:       document.getElementById('f-det-timeline') ? document.getElementById('f-det-timeline').value.trim() : '',
     detSubtitle:    document.getElementById('f-det-subtitle').value.trim(),
     detTagline:     document.getElementById('f-det-tagline').value.trim(),
     detDiscipline:  document.getElementById('f-det-discipline').value.trim(),
