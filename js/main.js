@@ -569,14 +569,14 @@ function initAmbientMusic() {
     if (isPlaying) {
       isPlaying = false;
       musicBtn.classList.remove('playing');
-      musicBtn.dataset.shortcut = 'M — Ambient Tune';
+      musicBtn.dataset.shortcut = 'M — Play Tune';
       musicBtn.title = 'Play ambient tune (M)';
       fadeOutAudio();
       stopGenerativeAmbient();
     } else {
       isPlaying = true;
       musicBtn.classList.add('playing');
-      musicBtn.dataset.shortcut = 'M — Playing (Click to Pause)';
+      musicBtn.dataset.shortcut = 'M — Pause Tune';
       musicBtn.title = 'Pause ambient tune (M)';
 
       audio.play().then(() => {
