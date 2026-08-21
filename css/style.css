@@ -1401,32 +1401,34 @@ p {
 .handle-bl { bottom: -5px; left: -5px; }
 .handle-br { bottom: -5px; right: -5px; }
 
-/* Photo Card & Image */
+/* Photo Card & Cutout Sticker */
 .about-photo-card {
   position: relative;
-  border-radius: 10px;
-  overflow: hidden;
-  background: #14131a;
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
   display: flex;
   align-items: center;
   justify-content: center;
+  background: transparent;
+  padding: 6px 10px;
 }
 
-.about-photo-img {
+.about-photo-cutout {
   display: block;
-  width: 100%;
-  max-width: 320px;
+  width: auto;
+  max-width: 240px;
+  max-height: 420px;
   height: auto;
-  aspect-ratio: 1 / 1;
-  object-fit: cover;
-  border-radius: 10px;
-  filter: contrast(1.03) brightness(1.01);
-  transition: transform 0.4s var(--ease-out);
+  object-fit: contain;
+  filter: drop-shadow(0 0 1.2px rgba(255, 255, 255, 0.95))
+         drop-shadow(0 0 2.5px rgba(255, 255, 255, 0.8))
+         drop-shadow(0 14px 28px rgba(0, 0, 0, 0.65));
+  transition: transform 0.4s var(--ease-snap), filter 0.4s ease;
 }
 
-.about-figma-frame:hover .about-photo-img {
+.about-figma-frame:hover .about-photo-cutout {
   transform: scale(1.03);
+  filter: drop-shadow(0 0 2px rgba(255, 255, 255, 1))
+         drop-shadow(0 0 4px rgba(255, 51, 102, 0.8))
+         drop-shadow(0 18px 36px rgba(0, 0, 0, 0.7));
 }
 
 /* Floating Figma layer tag */
