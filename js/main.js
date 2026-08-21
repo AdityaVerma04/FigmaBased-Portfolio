@@ -638,28 +638,35 @@ function initAmbientMusic() {
     bubble.setAttribute('role', 'status');
     bubble.setAttribute('aria-live', 'polite');
     bubble.innerHTML = `
-      <svg class="music-pixel-sax" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" aria-hidden="true">
-        <rect x="2" y="3" width="3" height="2" fill="#E2E8F0"/>
-        <rect x="5" y="4" width="2" height="2" fill="#F6AD55"/>
-        <rect x="7" y="5" width="2" height="2" fill="#F6AD55"/>
-        <rect x="8" y="7" width="2" height="6" fill="#ECC94B"/>
-        <rect x="6" y="9" width="2" height="2" fill="#FAF089"/>
-        <rect x="6" y="11" width="2" height="2" fill="#FAF089"/>
-        <rect x="10" y="8" width="1" height="1" fill="#FFFFFF"/>
-        <rect x="10" y="10" width="1" height="1" fill="#FFFFFF"/>
-        <rect x="10" y="12" width="1" height="1" fill="#FFFFFF"/>
-        <rect x="8" y="13" width="3" height="2" fill="#D69E2E"/>
-        <rect x="10" y="15" width="4" height="2" fill="#D69E2E"/>
-        <rect x="13" y="14" width="3" height="2" fill="#ECC94B"/>
-        <rect x="14" y="10" width="3" height="4" fill="#F6E05E"/>
-        <rect x="14" y="8" width="4" height="2" fill="#ECC94B"/>
-        <rect x="15" y="6" width="3" height="2" fill="#D69E2E"/>
-        <rect x="16" y="5" width="2" height="1" fill="#FAF089"/>
-        <rect x="15" y="10" width="1" height="2" fill="#FFFFFF"/>
-      </svg>
+      <div class="music-bubble-icon-box" aria-hidden="true">
+        <svg class="music-pixel-sax" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+          <rect x="3" y="4" width="3" height="2" fill="#E2E8F0"/>
+          <rect x="3" y="3" width="2" height="1" fill="#94A3B8"/>
+          <rect x="6" y="5" width="2" height="2" fill="#F59E0B"/>
+          <rect x="8" y="6" width="2" height="2" fill="#D97706"/>
+          <rect x="9" y="8" width="3" height="7" fill="#FBBF24"/>
+          <rect x="7" y="9" width="2" height="2" fill="#FEF08A"/>
+          <rect x="7" y="12" width="2" height="2" fill="#FEF08A"/>
+          <rect x="12" y="9" width="1" height="1" fill="#FFFFFF"/>
+          <rect x="12" y="11" width="1" height="1" fill="#FFFFFF"/>
+          <rect x="12" y="13" width="1" height="1" fill="#FFFFFF"/>
+          <rect x="9" y="15" width="4" height="3" fill="#D97706"/>
+          <rect x="12" y="17" width="4" height="2" fill="#B45309"/>
+          <rect x="15" y="15" width="3" height="3" fill="#F59E0B"/>
+          <rect x="16" y="11" width="4" height="4" fill="#FBBF24"/>
+          <rect x="17" y="9" width="4" height="2" fill="#FDE047"/>
+          <rect x="18" y="7" width="3" height="2" fill="#F59E0B"/>
+          <rect x="19" y="6" width="2" height="1" fill="#FEF08A"/>
+          <rect x="17" y="11" width="1" height="3" fill="#FFFFFF"/>
+          <rect x="10" y="8" width="1" height="6" fill="#FEF08A"/>
+        </svg>
+      </div>
       <div class="music-bubble-text-wrap">
-        <div class="music-bubble-line-1">Hey! Wanna hear some <span class="highlight">jazz</span></div>
-        <div class="music-bubble-line-2">while you check my portfolio?</div>
+        <div class="music-bubble-line-1">Hey! Wanna hear some <span class="highlight">jazz?</span></div>
+        <div class="music-bubble-line-2">while you check my portfolio</div>
+      </div>
+      <div class="music-bubble-action" aria-hidden="true">
+        <span class="music-kbd">M</span>
       </div>
     `;
 
