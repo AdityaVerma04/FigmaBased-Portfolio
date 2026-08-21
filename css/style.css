@@ -2413,8 +2413,8 @@ p {
   content: '';
   position: absolute;
   left: -2px;
-  top: 8px;
-  bottom: 8px;
+  top: 24px;
+  bottom: 24px;
   width: 2px;
   background: linear-gradient(
     to top,
@@ -2456,7 +2456,7 @@ p {
 
 @keyframes timelinePhotonAscent {
   0% {
-    top: calc(100% - 24px);
+    top: calc(100% - 30px);
     opacity: 0;
     transform: scaleY(0.4);
   }
@@ -2469,7 +2469,7 @@ p {
     transform: scaleY(1);
   }
   100% {
-    top: 8px;
+    top: 22px;
     opacity: 0;
     transform: scaleY(0.4);
   }
@@ -2489,7 +2489,7 @@ p {
   content: '';
   position: absolute;
   left: -39px;
-  top: 5px;
+  top: 24px;
   width: 10px;
   height: 10px;
   border-radius: 50%;
@@ -2512,7 +2512,7 @@ p {
   content: '';
   position: absolute;
   left: -44px;
-  top: 0px;
+  top: 19px;
   width: 20px;
   height: 20px;
   border-radius: 50%;
