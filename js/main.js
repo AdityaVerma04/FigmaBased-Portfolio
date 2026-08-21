@@ -425,35 +425,55 @@ function initMagneticElements() {
 // ── Hero Subtle Interactive Parallax ────────────────────────
 function initHeroParallax() {
   const hero = document.getElementById('hero');
-  const charLayer = document.querySelector('.hero-character-layer');
-  const wordmark = document.getElementById('heroWordmark') || document.querySelector('.hero-wordmark-container');
-  if (!hero || !charLayer || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const charWrapper = document.getElementById('heroCharacterWrapper') || document.querySelector('.hero-character-layer');
+  const wordmark = document.getElementById('heroWordmark') || document.querySelector('.hero-frame-15');
+  const scriptName = document.querySelector('.hero-script-name');
+  if (!hero || !charWrapper || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
   let targetX = 0, targetY = 0;
   let currentX = 0, currentY = 0;
 
-  hero.addEventListener('mousemove', (e) => {
+  window.addEventListener('mousemove', (e) => {
     const rect = hero.getBoundingClientRect();
-    const nx = (e.clientX - rect.left) / rect.width - 0.5;
-    const ny = (e.clientY - rect.top) / rect.height - 0.5;
-    targetX = nx;
-    targetY = ny;
-  });
+    if (e.clientY >= rect.top - 50 && e.clientY <= rect.bottom + 50) {
+      targetX = ((e.clientX - rect.left) / rect.width - 0.5) * 2; // -1 to +1
+      targetY = ((e.clientY - rect.top) / rect.height - 0.5) * 2; // -1 to +1
+    } else {
+      targetX = 0;
+      targetY = 0;
+    }
+  }, { passive: true });
 
-  hero.addEventListener('mouseleave', () => {
+  window.addEventListener('mouseleave', () => {
     targetX = 0;
     targetY = 0;
   });
 
   function update() {
-    currentX += (targetX - currentX) * 0.08;
-    currentY += (targetY - currentY) * 0.08;
+    currentX += (targetX - currentX) * 0.075;
+    currentY += (targetY - currentY) * 0.075;
 
-    if (charLayer) {
-      charLayer.style.transform = `translateX(calc(-50% + ${(currentX * 16).toFixed(2)}px)) translateY(${(currentY * 8).toFixed(2)}px)`;
+    // Character movement & subtle 3D tilt
+    if (charWrapper) {
+      const posX = (currentX * 18).toFixed(2);
+      const posY = (currentY * 10).toFixed(2);
+      const rotY = (currentX * 6).toFixed(2);
+      const rotX = (-currentY * 4).toFixed(2);
+      charWrapper.style.transform = `perspective(800px) translate3d(${posX}px, ${posY}px, 0) rotateY(${rotY}deg) rotateX(${rotX}deg)`;
     }
+
+    // Opposite subtle depth parallax on "PORTFOLIO" wordmark
     if (wordmark) {
-      wordmark.style.transform = `translate3d(${(-currentX * 10).toFixed(2)}px, calc(-50% + ${(-currentY * 5).toFixed(2)}px), 0)`;
+      const wmX = (-currentX * 12).toFixed(2);
+      const wmY = (-currentY * 6).toFixed(2);
+      wordmark.style.transform = `translate(calc(-50% + ${wmX}px), calc(-50% + ${wmY}px))`;
+    }
+
+    // Floating micro-shift on script name
+    if (scriptName) {
+      const snX = (currentX * 6).toFixed(2);
+      const snY = (currentY * 3).toFixed(2);
+      scriptName.style.transform = `rotate(-6deg) translate3d(${snX}px, ${snY}px, 0)`;
     }
 
     requestAnimationFrame(update);

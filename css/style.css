@@ -1125,6 +1125,17 @@ p {
   animation: fade-slide-up-center 0.85s var(--ease-out) 0.15s both;
 }
 
+.hero-character-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
 .hero-character-img {
   width: 100%;
   height: 100%;
