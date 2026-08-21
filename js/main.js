@@ -627,6 +627,71 @@ function initAmbientMusic() {
       audio.play().catch(startGenerativeAmbient);
     }
   });
+
+  // ── Music Notification Message Toast ─────────────────────
+  // Appears after 2 seconds on home screen, stays for 3 seconds, then smoothly fades out
+  function showMusicNotification() {
+    if (window.innerWidth <= 600 || isPlaying) return;
+    
+    const bubble = document.createElement('div');
+    bubble.className = 'music-bubble-notif';
+    bubble.setAttribute('role', 'status');
+    bubble.setAttribute('aria-live', 'polite');
+    bubble.innerHTML = `
+      <span class="music-bubble-icon" aria-hidden="true">🎷</span>
+      <span class="music-bubble-text">hey! wanna hear some <span class="highlight">jazz</span> while u check my portfolio?</span>
+    `;
+
+    // Notification badge on button
+    const badge = document.createElement('span');
+    badge.className = 'music-notif-badge';
+    musicBtn.appendChild(badge);
+
+    function updatePos() {
+      const btnRect = musicBtn.getBoundingClientRect();
+      bubble.style.left = `${btnRect.right + 12}px`;
+      bubble.style.top = `${btnRect.top + btnRect.height / 2}px`;
+    }
+
+    document.body.appendChild(bubble);
+    updatePos();
+    window.addEventListener('resize', updatePos);
+
+    // Click on notification bubble to start playing immediately
+    bubble.addEventListener('click', () => {
+      if (!isPlaying) toggleMusic();
+      dismiss();
+    });
+
+    // Animate in
+    requestAnimationFrame(() => {
+      bubble.classList.add('visible');
+    });
+
+    let dismissTimer = null;
+
+    function dismiss() {
+      if (!bubble.parentNode) return;
+      bubble.classList.remove('visible');
+      if (badge && badge.parentNode) badge.remove();
+      setTimeout(() => {
+        if (bubble.parentNode) bubble.remove();
+        window.removeEventListener('resize', updatePos);
+      }, 500);
+    }
+
+    // Stays for 3 seconds, then fades
+    dismissTimer = setTimeout(dismiss, 3000);
+
+    // Pause dismiss on hover so user can read / click easily
+    bubble.addEventListener('mouseenter', () => clearTimeout(dismissTimer));
+    bubble.addEventListener('mouseleave', () => {
+      dismissTimer = setTimeout(dismiss, 1500);
+    });
+  }
+
+  // Trigger 2 seconds after website home screen opens
+  setTimeout(showMusicNotification, 2000);
 }
 
 // ── Character Eye Blink Cycle ──────────────────────────────
