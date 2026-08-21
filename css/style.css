@@ -27,16 +27,22 @@
 
   /* Accent palette */
   --accent: #8c6fff;
-  --accent-mid: #a07bff;
+  --accent-mid: #9e89f7;
+  --accent-light: #b4a3ff;
+  --accent-rgb: 140, 111, 255;
   --accent-soft: rgba(140, 111, 255, 0.14);
   --accent-glow: rgba(140, 111, 255, 0.35);
   --accent-2: #ff7a59;
   --success: #5fd4a4;
 
   /* Gradients */
-  --grad-hero: linear-gradient(135deg, rgba(140, 111, 255, 0.18) 0%, transparent 60%);
+  --grad-hero: linear-gradient(135deg, rgba(var(--accent-rgb), 0.18) 0%, transparent 60%);
   --grad-card: linear-gradient(160deg, #1d1c26 0%, #211f30 100%);
-  --grad-accent: linear-gradient(135deg, #8c6fff 0%, #c084fc 100%);
+  --grad-accent: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+  --hero-accent-grad: linear-gradient(135deg, rgba(var(--accent-rgb), 0.35) 0%, rgba(var(--accent-rgb), 0) 60%), #0d0c13;
+  --hero-accent-extra: linear-gradient(135deg, rgba(var(--accent-rgb), 0.20) 0%, transparent 60%);
+  --portfolio-base-grad: linear-gradient(178.75deg, var(--accent-mid) -51.54%, #191919 99.44%);
+  --portfolio-dodge-grad: linear-gradient(170.33deg, var(--accent-mid) 13.53%, #191919 153.81%);
 
   /* Typography */
   --mono: 'IBM Plex Mono', monospace;
@@ -907,10 +913,11 @@ p {
   flex-direction: column;
   align-items: flex-start;
   padding: 33px 41px 0 40px;
-  background: linear-gradient(135deg, rgba(140, 111, 255, 0.35) 0%, rgba(140, 111, 255, 0) 60%), #0d0c13;
+  background: var(--hero-accent-grad);
   overflow: hidden;
   position: relative;
   isolation: isolate;
+  transition: background 0.35s ease;
 }
 
 /* Subtle extra fill layer */
@@ -918,9 +925,10 @@ p {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(140, 111, 255, 0.20) 0%, transparent 60%);
+  background: var(--hero-accent-extra);
   pointer-events: none;
   z-index: 1;
+  transition: background 0.35s ease;
 }
 
 /* Floating frame corners decoration */
@@ -1055,7 +1063,7 @@ p {
 
 /* Hover: subtle cinematic glow & slight lift */
 .hero-frame-14:hover {
-  filter: drop-shadow(0 0 16px rgba(158, 137, 247, 0.28));
+  filter: drop-shadow(0 0 20px var(--accent-glow));
 }
 
 .hero-frame-14:hover .hero-portfolio-text {
@@ -1063,17 +1071,18 @@ p {
 }
 
 .hero-portfolio-text {
-  transition: letter-spacing 0.5s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease;
+  transition: letter-spacing 0.5s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease, background 0.35s ease;
 }
 
-/* Layer 1: Base — gradient 178.75deg, #9E89F7 at -51.54% -> #191919 at 99.44% */
+/* Layer 1: Base — dynamic connected accent gradient */
 .hero-portfolio-base {
-  background: linear-gradient(178.75deg, #9E89F7 -51.54%, #191919 99.44%);
+  background: var(--portfolio-base-grad);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   position: relative;
   z-index: 1;
+  transition: background 0.35s ease;
 }
 
 /* Layer 2: Color Dodge — sits directly on top of base layer */
@@ -1083,13 +1092,14 @@ p {
   left: 0;
   width: 100%;
   text-align: center;
-  background: linear-gradient(170.33deg, #9E89F7 13.53%, #191919 153.81%);
+  background: var(--portfolio-dodge-grad);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   mix-blend-mode: color-dodge;
   filter: url(#figmaInnerShadow);
   z-index: 2;
+  transition: background 0.35s ease;
 }
 
 /* Center Character Cutout Layer: Fixed 417px x 625px */

@@ -880,22 +880,51 @@
   }
 
   function hexToRgb(hex) {
-    const r = parseInt(hex.slice(1, 3), 16);
-    const g = parseInt(hex.slice(3, 5), 16);
-    const b = parseInt(hex.slice(5, 7), 16);
-    return [r, g, b];
+    const clean = hex.replace('#', '');
+    const r = parseInt(clean.slice(0, 2), 16);
+    const g = parseInt(clean.slice(2, 4), 16);
+    const b = parseInt(clean.slice(4, 6), 16);
+    return [isNaN(r) ? 140 : r, isNaN(g) ? 111 : g, isNaN(b) ? 255 : b];
+  }
+
+  function rgbToHex(r, g, b) {
+    return '#' + [r, g, b].map(x => Math.max(0, Math.min(255, Math.round(x))).toString(16).padStart(2, '0')).join('');
+  }
+
+  function lightenRgb(rgb, amount = 0.2) {
+    return rgb.map(c => Math.min(255, Math.round(c + (255 - c) * amount)));
   }
 
   function applyAccent(hex) {
     ACCENT_HEX = hex;
     ACCENT_RGB = hexToRgb(hex);
+    const [r, g, b] = ACCENT_RGB;
+
+    // Harmonious lighter/mid tones for gradients
+    const midRgb = lightenRgb(ACCENT_RGB, 0.18);
+    const lightRgb = lightenRgb(ACCENT_RGB, 0.38);
+    const midHex = rgbToHex(...midRgb);
+    const lightHex = rgbToHex(...lightRgb);
+
+    // Save preference
+    try { localStorage.setItem('aditya_portfolio_accent', hex); } catch (e) {}
 
     // Update CSS custom properties live
-    document.documentElement.style.setProperty('--accent', hex);
+    const root = document.documentElement.style;
+    root.setProperty('--accent', hex);
+    root.setProperty('--accent-rgb', `${r}, ${g}, ${b}`);
+    root.setProperty('--accent-mid', midHex);
+    root.setProperty('--accent-light', lightHex);
+    root.setProperty('--accent-soft', `rgba(${r}, ${g}, ${b}, 0.14)`);
+    root.setProperty('--accent-glow', `rgba(${r}, ${g}, ${b}, 0.38)`);
 
-    // Lightened soft version
-    const [r, g, b] = ACCENT_RGB;
-    document.documentElement.style.setProperty('--accent-soft', `rgba(${r},${g},${b},0.12)`);
+    // Connected hero background & portfolio wordmark gradients
+    root.setProperty('--hero-accent-grad', `linear-gradient(135deg, rgba(${r}, ${g}, ${b}, 0.35) 0%, rgba(${r}, ${g}, ${b}, 0) 60%), #0d0c13`);
+    root.setProperty('--hero-accent-extra', `linear-gradient(135deg, rgba(${r}, ${g}, ${b}, 0.20) 0%, transparent 60%)`);
+    root.setProperty('--portfolio-base-grad', `linear-gradient(178.75deg, ${midHex} -51.54%, #191919 99.44%)`);
+    root.setProperty('--portfolio-dodge-grad', `linear-gradient(170.33deg, ${midHex} 13.53%, #191919 153.81%)`);
+    root.setProperty('--grad-hero', `linear-gradient(135deg, rgba(${r}, ${g}, ${b}, 0.18) 0%, transparent 60%)`);
+    root.setProperty('--grad-accent', `linear-gradient(135deg, ${hex} 0%, ${lightHex} 100%)`);
 
     // Update swatch button fill color
     const sw = document.querySelector('#colorSwatchBtn .swatch-fill');
@@ -909,10 +938,21 @@
   }
 
   // ── Boot ───────────────────────────────────────────────────
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
+  function boot() {
+    // Restore saved accent preference if available
+    try {
+      const saved = localStorage.getItem('aditya_portfolio_accent');
+      if (saved && /^#[0-9a-f]{6}$/i.test(saved)) {
+        applyAccent(saved);
+      }
+    } catch (e) {}
     init();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
   }
 
 })();
