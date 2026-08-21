@@ -1675,8 +1675,8 @@ p {
 /* ------------------------------------------------------------------ */
 .about-grid {
   display: grid;
-  grid-template-columns: minmax(260px, 325px) 1fr;
-  gap: 52px;
+  grid-template-columns: minmax(270px, 335px) 1fr;
+  gap: 56px;
   align-items: center;
 }
 
@@ -1892,7 +1892,7 @@ p {
 
 /* About Text & Typography (Modern Editorial Layout) */
 .about-text {
-  max-width: 640px; /* Expanded by 10% */
+  max-width: 608px;
 }
 
 .about-text h2 {
@@ -1903,7 +1903,7 @@ p {
   letter-spacing: -0.035em;
   color: #f6f5fc;
   margin-bottom: 24px;
-  max-width: 660px;
+  max-width: 630px;
 }
 
 .about-text h2 .about-accent-text {
@@ -1919,7 +1919,7 @@ p {
   color: rgba(255, 255, 255, 0.65);
   line-height: 1.75;
   margin-bottom: 22px;
-  max-width: 640px; /* Expanded by 10% from 580px */
+  max-width: 608px;
   letter-spacing: -0.01em;
 }
 
