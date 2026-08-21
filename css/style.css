@@ -2402,47 +2402,52 @@ p {
 /* ------------------------------------------------------------------ */
 .timeline {
   position: relative;
-  border-left: 2px solid rgba(255, 255, 255, 0.08);
   padding-left: 34px;
   margin-top: 18px;
   margin-bottom: 8px;
 }
 
-/* Upward Flowing Energy Current (Journey Beam) */
-.timeline::before {
+/* Connecting track line (starts strictly at top node and ends at bottom node) */
+.tl-track {
+  position: absolute;
+  left: -35px;
+  top: 28px;
+  bottom: -28px;
+  width: 2px;
+  background: rgba(255, 255, 255, 0.08);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Upward flowing energy stream on track */
+.tl-track::before {
   content: '';
   position: absolute;
-  left: -2px;
-  top: 24px;
-  bottom: 24px;
-  width: 2px;
+  inset: 0;
   background: linear-gradient(
     to top,
-    rgba(140, 111, 255, 0.1) 0%,
-    rgba(140, 111, 255, 0.8) 50%,
+    rgba(140, 111, 255, 0.15) 0%,
+    rgba(140, 111, 255, 0.85) 50%,
     #ffffff 90%,
-    rgba(140, 111, 255, 0.1) 100%
+    rgba(140, 111, 255, 0.15) 100%
   );
   background-size: 100% 250%;
   animation: timelineJourneyFlow 3.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-  pointer-events: none;
   border-radius: 2px;
   box-shadow: 0 0 8px var(--accent);
 }
 
-/* Traveling Journey Beacon Photon (Moving upwards along the track) */
-.timeline::after {
-  content: '';
+/* Ascending journey photon beacon */
+.tl-photon {
   position: absolute;
-  left: -4px;
+  left: -2px;
   width: 6px;
-  height: 18px;
+  height: 16px;
   border-radius: 3px;
   background: linear-gradient(to top, var(--accent), #ffffff);
   box-shadow: 0 0 10px var(--accent), 0 0 4px #ffffff;
   animation: timelinePhotonAscent 3.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
   pointer-events: none;
-  opacity: 0;
 }
 
 @keyframes timelineJourneyFlow {
@@ -2456,7 +2461,7 @@ p {
 
 @keyframes timelinePhotonAscent {
   0% {
-    top: calc(100% - 30px);
+    bottom: 0%;
     opacity: 0;
     transform: scaleY(0.4);
   }
@@ -2469,7 +2474,7 @@ p {
     transform: scaleY(1);
   }
   100% {
-    top: 22px;
+    bottom: calc(100% - 16px);
     opacity: 0;
     transform: scaleY(0.4);
   }
