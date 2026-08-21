@@ -1363,53 +1363,37 @@ p {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 24px 16px;
+  padding: 28px 16px;
 }
 
-/* Figma layer bounding box container with slight rotation */
-.about-figma-frame {
+/* ---- origin-story sticker (childhood cutout as an interactive layer) ---- */
+.origin {
   position: relative;
-  display: inline-block;
-  padding: 12px;
-  border: 1.5px dashed rgba(255, 255, 255, 0.4);
-  border-radius: 6px;
-  transform: rotate(-3.5deg);
-  transition: transform 0.4s var(--ease-snap), border-color 0.3s ease, box-shadow 0.3s ease;
-  will-change: transform;
-}
-
-.about-figma-frame:hover {
-  transform: rotate(0deg) scale(1.02);
-  border-color: var(--accent);
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
-}
-
-/* 4 corner selection handles */
-.figma-handle {
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  background: var(--accent);
-  border: 1px solid #ffffff;
-  z-index: 10;
-  box-shadow: 0 0 6px var(--accent-glow);
-  pointer-events: none;
-  transition: background-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.handle-tl { top: -5px; left: -5px; }
-.handle-tr { top: -5px; right: -5px; }
-.handle-bl { bottom: -5px; left: -5px; }
-.handle-br { bottom: -5px; right: -5px; }
-
-/* Photo Card & Cutout Sticker */
-.about-photo-card {
-  position: relative;
+  justify-self: center;
+  width: min(280px, 85%);
+  margin: 10px 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
+}
+
+.origin__float {
+  animation: originFloaty 6s ease-in-out infinite;
+  display: flex;
   justify-content: center;
-  background: transparent;
-  padding: 6px 10px;
+  width: 100%;
+}
+
+.origin__frame {
+  position: relative;
+  transform: rotate(-3.5deg);
+  transition: transform 0.5s var(--ease-snap);
+  display: inline-block;
+  padding: 6px;
+}
+
+.origin:hover .origin__frame {
+  transform: rotate(0deg) scale(1.04);
 }
 
 .about-photo-cutout {
@@ -1419,59 +1403,166 @@ p {
   max-height: 420px;
   height: auto;
   object-fit: contain;
+  position: relative;
+  z-index: 1;
   filter: drop-shadow(0 0 1.2px rgba(255, 255, 255, 0.95))
          drop-shadow(0 0 2.5px rgba(255, 255, 255, 0.8))
-         drop-shadow(0 14px 28px rgba(0, 0, 0, 0.65));
+         drop-shadow(0 20px 36px rgba(0, 0, 0, 0.65));
   transition: transform 0.4s var(--ease-snap), filter 0.4s ease;
 }
 
-.about-figma-frame:hover .about-photo-cutout {
-  transform: scale(1.03);
+.origin:hover .about-photo-cutout {
+  transform: scale(1.02);
   filter: drop-shadow(0 0 2px rgba(255, 255, 255, 1))
          drop-shadow(0 0 4px var(--accent-glow))
-         drop-shadow(0 18px 36px rgba(0, 0, 0, 0.7));
+         drop-shadow(0 24px 44px rgba(0, 0, 0, 0.75));
 }
 
-/* Floating Figma layer tag */
-.about-layer-tag {
+/* Marching-ants selection marquee */
+.origin__marquee {
   position: absolute;
-  bottom: -13px;
+  inset: -12px;
+  z-index: 2;
+  pointer-events: none;
+  border-radius: 4px;
+  background-image:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.55) 50%, transparent 50%),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.55) 50%, transparent 50%),
+    linear-gradient(0deg,  rgba(255, 255, 255, 0.55) 50%, transparent 50%),
+    linear-gradient(0deg,  rgba(255, 255, 255, 0.55) 50%, transparent 50%);
+  background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
+  background-size: 11px 1.5px, 11px 1.5px, 1.5px 11px, 1.5px 11px;
+  background-position: 0 0, 0 100%, 0 0, 100% 0;
+  animation: originAnts 0.6s linear infinite;
+  transition: opacity 0.3s ease;
+}
+
+.origin:hover .origin__marquee {
+  background-image:
+    linear-gradient(90deg, var(--accent) 50%, transparent 50%),
+    linear-gradient(90deg, var(--accent) 50%, transparent 50%),
+    linear-gradient(0deg,  var(--accent) 50%, transparent 50%),
+    linear-gradient(0deg,  var(--accent) 50%, transparent 50%);
+}
+
+/* Transform corner handles */
+.origin__h {
+  position: absolute;
+  z-index: 3;
+  width: 9px;
+  height: 9px;
+  background: var(--accent);
+  border: 1.5px solid var(--canvas);
+  border-radius: 2px;
+  box-shadow: 0 0 8px var(--accent-glow);
+  pointer-events: none;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.origin__h--tl { top: -16px; left: -16px; }
+.origin__h--tr { top: -16px; right: -16px; }
+.origin__h--bl { bottom: -16px; left: -16px; }
+.origin__h--br { bottom: -16px; right: -16px; }
+
+/* Layer tab badge */
+.origin__tab {
+  position: absolute;
+  z-index: 4;
+  bottom: -18px;
   left: 50%;
   transform: translateX(-50%);
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  border-radius: 6px;
-  background: rgba(29, 28, 38, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  gap: 7px;
   white-space: nowrap;
-  z-index: 11;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-primary);
+  background: rgba(29, 28, 38, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 7px;
+  padding: 5px 12px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
   transition: border-color 0.25s ease, background 0.25s ease;
 }
 
-.about-figma-frame:hover .about-layer-tag {
+.origin:hover .origin__tab {
   border-color: var(--accent);
   background: rgba(35, 34, 49, 0.98);
 }
 
-.layer-tag-icon {
-  width: 7px;
-  height: 7px;
+.origin__eye {
+  width: 11px;
+  height: 11px;
+  border: 1.5px solid var(--accent);
   border-radius: 50%;
-  background: var(--accent);
+  position: relative;
+  display: inline-block;
   box-shadow: 0 0 6px var(--accent-glow);
-  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.layer-name {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: #e4e2ed;
-  letter-spacing: 0.02em;
+.origin__eye::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border-radius: 50%;
+  background: var(--accent);
+  transition: background-color 0.2s ease;
+}
+
+/* Connected Hover Message Speech Bubble */
+.origin__bubble {
+  position: absolute;
+  z-index: 5;
+  top: 6%;
+  right: -36px;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 12.5px;
+  line-height: 1.25;
+  color: #0c0b12;
+  background: var(--accent);
+  padding: 8px 14px;
+  border-radius: 14px 14px 14px 3px;
+  transform: rotate(5deg) scale(0.65);
+  opacity: 0;
+  pointer-events: none;
+  transform-origin: bottom left;
+  transition: opacity 0.35s var(--ease-snap), transform 0.35s var(--ease-snap), background-color 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 10px 24px var(--accent-glow);
+  white-space: nowrap;
+}
+
+.origin:hover .origin__bubble {
+  opacity: 1;
+  transform: rotate(5deg) scale(1);
+}
+
+/* Animations */
+@keyframes originFloaty {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes originAnts {
+  to {
+    background-position: 11px 0, -11px 100%, 0 -11px, 100% 11px;
+  }
+}
+
+@media (max-width: 820px) {
+  .origin__bubble {
+    opacity: 1;
+    transform: rotate(5deg) scale(0.95);
+    right: -12px;
+  }
 }
 
 /* About Text & Mini Stats Row */
