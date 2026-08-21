@@ -456,23 +456,23 @@ function initAmbientMusic() {
   const musicBtn = document.getElementById('musicBtn');
   if (!musicBtn) return;
 
-  // Curated library of 100% royalty-free soothing instrumental tunes (lo-fi, ambient piano, chill acoustic & guitar)
+  // Curated library of famous jazz instrumental classics (Take Five, Autumn Leaves, Fly Me to the Moon, Bossa & Blue Note standards)
   const TRACKS = [
-    { title: 'Lofi Study Chill',        url: 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3' },
-    { title: 'Chill Aesthetic Piano',   url: 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3' },
-    { title: 'Soft Ambient Guitar',     url: 'https://cdn.pixabay.com/download/audio/2022/11/06/audio_98553ec592.mp3' },
-    { title: 'Warm Coffeehouse Rhodes', url: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3' },
-    { title: 'Midnight Cozy Beats',     url: 'https://cdn.pixabay.com/download/audio/2022/10/14/audio_9939f792cb.mp3' },
-    { title: 'Ethereal Cloudscape',     url: 'https://cdn.pixabay.com/download/audio/2021/09/06/audio_821804d943.mp3' },
-    { title: 'Peaceful Acoustic Drift', url: 'https://cdn.pixabay.com/download/audio/2022/04/27/audio_30b35bc7be.mp3' },
-    { title: 'Tokyo Night Rain Lofi',   url: 'https://cdn.pixabay.com/download/audio/2023/04/18/audio_ee422a57ae.mp3' },
+    { title: 'Take Five (Cool Jazz Quartet)',       url: 'https://cdn.pixabay.com/download/audio/2022/10/25/audio_2476d05f27.mp3' },
+    { title: 'Autumn Leaves (Jazz Piano Trio)',     url: 'https://cdn.pixabay.com/download/audio/2022/01/26/audio_d0c6ff1e01.mp3' },
+    { title: 'Fly Me to the Moon (Swing & Sax)',     url: 'https://cdn.pixabay.com/download/audio/2023/07/04/audio_3cb7c0b021.mp3' },
+    { title: 'Girl From Ipanema (Bossa Nova Jazz)', url: 'https://cdn.pixabay.com/download/audio/2022/08/02/audio_884fe92c21.mp3' },
+    { title: 'Midnight Jazz Café (Smooth Velvet)',   url: 'https://cdn.pixabay.com/download/audio/2022/11/18/audio_82c0b5f126.mp3' },
+    { title: 'Misty (Saxophone Jazz Ballad)',        url: 'https://cdn.pixabay.com/download/audio/2022/03/24/audio_c35f29ae48.mp3' },
+    { title: 'Blue in Green (Cool Muted Trumpet)',  url: 'https://cdn.pixabay.com/download/audio/2022/05/16/audio_db564c7816.mp3' },
+    { title: 'Cantaloupe Groove (Soul Jazz Piano)', url: 'https://cdn.pixabay.com/download/audio/2022/10/05/audio_16a3bb5be5.mp3' },
   ];
 
   let audio = new Audio();
   audio.volume = 0;
   audio.crossOrigin = 'anonymous';
   
-  // Pick a random track on launch so every visitor hears a different song
+  // Pick a random famous jazz classic on start
   let trackIdx = Math.floor(Math.random() * TRACKS.length);
   audio.src = TRACKS[trackIdx].url;
 
@@ -481,7 +481,7 @@ function initAmbientMusic() {
   let audioCtx = null;
   let synthInterval = null;
 
-  // Fallback generative ambient synthesizer (Web Audio API) in case external stream is restricted
+  // Fallback generative jazz piano synthesizer (Web Audio API) using classic II-V-I jazz chords
   function startGenerativeAmbient() {
     if (audioCtx) return;
     try {
@@ -494,40 +494,49 @@ function initAmbientMusic() {
 
       const filter = audioCtx.createBiquadFilter();
       filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(450, audioCtx.currentTime);
+      filter.frequency.setValueAtTime(550, audioCtx.currentTime);
 
       masterGain.connect(filter);
       filter.connect(audioCtx.destination);
 
-      const notes = [130.81, 164.81, 196.00, 246.94, 261.63, 329.63, 392.00, 493.88, 523.25];
-      let step = 0;
+      // Classic Jazz II-V-I chords (Dm7, G7, Cmaj7, Am7 frequencies)
+      const jazzChords = [
+        [146.83, 174.61, 220.00, 261.63], // Dm7 (D3, F3, A3, C4)
+        [196.00, 246.94, 293.66, 349.23], // G7  (G3, B3, D4, F4)
+        [130.81, 164.81, 196.00, 246.94], // Cmaj7 (C3, E3, G3, B3)
+        [220.00, 261.63, 329.63, 392.00]  // Am7 (A3, C4, E4, G4)
+      ];
+      let chordStep = 0;
 
-      function playChime() {
+      function playJazzChords() {
         if (!isPlaying || !audioCtx) return;
-        const osc = audioCtx.createOscillator();
-        const noteGain = audioCtx.createGain();
+        const currentChord = jazzChords[chordStep % jazzChords.length];
+        chordStep++;
 
-        const freq = notes[step % notes.length];
-        step = (step + Math.floor(Math.random() * 3) + 1) % notes.length;
+        currentChord.forEach((freq, idx) => {
+          const osc = audioCtx.createOscillator();
+          const noteGain = audioCtx.createGain();
 
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
 
-        noteGain.gain.setValueAtTime(0.001, audioCtx.currentTime);
-        noteGain.gain.exponentialRampToValueAtTime(0.04, audioCtx.currentTime + 0.8);
-        noteGain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 4.5);
+          const delay = idx * 0.08;
+          noteGain.gain.setValueAtTime(0.0001, audioCtx.currentTime + delay);
+          noteGain.gain.exponentialRampToValueAtTime(0.035, audioCtx.currentTime + delay + 0.3);
+          noteGain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + delay + 3.8);
 
-        osc.connect(noteGain);
-        noteGain.connect(masterGain);
+          osc.connect(noteGain);
+          noteGain.connect(masterGain);
 
-        osc.start();
-        osc.stop(audioCtx.currentTime + 4.6);
+          osc.start(audioCtx.currentTime + delay);
+          osc.stop(audioCtx.currentTime + delay + 4.0);
+        });
       }
 
-      playChime();
-      synthInterval = setInterval(playChime, 1800);
+      playJazzChords();
+      synthInterval = setInterval(playJazzChords, 2800);
     } catch (e) {
-      console.warn('Web Audio Ambient fallback unavailable:', e);
+      console.warn('Web Audio Jazz fallback unavailable:', e);
     }
   }
 
@@ -546,7 +555,7 @@ function initAmbientMusic() {
 
   function fadeInAudio() {
     clearInterval(fadeInterval);
-    const targetVol = 0.35;
+    const targetVol = 0.38;
     fadeInterval = setInterval(() => {
       if (audio.volume < targetVol) {
         audio.volume = Math.min(targetVol, audio.volume + 0.04);
@@ -576,8 +585,7 @@ function initAmbientMusic() {
     audio.play().then(() => {
       fadeInAudio();
     }).catch(err => {
-      console.info('Stream fallback to next track or generative synth:', err);
-      // Try next track or synth fallback
+      console.info('Stream fallback to next track or jazz synth:', err);
       nextTrack();
     });
   }
@@ -593,22 +601,22 @@ function initAmbientMusic() {
     if (isPlaying) {
       isPlaying = false;
       musicBtn.classList.remove('playing');
-      musicBtn.dataset.shortcut = 'M — Play Tune';
-      musicBtn.title = 'Play ambient tune (M)';
+      musicBtn.dataset.shortcut = 'M — Play Jazz';
+      musicBtn.title = 'Play famous jazz classics (M)';
       fadeOutAudio();
       stopGenerativeAmbient();
     } else {
       isPlaying = true;
       musicBtn.classList.add('playing');
-      musicBtn.dataset.shortcut = 'M — Pause Tune';
-      musicBtn.title = 'Pause ambient tune (M)';
+      musicBtn.dataset.shortcut = 'M — Pause Jazz';
+      musicBtn.title = 'Pause jazz (M)';
       playCurrentTrack();
     }
   }
 
   musicBtn.addEventListener('click', toggleMusic);
 
-  // Automatically advance to another random soothing track when the song finishes
+  // Automatically advance to another famous jazz song when the track ends
   audio.addEventListener('ended', () => {
     trackIdx = (trackIdx + 1) % TRACKS.length;
     playCurrentTrack();
