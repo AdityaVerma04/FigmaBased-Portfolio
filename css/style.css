@@ -1353,26 +1353,170 @@ p {
 /* ------------------------------------------------------------------ */
 .about-grid {
   display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
+  grid-template-columns: minmax(280px, 360px) 1fr;
   gap: 64px;
-  align-items: start;
+  align-items: center;
 }
 
+.about-photo-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px 16px;
+}
+
+/* Figma layer bounding box container with slight rotation */
+.about-figma-frame {
+  position: relative;
+  display: inline-block;
+  padding: 12px;
+  border: 1.5px dashed rgba(255, 255, 255, 0.4);
+  border-radius: 6px;
+  transform: rotate(-3.5deg);
+  transition: transform 0.4s var(--ease-snap), border-color 0.3s ease, box-shadow 0.3s ease;
+  will-change: transform;
+}
+
+.about-figma-frame:hover {
+  transform: rotate(0deg) scale(1.02);
+  border-color: #ff3366;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+}
+
+/* Pink 4 corner selection handles */
+.figma-handle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #ff3366;
+  border: 1px solid #ffffff;
+  z-index: 10;
+  box-shadow: 0 0 6px rgba(255, 51, 102, 0.6);
+  pointer-events: none;
+}
+
+.handle-tl { top: -5px; left: -5px; }
+.handle-tr { top: -5px; right: -5px; }
+.handle-bl { bottom: -5px; left: -5px; }
+.handle-br { bottom: -5px; right: -5px; }
+
+/* Photo Card & Image */
+.about-photo-card {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #14131a;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.about-photo-img {
+  display: block;
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 10px;
+  filter: contrast(1.03) brightness(1.01);
+  transition: transform 0.4s var(--ease-out);
+}
+
+.about-figma-frame:hover .about-photo-img {
+  transform: scale(1.03);
+}
+
+/* Floating Figma layer tag */
+.about-layer-tag {
+  position: absolute;
+  bottom: -13px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: rgba(29, 28, 38, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  white-space: nowrap;
+  z-index: 11;
+  transition: border-color 0.25s ease, background 0.25s ease;
+}
+
+.about-figma-frame:hover .about-layer-tag {
+  border-color: #ff3366;
+  background: rgba(35, 34, 49, 0.98);
+}
+
+.layer-tag-icon {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ff3366;
+  box-shadow: 0 0 6px #ff3366;
+}
+
+.layer-name {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: #e4e2ed;
+  letter-spacing: 0.02em;
+}
+
+/* About Text & Mini Stats Row */
 .about-grid p {
   font-size: 16px;
-  max-width: 480px;
+  max-width: 540px;
   margin-bottom: 18px;
+  line-height: 1.65;
 }
 
 .about-text p:last-of-type {
   margin-bottom: 0;
 }
 
+.about-stats-row {
+  display: flex;
+  gap: 32px;
+  margin: 28px 0 20px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.about-mini-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.about-mini-stat .stat-big {
+  font-family: var(--display);
+  font-size: 26px;
+  font-weight: 700;
+  color: #ff3366;
+  line-height: 1.1;
+}
+
+.about-mini-stat .stat-desc {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-faint);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
 .toolkit-row {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-top: 24px;
+  margin-top: 20px;
 }
 
 .tool-chip {
@@ -1388,39 +1532,6 @@ p {
 .tool-chip:hover {
   border-color: var(--accent);
   color: var(--accent);
-}
-
-.stat-col {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
-
-.stat-card {
-  background: var(--panel);
-  border: 1px solid var(--panel-border);
-  border-radius: 12px;
-  padding: 20px 18px;
-  transition: border-color 0.25s, transform 0.25s var(--ease-snap);
-}
-
-.stat-card:hover {
-  border-color: var(--accent-mid);
-  transform: translateX(-4px);
-}
-
-.stat-card .num {
-  font-family: var(--display);
-  font-size: 30px;
-  font-weight: 700;
-  color: var(--accent);
-  line-height: 1;
-}
-
-.stat-card .label {
-  font-size: 12px;
-  color: var(--text-secondary);
-  margin-top: 6px;
 }
 
 /* ------------------------------------------------------------------ */
