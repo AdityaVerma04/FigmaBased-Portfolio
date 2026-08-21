@@ -456,26 +456,32 @@ function initAmbientMusic() {
   const musicBtn = document.getElementById('musicBtn');
   if (!musicBtn) return;
 
-  // Royalty-free calming instrumental background tracks (lofi / ambient acoustic tunes)
+  // Curated library of 100% royalty-free soothing instrumental tunes (lo-fi, ambient piano, chill acoustic & guitar)
   const TRACKS = [
-    'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3', // Relaxing Lofi Study Tune
-    'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3', // Chill Aesthetic Instrumental
-    'https://cdn.pixabay.com/download/audio/2022/11/06/audio_98553ec592.mp3'  // Soft Ambient Guitar & Keys
+    { title: 'Lofi Study Chill',        url: 'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3' },
+    { title: 'Chill Aesthetic Piano',   url: 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3' },
+    { title: 'Soft Ambient Guitar',     url: 'https://cdn.pixabay.com/download/audio/2022/11/06/audio_98553ec592.mp3' },
+    { title: 'Warm Coffeehouse Rhodes', url: 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73467.mp3' },
+    { title: 'Midnight Cozy Beats',     url: 'https://cdn.pixabay.com/download/audio/2022/10/14/audio_9939f792cb.mp3' },
+    { title: 'Ethereal Cloudscape',     url: 'https://cdn.pixabay.com/download/audio/2021/09/06/audio_821804d943.mp3' },
+    { title: 'Peaceful Acoustic Drift', url: 'https://cdn.pixabay.com/download/audio/2022/04/27/audio_30b35bc7be.mp3' },
+    { title: 'Tokyo Night Rain Lofi',   url: 'https://cdn.pixabay.com/download/audio/2023/04/18/audio_ee422a57ae.mp3' },
   ];
 
   let audio = new Audio();
-  audio.loop = true;
   audio.volume = 0;
   audio.crossOrigin = 'anonymous';
-  let trackIdx = 0;
-  audio.src = TRACKS[trackIdx];
+  
+  // Pick a random track on launch so every visitor hears a different song
+  let trackIdx = Math.floor(Math.random() * TRACKS.length);
+  audio.src = TRACKS[trackIdx].url;
 
   let isPlaying = false;
   let fadeInterval = null;
   let audioCtx = null;
   let synthInterval = null;
 
-  // Fallback generative ambient synthesizer (Web Audio API) in case external MP3 is blocked by CORS/offline
+  // Fallback generative ambient synthesizer (Web Audio API) in case external stream is restricted
   function startGenerativeAmbient() {
     if (audioCtx) return;
     try {
@@ -493,7 +499,6 @@ function initAmbientMusic() {
       masterGain.connect(filter);
       filter.connect(audioCtx.destination);
 
-      // Warm soothing pentatonic chords (C major 7th / F maj 9th ambient arpeggios)
       const notes = [130.81, 164.81, 196.00, 246.94, 261.63, 329.63, 392.00, 493.88, 523.25];
       let step = 0;
 
@@ -565,6 +570,25 @@ function initAmbientMusic() {
     }, 80);
   }
 
+  function playCurrentTrack() {
+    const current = TRACKS[trackIdx];
+    audio.src = current.url;
+    audio.play().then(() => {
+      fadeInAudio();
+    }).catch(err => {
+      console.info('Stream fallback to next track or generative synth:', err);
+      // Try next track or synth fallback
+      nextTrack();
+    });
+  }
+
+  function nextTrack() {
+    trackIdx = (trackIdx + 1) % TRACKS.length;
+    if (isPlaying) {
+      playCurrentTrack();
+    }
+  }
+
   function toggleMusic() {
     if (isPlaying) {
       isPlaying = false;
@@ -578,17 +602,17 @@ function initAmbientMusic() {
       musicBtn.classList.add('playing');
       musicBtn.dataset.shortcut = 'M — Pause Tune';
       musicBtn.title = 'Pause ambient tune (M)';
-
-      audio.play().then(() => {
-        fadeInAudio();
-      }).catch(err => {
-        console.info('Audio streaming fallback to generative ambient synthesis:', err);
-        startGenerativeAmbient();
-      });
+      playCurrentTrack();
     }
   }
 
   musicBtn.addEventListener('click', toggleMusic);
+
+  // Automatically advance to another random soothing track when the song finishes
+  audio.addEventListener('ended', () => {
+    trackIdx = (trackIdx + 1) % TRACKS.length;
+    playCurrentTrack();
+  });
 
   // Shortcut: Press 'M' to toggle ambient music
   window.addEventListener('keydown', e => {
@@ -600,14 +624,12 @@ function initAmbientMusic() {
     }
   });
 
-  // Handle audio loading errors with seamless fallback to next track or generative synth
+  // Handle stream error by smoothly skipping to the next song
   audio.addEventListener('error', () => {
-    trackIdx = (trackIdx + 1) % TRACKS.length;
-    if (trackIdx !== 0) {
-      audio.src = TRACKS[trackIdx];
-      if (isPlaying) audio.play().catch(startGenerativeAmbient);
-    } else {
-      startGenerativeAmbient();
+    if (isPlaying) {
+      trackIdx = (trackIdx + 1) % TRACKS.length;
+      audio.src = TRACKS[trackIdx].url;
+      audio.play().catch(startGenerativeAmbient);
     }
   });
 }
