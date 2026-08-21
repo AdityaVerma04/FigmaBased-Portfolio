@@ -1549,22 +1549,23 @@ p {
 .origin__bubble {
   position: absolute;
   z-index: 5;
-  top: 6%;
-  right: -36px;
+  top: 22%;
+  right: -24px;
   font-family: var(--display);
   font-weight: 700;
-  font-size: 12.5px;
-  line-height: 1.25;
+  font-size: 11.5px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
   color: #0c0b12;
   background: var(--accent);
-  padding: 8px 14px;
-  border-radius: 14px 14px 14px 3px;
+  padding: 6px 12px;
+  border-radius: 12px 12px 12px 3px;
   transform: rotate(5deg) scale(0.65);
   opacity: 0;
   pointer-events: none;
   transform-origin: bottom left;
   transition: opacity 0.35s var(--ease-snap), transform 0.35s var(--ease-snap), background-color 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 10px 24px var(--accent-glow);
+  box-shadow: 0 8px 22px var(--accent-glow);
   white-space: nowrap;
 }
 

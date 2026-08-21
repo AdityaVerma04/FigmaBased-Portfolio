@@ -862,17 +862,35 @@
       animation: fadeSlideUp 0.18s ease;
     `;
 
-    const grid = PRESETS.map(p => `
-      <button class="cp-swatch ${p.hex === ACCENT_HEX ? 'cp-active' : ''}"
+    const swatchesHtml = PRESETS.map(p => `
+      <button class="cp-swatch ${p.hex.toLowerCase() === ACCENT_HEX.toLowerCase() ? 'cp-active' : ''}"
               data-hex="${p.hex}"
               title="${p.label}"
-              style="background:${p.hex}; width:28px;height:28px;border-radius:6px;border:2px solid ${p.hex === ACCENT_HEX ? '#fff' : 'transparent'};cursor:pointer;flex-shrink:0;transition:border-color 0.15s,transform 0.15s;">
+              style="background:${p.hex}; width:28px;height:28px;border-radius:6px;border:2px solid ${p.hex.toLowerCase() === ACCENT_HEX.toLowerCase() ? '#fff' : 'transparent'};cursor:pointer;flex-shrink:0;transition:border-color 0.15s,transform 0.15s;">
       </button>
     `).join('');
 
+    const wheelIsActive = !PRESETS.some(p => p.hex.toLowerCase() === ACCENT_HEX.toLowerCase());
+
+    const wheelBtnHtml = `
+      <label class="cp-swatch cp-wheel-btn ${wheelIsActive ? 'cp-active' : ''}"
+             id="cpWheelWrap"
+             title="Custom Color Spectrum Picker"
+             style="background: conic-gradient(from 0deg, #ff2a2a, #ffbb00, #00e676, #00e5ff, #2979ff, #d500f9, #ff2a2a); width:28px;height:28px;border-radius:6px;border:2px solid ${wheelIsActive ? '#fff' : 'transparent'};cursor:pointer;flex-shrink:0;position:relative;display:flex;align-items:center;justify-content:center;box-sizing:border-box;transition:border-color 0.15s,transform 0.15s;">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 1px 3px rgba(0,0,0,0.9));pointer-events:none;">
+          <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+        </svg>
+        <input id="cpNativePicker" type="color" value="${ACCENT_HEX}"
+               style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;">
+      </label>
+    `;
+
     panel.innerHTML = `
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:12px;">Accent color</div>
-      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;">${grid}</div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(255,255,255,0.4);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:12px;">Accent color</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;align-items:center;">
+        ${swatchesHtml}
+        ${wheelBtnHtml}
+      </div>
       <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(255,255,255,0.4);margin-bottom:6px;letter-spacing:0.04em;">Custom hex</div>
       <div id="cpHexWrap" style="display:flex;align-items:center;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:6px;padding:0 8px;height:32px;box-sizing:border-box;transition:border-color 0.2s,box-shadow 0.2s;">
         <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:rgba(255,255,255,0.45);user-select:none;margin-right:2px;font-weight:600;line-height:1;">#</span>
@@ -885,6 +903,8 @@
 
     const hexWrap = panel.querySelector('#cpHexWrap');
     const hexInput = panel.querySelector('#cpHexInput');
+    const nativePicker = panel.querySelector('#cpNativePicker');
+    const wheelWrap = panel.querySelector('#cpWheelWrap');
 
     hexInput.addEventListener('focus', () => {
       hexWrap.style.borderColor = 'var(--accent)';
@@ -895,7 +915,7 @@
       hexWrap.style.boxShadow = 'none';
     });
 
-    panel.querySelectorAll('.cp-swatch').forEach(btn => {
+    panel.querySelectorAll('.cp-swatch:not(.cp-wheel-btn)').forEach(btn => {
       btn.addEventListener('click', () => {
         applyAccent(btn.dataset.hex);
         panel.querySelectorAll('.cp-swatch').forEach(b => {
@@ -903,6 +923,19 @@
           b.classList.toggle('cp-active', b === btn);
         });
         hexInput.value = btn.dataset.hex.replace('#', '');
+        nativePicker.value = btn.dataset.hex;
+      });
+    });
+
+    // Custom Visual Spectrum Color Picker event
+    nativePicker.addEventListener('input', () => {
+      const col = nativePicker.value;
+      applyAccent(col);
+      hexInput.value = col.replace('#', '');
+      panel.querySelectorAll('.cp-swatch').forEach(b => {
+        const isWheel = b === wheelWrap;
+        b.style.borderColor = isWheel ? '#fff' : 'transparent';
+        b.classList.toggle('cp-active', isWheel);
       });
     });
 
@@ -910,12 +943,18 @@
       const clean = hexInput.value.replace(/[^0-9a-fA-F]/g, '').slice(0, 6);
       hexInput.value = clean;
       if (clean.length === 6) {
-        applyAccent('#' + clean);
-        panel.querySelectorAll('.cp-swatch').forEach(b => {
-          const isMatch = b.dataset.hex.toLowerCase() === ('#' + clean).toLowerCase();
+        const fullHex = '#' + clean;
+        applyAccent(fullHex);
+        nativePicker.value = fullHex;
+        let matched = false;
+        panel.querySelectorAll('.cp-swatch:not(.cp-wheel-btn)').forEach(b => {
+          const isMatch = b.dataset.hex.toLowerCase() === fullHex.toLowerCase();
           b.style.borderColor = isMatch ? '#fff' : 'transparent';
           b.classList.toggle('cp-active', isMatch);
+          if (isMatch) matched = true;
         });
+        wheelWrap.style.borderColor = matched ? 'transparent' : '#fff';
+        wheelWrap.classList.toggle('cp-active', !matched);
       }
     });
     hexInput.addEventListener('keydown', e => { if (e.key === 'Escape') panel.remove(); });
