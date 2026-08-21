@@ -870,26 +870,13 @@
       </button>
     `).join('');
 
-    const wheelIsActive = !PRESETS.some(p => p.hex.toLowerCase() === ACCENT_HEX.toLowerCase());
-
-    const wheelBtnHtml = `
-      <label class="cp-swatch cp-wheel-btn ${wheelIsActive ? 'cp-active' : ''}"
-             id="cpWheelWrap"
-             title="Custom Color Spectrum Picker"
-             style="background: conic-gradient(from 0deg, #ff2a2a, #ffbb00, #00e676, #00e5ff, #2979ff, #d500f9, #ff2a2a); width:28px;height:28px;border-radius:6px;border:2px solid ${wheelIsActive ? '#fff' : 'transparent'};cursor:pointer;flex-shrink:0;position:relative;display:flex;align-items:center;justify-content:center;box-sizing:border-box;transition:border-color 0.15s,transform 0.15s;">
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 1px 3px rgba(0,0,0,0.9));pointer-events:none;">
-          <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
-        </svg>
-        <input id="cpNativePicker" type="color" value="${ACCENT_HEX}"
-               style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;">
-      </label>
-    `;
+    // (Optional rainbow wheel button commented out since spectrum picker is integrated into the custom chip)
+    // const wheelBtnHtml = `...`;
 
     panel.innerHTML = `
       <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(255,255,255,0.4);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:12px;">Accent color</div>
       <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;align-items:center;">
         ${swatchesHtml}
-        ${wheelBtnHtml}
       </div>
       <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(255,255,255,0.4);margin-bottom:6px;letter-spacing:0.04em;">Custom hex</div>
       <div id="cpHexWrap" style="display:flex;align-items:center;gap:7px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:6px;padding:4px 8px;height:34px;box-sizing:border-box;transition:border-color 0.2s,box-shadow 0.2s;">
@@ -908,7 +895,6 @@
     const hexInput = panel.querySelector('#cpHexInput');
     const nativePicker = panel.querySelector('#cpNativePicker');
     const chipLabel = panel.querySelector('#cpChipLabel');
-    const wheelWrap = panel.querySelector('#cpWheelWrap');
 
     hexInput.addEventListener('focus', () => {
       hexWrap.style.borderColor = 'var(--accent)';
@@ -919,7 +905,7 @@
       hexWrap.style.boxShadow = 'none';
     });
 
-    panel.querySelectorAll('.cp-swatch:not(.cp-wheel-btn)').forEach(btn => {
+    panel.querySelectorAll('.cp-swatch').forEach(btn => {
       btn.addEventListener('click', () => {
         applyAccent(btn.dataset.hex);
         panel.querySelectorAll('.cp-swatch').forEach(b => {
@@ -932,16 +918,16 @@
       });
     });
 
-    // Custom Visual Spectrum Color Picker event
+    // Custom Visual Spectrum Color Picker event via Chip
     nativePicker.addEventListener('input', () => {
       const col = nativePicker.value;
       applyAccent(col);
       hexInput.value = col.replace('#', '');
       if (chipLabel) chipLabel.style.background = col;
       panel.querySelectorAll('.cp-swatch').forEach(b => {
-        const isWheel = b === wheelWrap;
-        b.style.borderColor = isWheel ? '#fff' : 'transparent';
-        b.classList.toggle('cp-active', isWheel);
+        const isMatch = b.dataset.hex.toLowerCase() === col.toLowerCase();
+        b.style.borderColor = isMatch ? '#fff' : 'transparent';
+        b.classList.toggle('cp-active', isMatch);
       });
     });
 
@@ -953,15 +939,11 @@
         applyAccent(fullHex);
         nativePicker.value = fullHex;
         if (chipLabel) chipLabel.style.background = fullHex;
-        let matched = false;
-        panel.querySelectorAll('.cp-swatch:not(.cp-wheel-btn)').forEach(b => {
+        panel.querySelectorAll('.cp-swatch').forEach(b => {
           const isMatch = b.dataset.hex.toLowerCase() === fullHex.toLowerCase();
           b.style.borderColor = isMatch ? '#fff' : 'transparent';
           b.classList.toggle('cp-active', isMatch);
-          if (isMatch) matched = true;
         });
-        wheelWrap.style.borderColor = matched ? 'transparent' : '#fff';
-        wheelWrap.classList.toggle('cp-active', !matched);
       }
     });
     hexInput.addEventListener('keydown', e => { if (e.key === 'Escape') panel.remove(); });
