@@ -1892,7 +1892,7 @@ p {
 
 /* About Text & Typography (Modern Editorial Layout) */
 .about-text {
-  max-width: 608px;
+  max-width: 620px;
 }
 
 .about-text h2 {
@@ -1903,7 +1903,7 @@ p {
   letter-spacing: -0.035em;
   color: #f6f5fc;
   margin-bottom: 24px;
-  max-width: 630px;
+  max-width: 642px;
 }
 
 .about-text h2 .about-accent-text {
@@ -1919,7 +1919,7 @@ p {
   color: rgba(255, 255, 255, 0.65);
   line-height: 1.75;
   margin-bottom: 22px;
-  max-width: 608px;
+  max-width: 620px;
   letter-spacing: -0.01em;
 }
 
