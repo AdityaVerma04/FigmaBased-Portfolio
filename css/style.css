@@ -464,7 +464,7 @@ button {
   align-items: center;
   padding: 14px 0 10px;
   gap: 2px;
-  z-index: 100;
+  z-index: 250;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
@@ -677,6 +677,23 @@ button {
   color: var(--text-faint);
 }
 
+/* Tool Canvas & Annotation Overlay */
+#toolCanvas {
+  position: absolute;
+  z-index: 30;
+  pointer-events: none;
+}
+
+#annotationLayer {
+  position: absolute;
+  z-index: 40;
+  pointer-events: none;
+}
+
+#annotationLayer * {
+  pointer-events: auto;
+}
+
 /* ------------------------------------------------------------------ */
 /*  5. LEFT LAYERS PANEL                                               */
 /* ------------------------------------------------------------------ */
@@ -690,7 +707,7 @@ button {
   background: rgba(26, 25, 36, 0.72);
   border-right: 1px solid var(--panel-border);
   padding: 22px 14px;
-  z-index: 100;
+  z-index: 250;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   overflow-y: auto;
@@ -780,7 +797,7 @@ body.fullscreen .layers-panel {
   background: rgba(26, 25, 36, 0.72);
   border-left: 1px solid var(--panel-border);
   padding: 20px 16px;
-  z-index: 100;
+  z-index: 250;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   overflow-y: auto;

@@ -467,7 +467,7 @@
            if (compStyle.display === 'inline') {
              target.style.display = 'inline-block';
            }
-           target.style.zIndex = '999999';
+           target.style.zIndex = '80';
         }
         document.body.style.cursor = 'grabbing';
         break;
@@ -856,7 +856,7 @@
       outline: 1px solid ${ACCENT_HEX};
       outline-offset: 3px;
       caret-color: ${ACCENT_HEX};
-      z-index: 160;
+      z-index: 60;
       cursor: text;
       white-space: nowrap;
     `;
@@ -902,7 +902,7 @@
       background: ${ACCENT_HEX};
       display: flex; align-items: center; justify-content: center;
       cursor: pointer;
-      z-index: 160;
+      z-index: 65;
       box-shadow: 0 2px 12px ${ACCENT_ALPHA(0.45)};
       transition: transform 0.15s, box-shadow 0.15s;
       flex-shrink: 0;
