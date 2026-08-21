@@ -905,7 +905,7 @@ body.fullscreen .hero-name {
   line-height: 1;
   padding: 4px 9px;
   border-radius: 7px;
-  box-shadow: 0 2px 10px var(--accent-glow);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
   transition: background-color 0.25s ease, box-shadow 0.25s ease;
   flex-shrink: 0;
 }
