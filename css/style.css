@@ -1380,20 +1380,21 @@ p {
 
 .about-figma-frame:hover {
   transform: rotate(0deg) scale(1.02);
-  border-color: #ff3366;
+  border-color: var(--accent);
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
 }
 
-/* Pink 4 corner selection handles */
+/* 4 corner selection handles */
 .figma-handle {
   position: absolute;
   width: 8px;
   height: 8px;
-  background: #ff3366;
+  background: var(--accent);
   border: 1px solid #ffffff;
   z-index: 10;
-  box-shadow: 0 0 6px rgba(255, 51, 102, 0.6);
+  box-shadow: 0 0 6px var(--accent-glow);
   pointer-events: none;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .handle-tl { top: -5px; left: -5px; }
@@ -1427,7 +1428,7 @@ p {
 .about-figma-frame:hover .about-photo-cutout {
   transform: scale(1.03);
   filter: drop-shadow(0 0 2px rgba(255, 255, 255, 1))
-         drop-shadow(0 0 4px rgba(255, 51, 102, 0.8))
+         drop-shadow(0 0 4px var(--accent-glow))
          drop-shadow(0 18px 36px rgba(0, 0, 0, 0.7));
 }
 
@@ -1453,7 +1454,7 @@ p {
 }
 
 .about-figma-frame:hover .about-layer-tag {
-  border-color: #ff3366;
+  border-color: var(--accent);
   background: rgba(35, 34, 49, 0.98);
 }
 
@@ -1461,8 +1462,9 @@ p {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: #ff3366;
-  box-shadow: 0 0 6px #ff3366;
+  background: var(--accent);
+  box-shadow: 0 0 6px var(--accent-glow);
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .layer-name {
@@ -1502,8 +1504,9 @@ p {
   font-family: var(--display);
   font-size: 26px;
   font-weight: 700;
-  color: #ff3366;
+  color: var(--accent);
   line-height: 1.1;
+  transition: color 0.2s ease;
 }
 
 .about-mini-stat .stat-desc {
