@@ -830,8 +830,15 @@ body.fullscreen .hero-name {
 
 .section {
   position: relative;
+  width: 100%;
   padding: 110px var(--section-px);
   border-bottom: 1px dashed var(--line);
+}
+
+.section:not(.hero) {
+  max-width: 1240px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .frame-tag {
