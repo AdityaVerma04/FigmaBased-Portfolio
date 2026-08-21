@@ -19,6 +19,17 @@
     COMMENT: 'comment',
   };
 
+  // ── Shape Subtypes ─────────────────────────────────────────
+  const SHAPES = [
+    { id: 'rect',    label: 'Rectangle', shortcut: 'R',       svg: '<rect x="4" y="6" width="16" height="12" rx="1"/>' },
+    { id: 'line',    label: 'Line',      shortcut: 'L',       svg: '<line x1="4" y1="20" x2="20" y2="4"/>' },
+    { id: 'arrow',   label: 'Arrow',     shortcut: 'Shift+L', svg: '<line x1="4" y1="20" x2="20" y2="4"/><polyline points="10 4 20 4 20 14"/>' },
+    { id: 'ellipse', label: 'Ellipse',   shortcut: 'O',       svg: '<circle cx="12" cy="12" r="8"/>' },
+    { id: 'polygon', label: 'Polygon',   shortcut: '',        svg: '<polygon points="12 4 21 19 3 19"/>' },
+    { id: 'star',    label: 'Star',      shortcut: '',        svg: '<polygon points="12 2 15 8.5 22 9.5 17 14.5 18.5 21.5 12 18 5.5 21.5 7 14.5 2 9.5 9 8.5 12 2"/>' },
+  ];
+  let activeShape = 'rect';
+
   // ── Accent color (matches CSS --accent, can be changed by picker) ──
   let ACCENT_HEX   = '#8c6fff';
   let ACCENT_RGB   = [140, 111, 255];
@@ -61,7 +72,23 @@
 
     // Tool button clicks
     document.querySelectorAll('.tool-btn[data-tool]').forEach(btn => {
-      btn.addEventListener('click', () => activateTool(btn.dataset.tool));
+      btn.addEventListener('click', () => {
+        if (btn.dataset.tool === T.RECT) {
+          if (activeTool === T.RECT) {
+            toggleShapeMenu();
+          } else {
+            activateTool(T.RECT);
+          }
+        } else {
+          activateTool(btn.dataset.tool);
+        }
+      });
+      if (btn.dataset.tool === T.RECT) {
+        btn.addEventListener('contextmenu', (e) => {
+          e.preventDefault();
+          toggleShapeMenu();
+        });
+      }
     });
 
     // Canvas mouse events
@@ -114,6 +141,64 @@
 
     // Start in Move mode
     activateTool(T.MOVE);
+  }
+
+  function toggleShapeMenu() {
+    const existing = document.getElementById('shapeMenu');
+    if (existing) { existing.remove(); return; }
+
+    const btn = document.getElementById('shapeToolBtn') || document.querySelector('.tool-btn[data-tool="rect"]');
+    const bRect = btn ? btn.getBoundingClientRect() : { top: 150, right: 52 };
+
+    const menu = document.createElement('div');
+    menu.className = 'figma-shape-menu';
+    menu.id = 'shapeMenu';
+    menu.style.top = Math.max(60, bRect.top) + 'px';
+    menu.style.left = (bRect.right + 8) + 'px';
+
+    menu.innerHTML = SHAPES.map(s => `
+      <div class="shape-menu-item ${s.id === activeShape ? 'active' : ''}" data-shape="${s.id}">
+        <span class="shape-check">${s.id === activeShape ? '✓' : ''}</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          ${s.svg}
+        </svg>
+        <span class="shape-label">${s.label}</span>
+        <span class="shape-shortcut">${s.shortcut}</span>
+      </div>
+    `).join('');
+
+    document.body.appendChild(menu);
+
+    menu.querySelectorAll('.shape-menu-item').forEach(item => {
+      item.addEventListener('click', () => {
+        setShape(item.dataset.shape);
+        menu.remove();
+      });
+    });
+
+    setTimeout(() => {
+      document.addEventListener('click', function rm(e) {
+        if (!menu.contains(e.target) && e.target !== btn && !btn.contains(e.target)) {
+          menu.remove();
+          document.removeEventListener('click', rm);
+        }
+      });
+    }, 100);
+  }
+
+  function setShape(shapeId) {
+    activeShape = shapeId;
+    const shapeDef = SHAPES.find(s => s.id === shapeId) || SHAPES[0];
+    const iconEl = document.getElementById('shapeToolIcon');
+    if (iconEl) {
+      iconEl.innerHTML = shapeDef.svg;
+    }
+    const btn = document.getElementById('shapeToolBtn');
+    if (btn) {
+      btn.dataset.shortcut = `${shapeDef.shortcut ? shapeDef.shortcut + ' — ' : ''}${shapeDef.label}`;
+      btn.title = `${shapeDef.label} (${shapeDef.shortcut || 'Shapes'})`;
+    }
+    activateTool(T.RECT);
   }
 
   function syncCanvasSize() {
@@ -196,6 +281,9 @@
     }
 
     const k = e.key.toLowerCase();
+    if (k === 'r') { setShape('rect'); return; }
+    if (k === 'l') { setShape(e.shiftKey ? 'arrow' : 'line'); return; }
+    if (k === 'o') { setShape('ellipse'); return; }
     if (KEYS[k]) { activateTool(KEYS[k]); return; }
 
     if (e.key === 'Escape') {
@@ -218,10 +306,62 @@
     }
   }
 
+  // ── Inspector Integration for Hand Tool ─────────────────────
+  function inspectElement(el) {
+    if (!el) return;
+    const inspName    = document.getElementById('inspName');
+    const inspSize    = document.getElementById('inspSize');
+    const inspFill    = document.getElementById('inspFill');
+    const inspSwatch  = document.getElementById('inspSwatch');
+    const inspRadius  = document.getElementById('inspRadius');
+    const inspLayout  = document.getElementById('inspLayout');
+    const inspOpacity = document.getElementById('inspOpacity');
+    const inspBlur    = document.getElementById('inspBlur');
+
+    if (!inspName) return;
+
+    let name = 'Layer · ' + el.tagName.toLowerCase();
+    if (el.classList.contains('hero-character-layer')) name = 'Layer · Character Cutout';
+    else if (el.classList.contains('hero-frame-14')) name = 'Wordmark · PORTFOLIO';
+    else if (el.classList.contains('hero-script-name')) name = 'Text · "aditya\'s"';
+    else if (el.classList.contains('hero-role-title')) name = 'Text · "UX DESIGNER"';
+    else if (el.classList.contains('origin')) name = 'Frame · Little Aditya';
+    else if (el.classList.contains('case-card')) name = 'Card · Case Study';
+    else if (el.classList.contains('cert-item')) name = 'Card · Certificate';
+    else if (el.classList.contains('about-mini-stat')) name = 'Stat · Metric';
+    else if (el.id) name = 'Layer · #' + el.id;
+
+    if (inspName.childNodes[0]) {
+      inspName.childNodes[0].textContent = name;
+    }
+
+    const w = Math.round(el.offsetWidth);
+    const h = Math.round(el.offsetHeight);
+    if (inspSize) inspSize.textContent = `${w} × ${h}`;
+
+    const comp = window.getComputedStyle(el);
+    if (inspLayout) inspLayout.textContent = comp.display === 'flex' ? 'Flex' : (comp.display === 'grid' ? 'Grid' : (comp.position === 'absolute' ? 'Absolute' : 'Auto'));
+    
+    const rad = comp.borderRadius || '0px';
+    if (inspRadius) inspRadius.textContent = rad !== '0px' ? rad : '0 px';
+
+    const op = comp.opacity ? `${Math.round(parseFloat(comp.opacity) * 100)}%` : '100%';
+    if (inspOpacity) inspOpacity.textContent = op;
+
+    const blur = comp.filter && comp.filter.includes('blur') ? comp.filter : '0 px';
+    if (inspBlur) inspBlur.textContent = blur;
+
+    let fill = getRgbToHex(comp.backgroundColor);
+    if (fill === '#14131A' || fill === 'TRANSPARENT' || comp.backgroundColor === 'rgba(0, 0, 0, 0)') {
+      fill = getRgbToHex(comp.color) || ACCENT_HEX;
+    }
+    if (el.classList.contains('hero-character-layer')) fill = ACCENT_HEX;
+    if (inspFill) inspFill.textContent = fill.toUpperCase();
+    if (inspSwatch) inspSwatch.style.background = fill;
+  }
+
   // ── Position helpers ───────────────────────────────────────
   function getPos(e) {
-    // x/y are workspace-local canvas coords (for drawing on toolCanvas)
-    // cx/cy are viewport coords (for placing fixed-position DOM elements like text/comment pins)
     return {
       x:  e.clientX - wsRect.left,
       y:  e.clientY - wsRect.top,
@@ -259,21 +399,16 @@
         placeText(pos); break;
 
       case T.HAND:
-        e.preventDefault(); // Prevent native drag-and-drop of links/images and text selection
-        // Hide toolCanvas from pointer events briefly so we can find what's underneath it
+        e.preventDefault();
         toolCanvas.style.pointerEvents = 'none';
         let target = document.elementFromPoint(e.clientX, e.clientY);
         toolCanvas.style.pointerEvents = 'auto';
         
         if (target) {
-            // 1. Lock character layers together into a single unit
             const charGroup = target.closest('.hero-character-layer, .hero-character-wrapper, #heroCharacterImg, #heroCharacterOverlay');
-            // 2. Individual header text layers
             const scriptName = target.closest('.hero-script-name');
             const roleTitle = target.closest('.hero-role-title');
-            // 3. Lock PORTFOLIO wordmark (base + color dodge layers) into a single unit
             const portfolioWordmark = target.closest('.hero-frame-14, .hero-portfolio-text, .hero-portfolio-base, .hero-portfolio-dodge');
-            // 4. Lock about origin cutout & cards
             const originCard = target.closest('.origin');
             const card = target.closest('.case-card, .stat-card, .cert-item, .contact-card');
 
@@ -290,7 +425,6 @@
             } else if (card) {
                 target = card;
             } else {
-                // Prevent dragging structural background wrappers
                 const layoutClasses = ['section', 'about-grid', 'work-grid', 'about-text', 'stat-col', 'hero-meta', 'hero-cta', 'filter-bar', 'hero', 'workspace', 'skill-cols', 'skill-group-title', 'skill-list', 'contact-grid', 'contact-info', 'hero-frame-15', 'hero-frame-13'];
                 const isLayout = layoutClasses.some(c => target.classList.contains(c)) || 
                                  ['MAIN', 'SECTION', 'UL'].includes(target.tagName) || 
@@ -304,12 +438,13 @@
             }
         }
         
-        // Only pick up elements inside the workspace, not UI panels or the background
         if (target && target !== document.body && target !== document.documentElement && !target.classList.contains('workspace') && !target.closest('.topbar') && !target.closest('.layers-panel') && !target.closest('.inspector') && !target.closest('.toolstrip')) {
            draggedEl = target;
            dragStartPos = { cx: e.clientX, cy: e.clientY };
            window.isDraggingHeroLayer = true;
            
+           inspectElement(draggedEl);
+
            if (!originalTransform.has(target)) {
              originalTransform.set(target, {
                 transform: target.style.transform || '',
@@ -323,7 +458,6 @@
              });
            }
            
-           // Kill CSS animations that might lock the transform property
            target.style.setProperty('animation', 'none', 'important');
            target.style.transition = 'none';
            const compStyle = window.getComputedStyle(target);
@@ -365,7 +499,6 @@
            let currentX = prev.dx + dx;
            let currentY = prev.dy + dy;
            
-           // Tilt based on horizontal displacement (0.04 degrees per pixel), max 15 deg.
            const rot = Math.max(-15, Math.min(15, currentX * 0.04));
            
            if (draggedEl.classList.contains('hero-character-layer')) {
@@ -377,11 +510,12 @@
            } else {
              draggedEl.style.transform = `translate(${currentX}px, ${currentY}px) rotate(${rot}deg)`;
            }
+
+           inspectElement(draggedEl);
         }
         break;
     }
 
-    // Show cursor tooltip label
     updateCursorLabel(e.clientX, e.clientY);
   }
 
@@ -393,7 +527,16 @@
       case T.RECT:
         if (isDrawing && drawStart) {
           const r = normRect(drawStart, pos);
-          if (r.w > 4 && r.h > 4) shapes.push({ kind: activeTool, ...r, time: Date.now() });
+          if (r.w > 3 || r.h > 3) {
+            shapes.push({
+              kind: activeTool,
+              shape: activeShape,
+              start: drawStart,
+              end: pos,
+              ...r,
+              time: Date.now()
+            });
+          }
         }
         isDrawing = false; drawStart = null; drawCurrent = null; break;
 
@@ -437,7 +580,7 @@
     if (activeTool === T.PEN && penPoints.length > 1) finishPen();
   }
 
-  // ── Cursor tooltip label (shown for all non-Move tools) ────
+  // ── Cursor tooltip label ───────────────────────────────────
   let labelEl = null;
 
   function updateCursorLabel(cx, cy) {
@@ -445,7 +588,7 @@
 
     const labels = {
       [T.FRAME]:   'FRAME',
-      [T.RECT]:    'RECT',
+      [T.RECT]:    (activeShape || 'RECT').toUpperCase(),
       [T.PEN]:     'PEN',
       [T.TEXT]:    'TEXT',
       [T.HAND]:    'HAND',
@@ -480,50 +623,127 @@
     if (labelEl) { labelEl.remove(); labelEl = null; }
   }
 
-  // ── Frame / Rectangle drawing ──────────────────────────────
+  // ── Frame / Shapes drawing ─────────────────────────────────
   function drawPreview(a, b) {
     const r = normRect(a, b);
-    if (r.w < 2 || r.h < 2) return;
-    drawRect(r, activeTool, true, 1);
+    if (r.w < 2 && r.h < 2) return;
+    drawShape({ kind: activeTool, shape: activeShape, start: a, end: b, ...r }, activeTool, true, 1);
   }
 
-  function drawRect(r, kind, preview = false, alpha = 1) {
+  function drawShape(s, kind, preview = false, alpha = 1) {
     const isFrame = kind === T.FRAME;
     toolCtx.save();
     toolCtx.globalAlpha = alpha;
+    const shapeType = isFrame ? 'frame' : (s.shape || 'rect');
 
     if (isFrame) {
-      // Dashed violet outline
       toolCtx.setLineDash([5, 4]);
       toolCtx.strokeStyle = ACCENT_HEX;
       toolCtx.lineWidth = 1.5;
-      toolCtx.strokeRect(r.x + 0.5, r.y + 0.5, r.w, r.h);
+      toolCtx.strokeRect(s.x + 0.5, s.y + 0.5, s.w, s.h);
       toolCtx.fillStyle = ACCENT_ALPHA(preview ? 0.04 : 0.07);
-      toolCtx.fillRect(r.x, r.y, r.w, r.h);
+      toolCtx.fillRect(s.x, s.y, s.w, s.h);
 
-      // Frame label
       toolCtx.setLineDash([]);
       toolCtx.font = '10px "IBM Plex Mono", monospace';
       toolCtx.fillStyle = ACCENT_ALPHA(0.85);
-      toolCtx.fillText(`◇ Frame · ${Math.round(r.w)} × ${Math.round(r.h)}`, r.x + 2, r.y - 7);
-
-      cornerHandles(r);
-    } else {
-      // Filled rectangle
+      toolCtx.fillText(`◇ Frame · ${Math.round(s.w)} × ${Math.round(s.h)}`, s.x + 2, s.y - 7);
+      cornerHandles(s);
+    } else if (shapeType === 'rect') {
       toolCtx.setLineDash([]);
       toolCtx.fillStyle = ACCENT_ALPHA(preview ? 0.13 : 0.2);
-      toolCtx.fillRect(r.x, r.y, r.w, r.h);
+      toolCtx.fillRect(s.x, s.y, s.w, s.h);
       toolCtx.strokeStyle = ACCENT_HEX;
       toolCtx.lineWidth = 1.5;
-      toolCtx.strokeRect(r.x + 0.5, r.y + 0.5, r.w, r.h);
+      toolCtx.strokeRect(s.x + 0.5, s.y + 0.5, s.w, s.h);
 
-      // Dimension label inside
-      if (r.w > 60 && r.h > 20) {
+      if (s.w > 50 && s.h > 20) {
         toolCtx.font = '10px "IBM Plex Mono", monospace';
         toolCtx.fillStyle = ACCENT_ALPHA(0.85);
-        toolCtx.fillText(`${Math.round(r.w)} × ${Math.round(r.h)}`, r.x + 6, r.y + 14);
+        toolCtx.fillText(`${Math.round(s.w)} × ${Math.round(s.h)}`, s.x + 6, s.y + 14);
       }
-      cornerHandles(r);
+      cornerHandles(s);
+    } else if (shapeType === 'line' || shapeType === 'arrow') {
+      const p1 = s.start || { x: s.x, y: s.y };
+      const p2 = s.end || { x: s.x + s.w, y: s.y + s.h };
+      toolCtx.setLineDash([]);
+      toolCtx.strokeStyle = ACCENT_HEX;
+      toolCtx.lineWidth = 2;
+      toolCtx.beginPath();
+      toolCtx.moveTo(p1.x, p1.y);
+      toolCtx.lineTo(p2.x, p2.y);
+      toolCtx.stroke();
+
+      if (shapeType === 'arrow') {
+        const angle = Math.atan2(p2.y - p1.y, p2.x - p1.x);
+        const headlen = 11;
+        toolCtx.fillStyle = ACCENT_HEX;
+        toolCtx.beginPath();
+        toolCtx.moveTo(p2.x, p2.y);
+        toolCtx.lineTo(p2.x - headlen * Math.cos(angle - Math.PI / 6), p2.y - headlen * Math.sin(angle - Math.PI / 6));
+        toolCtx.lineTo(p2.x - headlen * Math.cos(angle + Math.PI / 6), p2.y - headlen * Math.sin(angle + Math.PI / 6));
+        toolCtx.closePath();
+        toolCtx.fill();
+        toolCtx.stroke();
+      }
+    } else if (shapeType === 'ellipse') {
+      toolCtx.setLineDash([]);
+      toolCtx.fillStyle = ACCENT_ALPHA(preview ? 0.13 : 0.2);
+      toolCtx.strokeStyle = ACCENT_HEX;
+      toolCtx.lineWidth = 1.5;
+      const cx = s.x + s.w / 2;
+      const cy = s.y + s.h / 2;
+      const rx = Math.max(1, s.w / 2);
+      const ry = Math.max(1, s.h / 2);
+      toolCtx.beginPath();
+      toolCtx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+      toolCtx.fill();
+      toolCtx.stroke();
+      cornerHandles(s);
+    } else if (shapeType === 'polygon') {
+      toolCtx.setLineDash([]);
+      toolCtx.fillStyle = ACCENT_ALPHA(preview ? 0.13 : 0.2);
+      toolCtx.strokeStyle = ACCENT_HEX;
+      toolCtx.lineWidth = 1.5;
+      toolCtx.beginPath();
+      toolCtx.moveTo(s.x + s.w / 2, s.y);
+      toolCtx.lineTo(s.x + s.w, s.y + s.h);
+      toolCtx.lineTo(s.x, s.y + s.h);
+      toolCtx.closePath();
+      toolCtx.fill();
+      toolCtx.stroke();
+      cornerHandles(s);
+    } else if (shapeType === 'star') {
+      toolCtx.setLineDash([]);
+      toolCtx.fillStyle = ACCENT_ALPHA(preview ? 0.13 : 0.2);
+      toolCtx.strokeStyle = ACCENT_HEX;
+      toolCtx.lineWidth = 1.5;
+      const cx = s.x + s.w / 2;
+      const cy = s.y + s.h / 2;
+      const spikes = 5;
+      const outerRadius = Math.min(s.w, s.h) / 2;
+      const innerRadius = outerRadius * 0.42;
+      let rot = (Math.PI / 2) * 3;
+      const step = Math.PI / spikes;
+
+      toolCtx.beginPath();
+      toolCtx.moveTo(cx, cy - outerRadius);
+      for (let i = 0; i < spikes; i++) {
+        let x = cx + Math.cos(rot) * outerRadius;
+        let y = cy + Math.sin(rot) * outerRadius;
+        toolCtx.lineTo(x, y);
+        rot += step;
+
+        x = cx + Math.cos(rot) * innerRadius;
+        y = cy + Math.sin(rot) * innerRadius;
+        toolCtx.lineTo(x, y);
+        rot += step;
+      }
+      toolCtx.lineTo(cx, cy - outerRadius);
+      toolCtx.closePath();
+      toolCtx.fill();
+      toolCtx.stroke();
+      cornerHandles(s);
     }
 
     toolCtx.restore();
@@ -771,8 +991,8 @@
     shapes.forEach(s => {
       const alpha = getAlpha(s.time);
       if (alpha <= 0) return;
-      if (s.kind === T.FRAME)  drawRect(s, T.FRAME, false, alpha);
-      if (s.kind === T.RECT)   drawRect(s, T.RECT, false, alpha);
+      if (s.kind === T.FRAME)  drawShape(s, T.FRAME, false, alpha);
+      if (s.kind === T.RECT)   drawShape(s, T.RECT, false, alpha);
       if (s.kind === 'pen')    drawPen(s.pts, null, s.closed, alpha);
     });
 

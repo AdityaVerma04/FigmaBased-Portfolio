@@ -85,11 +85,12 @@
 
     <div class="tool-divider" aria-hidden="true"></div>
 
-    <!-- Rectangle -->
-    <button class="tool-btn" data-tool="rect" data-shortcut="R — Rectangle" title="Rectangle (R)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+    <!-- Shapes Tool (Dropdown) -->
+    <button class="tool-btn" data-tool="rect" id="shapeToolBtn" data-shortcut="R — Shapes" title="Shapes (R)">
+      <svg id="shapeToolIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
         <rect x="4" y="6" width="16" height="12" rx="1" />
       </svg>
+      <span class="tool-chevron" style="position:absolute;bottom:2px;right:2px;font-size:7px;line-height:1;opacity:0.65;pointer-events:none;">▾</span>
     </button>
     <!-- Pen -->
     <button class="tool-btn" data-tool="pen" data-shortcut="P — Pen" title="Pen (P)">
