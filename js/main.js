@@ -182,10 +182,45 @@ function flashVal(el) {
   el.classList.add('flash');
 }
 
+function getDeviceLabel() {
+  const ua = navigator.userAgent || '';
+  const w = window.innerWidth;
+  if (/iPad|iPhone|iPod/.test(ua) || (navigator.maxTouchPoints > 1 && /Macintosh/.test(ua) && 'ontouchend' in document)) {
+    return 'iOS Device';
+  } else if (/Android/.test(ua)) {
+    return 'Android Device';
+  } else if (w < 600) {
+    return 'Mobile';
+  } else if (w < 1024) {
+    return 'Tablet';
+  } else if (/Windows/.test(ua)) {
+    return 'Windows PC';
+  } else if (/Macintosh/.test(ua)) {
+    return 'Mac Display';
+  } else if (/Linux/.test(ua)) {
+    return 'Linux Display';
+  }
+  return 'Desktop Display';
+}
+
+function getRgbToHex(col) {
+  if (!col) return '#14131A';
+  if (col.startsWith('#')) return col.toUpperCase();
+  const m = col.match(/\d+/g);
+  if (!m || m.length < 3) return '#14131A';
+  const r = parseInt(m[0], 10).toString(16).padStart(2, '0');
+  const g = parseInt(m[1], 10).toString(16).padStart(2, '0');
+  const b = parseInt(m[2], 10).toString(16).padStart(2, '0');
+  return ('#' + r + g + b).toUpperCase();
+}
+
 function initInspector() {
   const sections    = document.querySelectorAll('.section[data-frame]');
   const layerItems  = document.querySelectorAll('.layer-item');
   const inspName    = document.getElementById('inspName');
+  const inspDevice  = document.getElementById('inspDevice');
+  const inspScreen  = document.getElementById('inspScreen');
+  const inspDpr     = document.getElementById('inspDpr');
   const inspSize    = document.getElementById('inspSize');
   const inspFill    = document.getElementById('inspFill');
   const inspSwatch  = document.getElementById('inspSwatch');
@@ -196,6 +231,62 @@ function initInspector() {
 
   if (!sections.length || !inspName) return;
 
+  let currentActiveEl = sections[0];
+
+  const updateDeviceInfo = () => {
+    if (inspDevice) inspDevice.textContent = getDeviceLabel();
+    if (inspScreen) inspScreen.textContent = `${window.innerWidth} × ${window.innerHeight}`;
+    if (inspDpr) inspDpr.textContent = `${(window.devicePixelRatio || 1).toFixed(1)}×`;
+  };
+
+  const updateSectionMetrics = (el) => {
+    if (!el) return;
+    currentActiveEl = el;
+
+    const setVal = (node, value) => {
+      if (!node) return;
+      const prev = node.textContent;
+      if (prev === value) return;
+      node.textContent = value;
+      flashVal(node);
+    };
+
+    // Live frame width and height measurement
+    const measuredW = Math.round(el.offsetWidth || window.innerWidth);
+    const measuredH = Math.round(el.offsetHeight || window.innerHeight);
+    setVal(inspSize, `${measuredW} × ${measuredH}`);
+
+    setVal(inspLayout, el.dataset.layout || 'Auto');
+    
+    // Live radius
+    const compStyle = window.getComputedStyle(el);
+    const rad = el.dataset.radius || parseInt(compStyle.borderRadius) || '0';
+    setVal(inspRadius, rad !== '0' && rad !== 0 ? `${rad} px` : '0 px');
+
+    setVal(inspOpacity, el.dataset.opacity || (compStyle.opacity ? `${Math.round(parseFloat(compStyle.opacity) * 100)}%` : '100%'));
+    setVal(inspBlur, el.dataset.blur || '0 px');
+
+    // Live Fill color + swatch
+    let fill = el.dataset.fill;
+    if (el.id === 'hero') {
+      const liveAccent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+      fill = liveAccent || '#0D0C13';
+    }
+    if (!fill) {
+      fill = getRgbToHex(compStyle.backgroundColor);
+    }
+    fill = fill.toUpperCase();
+    setVal(inspFill, fill);
+    if (inspSwatch) inspSwatch.style.background = fill;
+
+    // Active layer highlight
+    layerItems.forEach(item => {
+      item.classList.toggle('active', item.dataset.target === el.id);
+    });
+  };
+
+  updateDeviceInfo();
+
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (!entry.isIntersecting) return;
@@ -204,38 +295,39 @@ function initInspector() {
       // Fade-swap the frame name
       inspName.style.opacity = '0';
       setTimeout(() => {
-        inspName.childNodes[0].textContent = 'Frame · ' + el.dataset.frame;
+        inspName.childNodes[0].textContent = 'Frame · ' + (el.dataset.frame || 'Workspace');
         inspName.style.opacity = '1';
-      }, 140);
+      }, 120);
 
-      // Update all inspector values with flash animation
-      const setVal = (node, value) => {
-        if (!node) return;
-        const prev = node.textContent;
-        if (prev === value) return;
-        node.textContent = value;
-        flashVal(node);
-      };
-
-      setVal(inspSize,    el.dataset.size    || '—');
-      setVal(inspLayout,  el.dataset.layout  || 'Fixed');
-      setVal(inspRadius,  (el.dataset.radius || '0') + (el.dataset.radius && el.dataset.radius !== '0' ? ' px' : ''));
-      setVal(inspOpacity, el.dataset.opacity || '100%');
-      setVal(inspBlur,    el.dataset.blur    || '0 px');
-
-      // Fill color + swatch
-      const fill = (el.dataset.fill || '#14131A').toUpperCase();
-      setVal(inspFill, fill);
-      if (inspSwatch) inspSwatch.style.background = fill;
-
-      // Active layer highlight
-      layerItems.forEach(item => {
-        item.classList.toggle('active', item.dataset.target === el.id);
-      });
+      updateSectionMetrics(el);
     });
-  }, { threshold: 0.3 });
+  }, { threshold: 0.25 });
 
   sections.forEach(s => observer.observe(s));
+
+  // Live resize & orientation change listener
+  window.addEventListener('resize', () => {
+    updateDeviceInfo();
+    if (currentActiveEl) {
+      updateSectionMetrics(currentActiveEl);
+    }
+  }, { passive: true });
+
+  window.addEventListener('orientationchange', () => {
+    setTimeout(() => {
+      updateDeviceInfo();
+      if (currentActiveEl) {
+        updateSectionMetrics(currentActiveEl);
+      }
+    }, 150);
+  });
+
+  // Listen to live accentChange event to update fill
+  window.addEventListener('accentChange', () => {
+    if (currentActiveEl) {
+      updateSectionMetrics(currentActiveEl);
+    }
+  });
 }
 
 // ── Layer nav clicks ───────────────────────────────────────
