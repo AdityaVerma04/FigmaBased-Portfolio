@@ -665,9 +665,6 @@ function initAmbientMusic() {
         <div class="music-bubble-line-1">Hey! Wanna hear some <span class="highlight">jazz?</span></div>
         <div class="music-bubble-line-2">while you check my portfolio</div>
       </div>
-      <div class="music-bubble-action" aria-hidden="true">
-        <span class="music-kbd">M</span>
-      </div>
     `;
 
     // Notification badge on button
