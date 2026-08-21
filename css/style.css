@@ -1890,12 +1890,35 @@ p {
   }
 }
 
-/* About Text & Mini Stats Row */
-.about-grid p {
-  font-size: 16px;
-  max-width: 540px;
-  margin-bottom: 18px;
-  line-height: 1.65;
+/* About Text & Typography (Modern Editorial Layout) */
+.about-text h2 {
+  font-family: var(--display), sans-serif;
+  font-size: clamp(30px, 3.6vw, 42px);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+  color: #f6f5fc;
+  margin-bottom: 24px;
+  max-width: 600px;
+}
+
+.about-text h2 .about-accent-text {
+  color: #ff5c8a;
+  background: linear-gradient(135deg, #ff6584 0%, #f43f5e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline;
+}
+
+.about-text p {
+  font-family: var(--body), sans-serif;
+  font-size: 15.5px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.75;
+  margin-bottom: 22px;
+  max-width: 580px;
+  letter-spacing: -0.01em;
 }
 
 .about-text p:last-of-type {
