@@ -1675,7 +1675,7 @@ p {
 /* ------------------------------------------------------------------ */
 .about-grid {
   display: grid;
-  grid-template-columns: minmax(250px, 310px) 1fr;
+  grid-template-columns: minmax(260px, 325px) 1fr;
   gap: 52px;
   align-items: center;
 }
@@ -1692,7 +1692,7 @@ p {
 .origin {
   position: relative;
   justify-self: center;
-  width: min(280px, 85%);
+  width: min(295px, 88%);
   margin: 10px 0;
   display: flex;
   flex-direction: column;
@@ -1721,8 +1721,8 @@ p {
 .about-photo-cutout {
   display: block;
   width: auto;
-  max-width: 240px;
-  max-height: 420px;
+  max-width: 252px;
+  max-height: 440px;
   height: auto;
   object-fit: contain;
   position: relative;
@@ -1908,11 +1908,8 @@ p {
 
 .about-text h2 .about-accent-text {
   color: var(--accent);
-  background: linear-gradient(135deg, var(--accent) 0%, rgba(255, 120, 180, 0.9) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
   display: inline;
-  transition: color 0.3s ease, filter 0.3s ease;
+  transition: color 0.3s ease;
 }
 
 .about-text p {
