@@ -876,12 +876,12 @@
       activeTextEl.contentEditable = 'false';
       activeTextEl.style.outline   = 'none';
       activeTextEl.style.cursor    = 'default';
-      activeTextEl.style.transition = 'opacity 2s ease';
+      activeTextEl.style.transition = 'opacity 1.5s ease';
       const target = activeTextEl;
       setTimeout(() => {
         target.style.opacity = '0';
-        setTimeout(() => target.remove(), 2000);
-      }, 6000);
+        setTimeout(() => target.remove(), 1500);
+      }, 4000);
     }
     activeTextEl = null;
   }
@@ -915,12 +915,12 @@
 
     annoLayer.appendChild(pin);
 
-    // Auto fade pin
+    // Auto fade pin after 4 seconds (4000ms)
     setTimeout(() => {
-      pin.style.transition = 'opacity 2s ease, transform 0.15s, box-shadow 0.15s';
+      pin.style.transition = 'opacity 1.5s ease, transform 0.15s, box-shadow 0.15s';
       pin.style.opacity = '0';
-      setTimeout(() => { if (pin.parentNode) pin.remove(); }, 2000);
-    }, 6000);
+      setTimeout(() => { if (pin.parentNode) pin.remove(); }, 1500);
+    }, 4000);
   }
 
   function showCommentPopup(pin, n) {
@@ -963,8 +963,8 @@
   }
 
   // ── Animation & Redraw ─────────────────────────────────────
-  const FADE_DELAY = 6000;
-  const FADE_DUR   = 2000;
+  const FADE_DELAY = 4000; // 4000ms = 4 seconds
+  const FADE_DUR   = 1500; // 1.5 second smooth fade-out
 
   function getAlpha(time) {
     if (!time) return 1;
