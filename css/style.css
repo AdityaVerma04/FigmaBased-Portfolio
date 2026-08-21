@@ -1727,7 +1727,8 @@ p {
   object-fit: contain;
   position: relative;
   z-index: 1;
-  filter: drop-shadow(0 0 1.2px rgba(255, 255, 255, 0.95))
+  filter: saturate(0.95)
+         drop-shadow(0 0 1.2px rgba(255, 255, 255, 0.95))
          drop-shadow(0 0 2.5px rgba(255, 255, 255, 0.8))
          drop-shadow(0 20px 36px rgba(0, 0, 0, 0.65));
   transition: transform 0.4s var(--ease-snap), filter 0.4s ease;
@@ -1735,7 +1736,8 @@ p {
 
 .origin:hover .about-photo-cutout {
   transform: scale(1.02);
-  filter: drop-shadow(0 0 2px rgba(255, 255, 255, 1))
+  filter: saturate(0.95)
+         drop-shadow(0 0 2px rgba(255, 255, 255, 1))
          drop-shadow(0 0 4px var(--accent-glow))
          drop-shadow(0 24px 44px rgba(0, 0, 0, 0.75));
 }
