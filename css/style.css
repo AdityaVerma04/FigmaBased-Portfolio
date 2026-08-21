@@ -597,25 +597,25 @@ button {
 /* Music Notification Message Bubble (Prompt Toast) */
 .music-bubble-notif {
   position: fixed;
-  background: rgba(22, 21, 30, 0.96);
+  background: rgba(20, 19, 27, 0.97);
   border: 1px solid rgba(140, 111, 255, 0.45);
-  border-radius: 9px;
-  padding: 8px 14px 8px 11px;
+  border-radius: 10px;
+  padding: 8px 14px 8px 12px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   z-index: 450;
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.65), 0 0 16px rgba(140, 111, 255, 0.25);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.7), 0 0 20px rgba(140, 111, 255, 0.25);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   cursor: pointer;
   user-select: none;
-  white-space: nowrap;
   opacity: 0;
   transform: translateY(-50%) translateX(-8px) scale(0.95);
   pointer-events: none;
   transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+              transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .music-bubble-notif.visible {
@@ -625,8 +625,8 @@ button {
 }
 
 .music-bubble-notif:hover {
-  border-color: rgba(140, 111, 255, 0.7);
-  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.75), 0 0 20px rgba(140, 111, 255, 0.4);
+  border-color: rgba(140, 111, 255, 0.75);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.8), 0 0 24px rgba(140, 111, 255, 0.45);
 }
 
 .music-bubble-notif::before {
@@ -637,31 +637,50 @@ button {
   transform: translateY(-50%) rotate(45deg);
   width: 8px;
   height: 8px;
-  background: rgba(22, 21, 30, 0.96);
+  background: rgba(20, 19, 27, 0.97);
   border-left: 1px solid rgba(140, 111, 255, 0.45);
   border-bottom: 1px solid rgba(140, 111, 255, 0.45);
 }
 
-.music-bubble-icon {
-  font-size: 14px;
-  line-height: 1;
-  animation: notifWiggle 1.6s ease-in-out infinite;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.music-pixel-sax {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  animation: notifWiggle 1.8s ease-in-out infinite;
+  filter: drop-shadow(0 2px 6px rgba(236, 201, 75, 0.4));
 }
 
-.music-bubble-text {
+.music-bubble-text-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: left;
+}
+
+.music-bubble-line-1 {
   font-family: var(--body);
   font-size: 12.5px;
-  font-weight: 500;
-  color: #f1f0f8;
-  letter-spacing: -0.01em;
+  font-weight: 600;
+  color: #f6f5fc;
+  line-height: 1.25;
+  white-space: nowrap;
 }
 
-.music-bubble-text .highlight {
+.music-bubble-line-1 .highlight {
   color: var(--accent);
-  font-weight: 600;
+  text-shadow: 0 0 8px var(--accent-glow);
+}
+
+.music-bubble-line-2 {
+  font-family: var(--body);
+  font-size: 11.5px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  line-height: 1.25;
+  white-space: nowrap;
 }
 
 .music-notif-badge {

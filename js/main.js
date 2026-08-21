@@ -629,7 +629,7 @@ function initAmbientMusic() {
   });
 
   // ── Music Notification Message Toast ─────────────────────
-  // Appears after 2 seconds on home screen, stays for 3 seconds, then smoothly fades out
+  // Appears after 2 seconds on home screen, stays for 5 seconds, then smoothly fades out
   function showMusicNotification() {
     if (window.innerWidth <= 600 || isPlaying) return;
     
@@ -638,8 +638,29 @@ function initAmbientMusic() {
     bubble.setAttribute('role', 'status');
     bubble.setAttribute('aria-live', 'polite');
     bubble.innerHTML = `
-      <span class="music-bubble-icon" aria-hidden="true">🎷</span>
-      <span class="music-bubble-text">hey! wanna hear some <span class="highlight">jazz</span> while u check my portfolio?</span>
+      <svg class="music-pixel-sax" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" aria-hidden="true">
+        <rect x="2" y="3" width="3" height="2" fill="#E2E8F0"/>
+        <rect x="5" y="4" width="2" height="2" fill="#F6AD55"/>
+        <rect x="7" y="5" width="2" height="2" fill="#F6AD55"/>
+        <rect x="8" y="7" width="2" height="6" fill="#ECC94B"/>
+        <rect x="6" y="9" width="2" height="2" fill="#FAF089"/>
+        <rect x="6" y="11" width="2" height="2" fill="#FAF089"/>
+        <rect x="10" y="8" width="1" height="1" fill="#FFFFFF"/>
+        <rect x="10" y="10" width="1" height="1" fill="#FFFFFF"/>
+        <rect x="10" y="12" width="1" height="1" fill="#FFFFFF"/>
+        <rect x="8" y="13" width="3" height="2" fill="#D69E2E"/>
+        <rect x="10" y="15" width="4" height="2" fill="#D69E2E"/>
+        <rect x="13" y="14" width="3" height="2" fill="#ECC94B"/>
+        <rect x="14" y="10" width="3" height="4" fill="#F6E05E"/>
+        <rect x="14" y="8" width="4" height="2" fill="#ECC94B"/>
+        <rect x="15" y="6" width="3" height="2" fill="#D69E2E"/>
+        <rect x="16" y="5" width="2" height="1" fill="#FAF089"/>
+        <rect x="15" y="10" width="1" height="2" fill="#FFFFFF"/>
+      </svg>
+      <div class="music-bubble-text-wrap">
+        <div class="music-bubble-line-1">Hey! Wanna hear some <span class="highlight">jazz</span></div>
+        <div class="music-bubble-line-2">while you check my portfolio?</div>
+      </div>
     `;
 
     // Notification badge on button
@@ -680,13 +701,13 @@ function initAmbientMusic() {
       }, 500);
     }
 
-    // Stays for 3 seconds, then fades
-    dismissTimer = setTimeout(dismiss, 3000);
+    // Stays for 5 seconds, then fades
+    dismissTimer = setTimeout(dismiss, 5000);
 
     // Pause dismiss on hover so user can read / click easily
     bubble.addEventListener('mouseenter', () => clearTimeout(dismissTimer));
     bubble.addEventListener('mouseleave', () => {
-      dismissTimer = setTimeout(dismiss, 1500);
+      dismissTimer = setTimeout(dismiss, 2000);
     });
   }
 
