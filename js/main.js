@@ -448,7 +448,169 @@ document.addEventListener('DOMContentLoaded', () => {
   initHeroParallax();
   initEyeBlink();
   initMagneticElements();
+  initAmbientMusic();
 });
+
+// ── Ambient Music Player (Desktop & Tablet) ────────────────
+function initAmbientMusic() {
+  const musicBtn = document.getElementById('musicBtn');
+  if (!musicBtn) return;
+
+  // Royalty-free calming instrumental background tracks (lofi / ambient acoustic tunes)
+  const TRACKS = [
+    'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3', // Relaxing Lofi Study Tune
+    'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3', // Chill Aesthetic Instrumental
+    'https://cdn.pixabay.com/download/audio/2022/11/06/audio_98553ec592.mp3'  // Soft Ambient Guitar & Keys
+  ];
+
+  let audio = new Audio();
+  audio.loop = true;
+  audio.volume = 0;
+  audio.crossOrigin = 'anonymous';
+  let trackIdx = 0;
+  audio.src = TRACKS[trackIdx];
+
+  let isPlaying = false;
+  let fadeInterval = null;
+  let audioCtx = null;
+  let synthInterval = null;
+
+  // Fallback generative ambient synthesizer (Web Audio API) in case external MP3 is blocked by CORS/offline
+  function startGenerativeAmbient() {
+    if (audioCtx) return;
+    try {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      audioCtx = new AudioContext();
+
+      const masterGain = audioCtx.createGain();
+      masterGain.gain.setValueAtTime(0.01, audioCtx.currentTime);
+      masterGain.gain.exponentialRampToValueAtTime(0.08, audioCtx.currentTime + 3);
+
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(450, audioCtx.currentTime);
+
+      masterGain.connect(filter);
+      filter.connect(audioCtx.destination);
+
+      // Warm soothing pentatonic chords (C major 7th / F maj 9th ambient arpeggios)
+      const notes = [130.81, 164.81, 196.00, 246.94, 261.63, 329.63, 392.00, 493.88, 523.25];
+      let step = 0;
+
+      function playChime() {
+        if (!isPlaying || !audioCtx) return;
+        const osc = audioCtx.createOscillator();
+        const noteGain = audioCtx.createGain();
+
+        const freq = notes[step % notes.length];
+        step = (step + Math.floor(Math.random() * 3) + 1) % notes.length;
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+        noteGain.gain.setValueAtTime(0.001, audioCtx.currentTime);
+        noteGain.gain.exponentialRampToValueAtTime(0.04, audioCtx.currentTime + 0.8);
+        noteGain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 4.5);
+
+        osc.connect(noteGain);
+        noteGain.connect(masterGain);
+
+        osc.start();
+        osc.stop(audioCtx.currentTime + 4.6);
+      }
+
+      playChime();
+      synthInterval = setInterval(playChime, 1800);
+    } catch (e) {
+      console.warn('Web Audio Ambient fallback unavailable:', e);
+    }
+  }
+
+  function stopGenerativeAmbient() {
+    if (synthInterval) {
+      clearInterval(synthInterval);
+      synthInterval = null;
+    }
+    if (audioCtx) {
+      try {
+        audioCtx.close();
+      } catch (e) {}
+      audioCtx = null;
+    }
+  }
+
+  function fadeInAudio() {
+    clearInterval(fadeInterval);
+    const targetVol = 0.35;
+    fadeInterval = setInterval(() => {
+      if (audio.volume < targetVol) {
+        audio.volume = Math.min(targetVol, audio.volume + 0.04);
+      } else {
+        clearInterval(fadeInterval);
+      }
+    }, 100);
+  }
+
+  function fadeOutAudio(callback) {
+    clearInterval(fadeInterval);
+    fadeInterval = setInterval(() => {
+      if (audio.volume > 0.04) {
+        audio.volume = Math.max(0, audio.volume - 0.05);
+      } else {
+        audio.volume = 0;
+        audio.pause();
+        clearInterval(fadeInterval);
+        if (callback) callback();
+      }
+    }, 80);
+  }
+
+  function toggleMusic() {
+    if (isPlaying) {
+      isPlaying = false;
+      musicBtn.classList.remove('playing');
+      musicBtn.dataset.shortcut = 'M — Ambient Tune';
+      musicBtn.title = 'Play ambient tune (M)';
+      fadeOutAudio();
+      stopGenerativeAmbient();
+    } else {
+      isPlaying = true;
+      musicBtn.classList.add('playing');
+      musicBtn.dataset.shortcut = 'M — Playing (Click to Pause)';
+      musicBtn.title = 'Pause ambient tune (M)';
+
+      audio.play().then(() => {
+        fadeInAudio();
+      }).catch(err => {
+        console.info('Audio streaming fallback to generative ambient synthesis:', err);
+        startGenerativeAmbient();
+      });
+    }
+  }
+
+  musicBtn.addEventListener('click', toggleMusic);
+
+  // Shortcut: Press 'M' to toggle ambient music
+  window.addEventListener('keydown', e => {
+    const tag = (document.activeElement?.tagName || '').toUpperCase();
+    const editing = tag === 'INPUT' || tag === 'TEXTAREA' || document.activeElement?.isContentEditable;
+    if (editing) return;
+    if (e.key === 'm' || e.key === 'M') {
+      toggleMusic();
+    }
+  });
+
+  // Handle audio loading errors with seamless fallback to next track or generative synth
+  audio.addEventListener('error', () => {
+    trackIdx = (trackIdx + 1) % TRACKS.length;
+    if (trackIdx !== 0) {
+      audio.src = TRACKS[trackIdx];
+      if (isPlaying) audio.play().catch(startGenerativeAmbient);
+    } else {
+      startGenerativeAmbient();
+    }
+  });
+}
 
 // ── Character Eye Blink Cycle ──────────────────────────────
 // Intervals: 1.8s, 2.6s, 1.4s, 3.1s loop
