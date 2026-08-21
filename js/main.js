@@ -454,7 +454,7 @@ function initHeroParallax() {
     currentY += (targetY - currentY) * 0.075;
 
     // Character movement & subtle 3D tilt
-    if (charWrapper) {
+    if (charWrapper && !window.isDraggingHeroLayer) {
       const posX = (currentX * 18).toFixed(2);
       const posY = (currentY * 10).toFixed(2);
       const rotY = (currentX * 6).toFixed(2);
@@ -463,7 +463,7 @@ function initHeroParallax() {
     }
 
     // Opposite subtle depth parallax on "PORTFOLIO" wordmark
-    if (wordmark) {
+    if (wordmark && !window.isDraggingHeroLayer) {
       const wmX = (-currentX * 12).toFixed(2);
       const wmY = (-currentY * 6).toFixed(2);
       wordmark.style.transform = `translate(calc(-50% + ${wmX}px), calc(-50% + ${wmY}px))`;

@@ -266,12 +266,24 @@
         toolCanvas.style.pointerEvents = 'auto';
         
         if (target) {
-            // 1. If they click inside a card, group the whole card.
-            let card = target.closest('.case-card, .stat-card');
-            if (card) {
+            // 1. Lock character layers together into a single unit
+            const charGroup = target.closest('.hero-character-layer, .hero-character-wrapper, #heroCharacterImg, #heroCharacterOverlay');
+            // 2. Lock portfolio title & wordmark layers together into a single unit
+            const portfolioGroup = target.closest('#heroWordmark, .hero-frame-15, .hero-frame-14, .hero-frame-13, .hero-portfolio-text, .hero-script-name, .hero-role-title');
+            // 3. Lock about origin cutout & cards
+            const originCard = target.closest('.origin');
+            const card = target.closest('.case-card, .stat-card, .cert-item, .contact-card');
+
+            if (charGroup) {
+                target = document.querySelector('.hero-character-layer');
+            } else if (portfolioGroup) {
+                target = document.getElementById('heroWordmark') || document.querySelector('.hero-frame-15');
+            } else if (originCard) {
+                target = originCard;
+            } else if (card) {
                 target = card;
             } else {
-                // 2. Prevent dragging structural background wrappers.
+                // Prevent dragging structural background wrappers
                 const layoutClasses = ['section', 'about-grid', 'work-grid', 'about-text', 'stat-col', 'hero-meta', 'hero-cta', 'filter-bar', 'hero', 'workspace', 'skill-cols', 'skill-group-title', 'skill-list', 'contact-grid', 'contact-info'];
                 const isLayout = layoutClasses.some(c => target.classList.contains(c)) || 
                                  ['MAIN', 'SECTION', 'UL'].includes(target.tagName) || 
@@ -282,7 +294,6 @@
                 if (isLayout) {
                     target = null;
                 }
-                // 3. Otherwise, target remains EXACTLY what they clicked (e.g., <em>, .hero-name__word, <p>).
             }
         }
         
@@ -290,6 +301,7 @@
         if (target && target !== document.body && target !== document.documentElement && !target.classList.contains('workspace') && !target.closest('.topbar') && !target.closest('.layers-panel') && !target.closest('.inspector') && !target.closest('.toolstrip')) {
            draggedEl = target;
            dragStartPos = { cx: e.clientX, cy: e.clientY };
+           window.isDraggingHeroLayer = true;
            
            if (!originalTransform.has(target)) {
              originalTransform.set(target, {
@@ -348,7 +360,14 @@
            
            // Tilt based on horizontal displacement (0.04 degrees per pixel), max 15 deg.
            const rot = Math.max(-15, Math.min(15, currentX * 0.04));
-           draggedEl.style.transform = `translate(${currentX}px, ${currentY}px) rotate(${rot}deg)`;
+           
+           if (draggedEl.classList.contains('hero-character-layer')) {
+             draggedEl.style.transform = `translateX(calc(-50% + ${currentX}px)) translateY(${currentY}px) rotate(${rot}deg)`;
+           } else if (draggedEl.id === 'heroWordmark' || draggedEl.classList.contains('hero-frame-15')) {
+             draggedEl.style.transform = `translate(calc(-50% + ${currentX}px), calc(-50% + ${currentY}px)) rotate(${rot}deg)`;
+           } else {
+             draggedEl.style.transform = `translate(${currentX}px, ${currentY}px) rotate(${rot}deg)`;
+           }
         }
         break;
     }
@@ -379,10 +398,11 @@
            prev.dy += dy;
            
            draggedEl = null;
+           window.isDraggingHeroLayer = false;
            
            setTimeout(() => {
               if (originalTransform.has(el) && draggedEl !== el) {
-                 el.style.transition = 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)'; 
+                 el.style.transition = 'transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275)'; 
                  el.style.transform = prev.transform; 
                  
                  setTimeout(() => {
@@ -393,11 +413,12 @@
                        el.style.zIndex = prev.zIndex;
                        originalTransform.delete(el);
                     }
-                 }, 500);
+                 }, 600);
               }
            }, 3500); 
         }
         handAnchor = null; 
+        window.isDraggingHeroLayer = false;
         document.body.style.cursor = 'grab'; 
         break;
     }
