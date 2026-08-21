@@ -287,6 +287,14 @@ function initInspector() {
 
   updateDeviceInfo();
 
+  const heroEl = document.getElementById('hero') || sections[0];
+  if (heroEl) {
+    if (inspName && inspName.childNodes[0]) {
+      inspName.childNodes[0].textContent = 'Frame · ' + (heroEl.dataset.frame || 'Cover');
+    }
+    updateSectionMetrics(heroEl);
+  }
+
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (!entry.isIntersecting) return;
