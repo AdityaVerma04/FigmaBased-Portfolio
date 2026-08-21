@@ -947,16 +947,22 @@
     return rgb.map(c => Math.min(255, Math.round(c + (255 - c) * amount)));
   }
 
+  function getLightestTint(rgb, amount = 0.84) {
+    return rgb.map(c => Math.min(255, Math.round(c + (255 - c) * amount)));
+  }
+
   function applyAccent(hex) {
     ACCENT_HEX = hex;
     ACCENT_RGB = hexToRgb(hex);
     const [r, g, b] = ACCENT_RGB;
 
-    // Harmonious lighter/mid tones for gradients
+    // Harmonious lighter/mid tones and ultra-light pastel tint
     const midRgb = lightenRgb(ACCENT_RGB, 0.18);
     const lightRgb = lightenRgb(ACCENT_RGB, 0.38);
+    const tintRgb = getLightestTint(ACCENT_RGB, 0.84);
     const midHex = rgbToHex(...midRgb);
     const lightHex = rgbToHex(...lightRgb);
+    const tintHex = rgbToHex(...tintRgb);
 
     // Save preference
     try { localStorage.setItem('aditya_portfolio_accent', hex); } catch (e) {}
@@ -967,6 +973,7 @@
     root.setProperty('--accent-rgb', `${r}, ${g}, ${b}`);
     root.setProperty('--accent-mid', midHex);
     root.setProperty('--accent-light', lightHex);
+    root.setProperty('--accent-tint', tintHex);
     root.setProperty('--accent-soft', `rgba(${r}, ${g}, ${b}, 0.14)`);
     root.setProperty('--accent-glow', `rgba(${r}, ${g}, ${b}, 0.38)`);
 

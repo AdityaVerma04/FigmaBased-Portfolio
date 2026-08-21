@@ -29,6 +29,7 @@
   --accent: #8c6fff;
   --accent-mid: #9e89f7;
   --accent-light: #b4a3ff;
+  --accent-tint: #eedefd;
   --accent-rgb: 140, 111, 255;
   --accent-soft: rgba(140, 111, 255, 0.14);
   --accent-glow: rgba(140, 111, 255, 0.35);
@@ -1036,7 +1037,7 @@ p {
 .hero-role-title {
   font-family: 'Bebas Neue', sans-serif;
   font-size: 88px;
-  color: #eedefd;
+  color: var(--accent-tint, #eedefd);
   letter-spacing: 1.4px;
   line-height: 1;
   text-transform: uppercase;
@@ -1046,6 +1047,7 @@ p {
   cursor: default;
   margin-right: 0;
   margin-bottom: -30px;
+  transition: color 0.35s ease;
 }
 
 /* Frame 14: Width 981px, Height 216px */
