@@ -456,32 +456,29 @@ function initAmbientMusic() {
   const musicBtn = document.getElementById('musicBtn');
   if (!musicBtn) return;
 
-  // Curated library of famous jazz instrumental classics (Take Five, Autumn Leaves, Fly Me to the Moon, Bossa & Blue Note standards)
-  const TRACKS = [
-    { title: 'Take Five (Cool Jazz Quartet)',       url: 'https://cdn.pixabay.com/download/audio/2022/10/25/audio_2476d05f27.mp3' },
-    { title: 'Autumn Leaves (Jazz Piano Trio)',     url: 'https://cdn.pixabay.com/download/audio/2022/01/26/audio_d0c6ff1e01.mp3' },
-    { title: 'Fly Me to the Moon (Swing & Sax)',     url: 'https://cdn.pixabay.com/download/audio/2023/07/04/audio_3cb7c0b021.mp3' },
-    { title: 'Girl From Ipanema (Bossa Nova Jazz)', url: 'https://cdn.pixabay.com/download/audio/2022/08/02/audio_884fe92c21.mp3' },
-    { title: 'Midnight Jazz Café (Smooth Velvet)',   url: 'https://cdn.pixabay.com/download/audio/2022/11/18/audio_82c0b5f126.mp3' },
-    { title: 'Misty (Saxophone Jazz Ballad)',        url: 'https://cdn.pixabay.com/download/audio/2022/03/24/audio_c35f29ae48.mp3' },
-    { title: 'Blue in Green (Cool Muted Trumpet)',  url: 'https://cdn.pixabay.com/download/audio/2022/05/16/audio_db564c7816.mp3' },
-    { title: 'Cantaloupe Groove (Soul Jazz Piano)', url: 'https://cdn.pixabay.com/download/audio/2022/10/05/audio_16a3bb5be5.mp3' },
+  // Infinite 24/7 live online Jazz radio streams & broadcasts (non-stop famous classics, cool jazz & smooth jazz)
+  const JAZZ_STREAMS = [
+    'https://ice2.somafm.com/sonicuniverse-128-mp3', // Sonic Universe: Cool Jazz Standards & Modern Nu-Jazz
+    'https://stream.zeno.fm/429vyq91z98uv',          // Classic Jazz Radio: 24/7 Famous Jazz Classics & Big Band
+    'https://ice2.somafm.com/secretagent-128-mp3',   // Vintage 60s Jazz, Bossa Nova & Lounge Standards
+    'https://stream.zeno.fm/f3wvbbqmdg8uv',          // Smooth Jazz 24/7 Global Stream
+    'https://ice2.somafm.com/lush-128-mp3',          // Lush: Velvet Smooth Jazz & Melodic Ballads
+    'https://ice1.somafm.com/illstreet-128-mp3'      // Illinois Street: Soul Jazz & Classic Grooves
   ];
 
   let audio = new Audio();
   audio.volume = 0;
   audio.crossOrigin = 'anonymous';
   
-  // Pick a random famous jazz classic on start
-  let trackIdx = Math.floor(Math.random() * TRACKS.length);
-  audio.src = TRACKS[trackIdx].url;
+  // Start on a random live jazz station
+  let stationIdx = Math.floor(Math.random() * JAZZ_STREAMS.length);
 
   let isPlaying = false;
   let fadeInterval = null;
   let audioCtx = null;
   let synthInterval = null;
 
-  // Fallback generative jazz piano synthesizer (Web Audio API) using classic II-V-I jazz chords
+  // Fallback generative jazz synthesizer (Web Audio API) using classic II-V-I jazz chords
   function startGenerativeAmbient() {
     if (audioCtx) return;
     try {
@@ -555,7 +552,7 @@ function initAmbientMusic() {
 
   function fadeInAudio() {
     clearInterval(fadeInterval);
-    const targetVol = 0.38;
+    const targetVol = 0.4;
     fadeInterval = setInterval(() => {
       if (audio.volume < targetVol) {
         audio.volume = Math.min(targetVol, audio.volume + 0.04);
@@ -579,22 +576,18 @@ function initAmbientMusic() {
     }, 80);
   }
 
-  function playCurrentTrack() {
-    const current = TRACKS[trackIdx];
-    audio.src = current.url;
+  function playLiveStream() {
+    audio.src = JAZZ_STREAMS[stationIdx];
+    audio.load();
     audio.play().then(() => {
       fadeInAudio();
     }).catch(err => {
-      console.info('Stream fallback to next track or jazz synth:', err);
-      nextTrack();
+      console.info('Live station connection retry / fallback:', err);
+      // Try next live stream channel
+      stationIdx = (stationIdx + 1) % JAZZ_STREAMS.length;
+      audio.src = JAZZ_STREAMS[stationIdx];
+      audio.play().catch(startGenerativeAmbient);
     });
-  }
-
-  function nextTrack() {
-    trackIdx = (trackIdx + 1) % TRACKS.length;
-    if (isPlaying) {
-      playCurrentTrack();
-    }
   }
 
   function toggleMusic() {
@@ -602,7 +595,7 @@ function initAmbientMusic() {
       isPlaying = false;
       musicBtn.classList.remove('playing');
       musicBtn.dataset.shortcut = 'M — Play Jazz';
-      musicBtn.title = 'Play famous jazz classics (M)';
+      musicBtn.title = 'Play live famous jazz (M)';
       fadeOutAudio();
       stopGenerativeAmbient();
     } else {
@@ -610,19 +603,13 @@ function initAmbientMusic() {
       musicBtn.classList.add('playing');
       musicBtn.dataset.shortcut = 'M — Pause Jazz';
       musicBtn.title = 'Pause jazz (M)';
-      playCurrentTrack();
+      playLiveStream();
     }
   }
 
   musicBtn.addEventListener('click', toggleMusic);
 
-  // Automatically advance to another famous jazz song when the track ends
-  audio.addEventListener('ended', () => {
-    trackIdx = (trackIdx + 1) % TRACKS.length;
-    playCurrentTrack();
-  });
-
-  // Shortcut: Press 'M' to toggle ambient music
+  // Shortcut: Press 'M' to toggle ambient jazz
   window.addEventListener('keydown', e => {
     const tag = (document.activeElement?.tagName || '').toUpperCase();
     const editing = tag === 'INPUT' || tag === 'TEXTAREA' || document.activeElement?.isContentEditable;
@@ -632,11 +619,11 @@ function initAmbientMusic() {
     }
   });
 
-  // Handle stream error by smoothly skipping to the next song
+  // Handle stream interruption by rotating to another 24/7 live jazz broadcast
   audio.addEventListener('error', () => {
     if (isPlaying) {
-      trackIdx = (trackIdx + 1) % TRACKS.length;
-      audio.src = TRACKS[trackIdx].url;
+      stationIdx = (stationIdx + 1) % JAZZ_STREAMS.length;
+      audio.src = JAZZ_STREAMS[stationIdx];
       audio.play().catch(startGenerativeAmbient);
     }
   });
