@@ -892,8 +892,11 @@
         ${wheelBtnHtml}
       </div>
       <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(255,255,255,0.4);margin-bottom:6px;letter-spacing:0.04em;">Custom hex</div>
-      <div id="cpHexWrap" style="display:flex;align-items:center;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:6px;padding:0 8px;height:32px;box-sizing:border-box;transition:border-color 0.2s,box-shadow 0.2s;">
-        <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:rgba(255,255,255,0.45);user-select:none;margin-right:2px;font-weight:600;line-height:1;">#</span>
+      <div id="cpHexWrap" style="display:flex;align-items:center;gap:7px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:6px;padding:4px 8px;height:34px;box-sizing:border-box;transition:border-color 0.2s,box-shadow 0.2s;">
+        <label id="cpChipLabel" title="Click to open color spectrum picker" style="position:relative;width:24px;height:18px;border-radius:4px;background:${ACCENT_HEX};cursor:pointer;flex-shrink:0;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.25);display:flex;align-items:center;justify-content:center;transition:background 0.2s,transform 0.12s;">
+          <input id="cpNativePicker" type="color" value="${ACCENT_HEX}" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;">
+        </label>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:rgba(255,255,255,0.45);user-select:none;font-weight:600;line-height:1;">#</span>
         <input id="cpHexInput" type="text" value="${ACCENT_HEX.replace('#', '')}" maxlength="6" spellcheck="false" autocomplete="off"
           style="width:100%;background:transparent;border:none;color:#fff;font-family:'IBM Plex Mono',monospace;font-size:12px;outline:none;padding:0;letter-spacing:0.04em;">
       </div>
@@ -904,6 +907,7 @@
     const hexWrap = panel.querySelector('#cpHexWrap');
     const hexInput = panel.querySelector('#cpHexInput');
     const nativePicker = panel.querySelector('#cpNativePicker');
+    const chipLabel = panel.querySelector('#cpChipLabel');
     const wheelWrap = panel.querySelector('#cpWheelWrap');
 
     hexInput.addEventListener('focus', () => {
@@ -924,6 +928,7 @@
         });
         hexInput.value = btn.dataset.hex.replace('#', '');
         nativePicker.value = btn.dataset.hex;
+        if (chipLabel) chipLabel.style.background = btn.dataset.hex;
       });
     });
 
@@ -932,6 +937,7 @@
       const col = nativePicker.value;
       applyAccent(col);
       hexInput.value = col.replace('#', '');
+      if (chipLabel) chipLabel.style.background = col;
       panel.querySelectorAll('.cp-swatch').forEach(b => {
         const isWheel = b === wheelWrap;
         b.style.borderColor = isWheel ? '#fff' : 'transparent';
@@ -946,6 +952,7 @@
         const fullHex = '#' + clean;
         applyAccent(fullHex);
         nativePicker.value = fullHex;
+        if (chipLabel) chipLabel.style.background = fullHex;
         let matched = false;
         panel.querySelectorAll('.cp-swatch:not(.cp-wheel-btn)').forEach(b => {
           const isMatch = b.dataset.hex.toLowerCase() === fullHex.toLowerCase();
@@ -1027,6 +1034,9 @@
     // Update swatch button fill color
     const sw = document.querySelector('#colorSwatchBtn .swatch-fill');
     if (sw) sw.style.background = hex;
+
+    const chip = document.getElementById('cpChipLabel');
+    if (chip) chip.style.background = hex;
 
     // Update bg-canvas.js accent via custom event
     window.dispatchEvent(new CustomEvent('accentChange', { detail: { hex, rgb: ACCENT_RGB } }));
