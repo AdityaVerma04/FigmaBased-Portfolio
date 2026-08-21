@@ -431,13 +431,20 @@ button {
   padding: 7px 17px;
   border-radius: 6px;
   border: none;
-  transition: opacity 0.2s, transform 0.15s;
-  box-shadow: 0 0 18px rgba(140, 111, 255, 0.3);
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s, box-shadow 0.25s ease, background 0.3s ease;
+  box-shadow: 0 0 18px var(--accent-glow);
 }
 
 .share-btn:hover {
-  opacity: 0.88;
+  opacity: 0.92;
   transform: translateY(-1px);
+  box-shadow: 0 0 26px var(--accent-glow);
+}
+
+.share-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 0 12px var(--accent-glow);
 }
 
 /* ------------------------------------------------------------------ */
@@ -1169,7 +1176,7 @@ p {
 
 .hero-btn-primary {
   position: relative;
-  background: linear-gradient(135deg, #8c6fff 0%, #a87ffb 100%);
+  background: var(--grad-accent);
   color: #ffffff;
   font-family: var(--body);
   font-weight: 600;
@@ -1178,20 +1185,20 @@ p {
   border-radius: 8px;
   border: none;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(140, 111, 255, 0.28);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 16px var(--accent-glow);
+  transition: transform 0.2s ease, box-shadow 0.25s ease, background 0.3s ease;
   display: inline-flex;
   align-items: center;
 }
 
 .hero-btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(140, 111, 255, 0.42);
+  box-shadow: 0 8px 24px var(--accent-glow);
 }
 
 .hero-btn-primary:active {
   transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(140, 111, 255, 0.3);
+  box-shadow: 0 2px 8px var(--accent-glow);
 }
 
 .hero-btn-ghost {
@@ -1214,10 +1221,10 @@ p {
 
 .hero-btn-ghost:hover {
   background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(140, 111, 255, 0.6);
+  border-color: var(--accent);
   color: #ffffff;
   transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 6px 20px rgba(140, 111, 255, 0.25);
+  box-shadow: 0 6px 20px var(--accent-glow);
 }
 
 .hero-btn-ghost:active {
