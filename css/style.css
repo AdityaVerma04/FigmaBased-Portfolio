@@ -1892,23 +1892,24 @@ p {
 
 /* About Text & Typography (Modern Editorial Layout) */
 .about-text {
-  max-width: 620px;
+  max-width: 652px; /* Increased by 5% */
 }
 
 .about-text h2 {
   font-family: var(--display), sans-serif;
-  font-size: clamp(30px, 3.6vw, 42px);
+  font-size: clamp(32px, 3.8vw, 44px);
   font-weight: 800;
   line-height: 1.15;
   letter-spacing: -0.035em;
   color: #f6f5fc;
   margin-bottom: 24px;
-  max-width: 642px;
+  max-width: 675px;
 }
 
 .about-text h2 .about-accent-text {
   color: var(--accent);
   display: inline;
+  white-space: nowrap;
   transition: color 0.3s ease;
 }
 
@@ -1919,7 +1920,7 @@ p {
   color: rgba(255, 255, 255, 0.65);
   line-height: 1.75;
   margin-bottom: 22px;
-  max-width: 620px;
+  max-width: 652px;
   letter-spacing: -0.01em;
 }
 
