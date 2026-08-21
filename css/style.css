@@ -2397,12 +2397,82 @@ p {
 }
 
 /* ------------------------------------------------------------------ */
-/*  13. EXPERIENCE TIMELINE                                            */
+/* ------------------------------------------------------------------ */
+/*  13. EXPERIENCE TIMELINE (Interactive Journey Flow)                 */
 /* ------------------------------------------------------------------ */
 .timeline {
-  border-left: 1px solid var(--panel-border);
+  position: relative;
+  border-left: 2px solid rgba(255, 255, 255, 0.08);
   padding-left: 34px;
-  margin-top: 12px;
+  margin-top: 18px;
+  margin-bottom: 8px;
+}
+
+/* Upward Flowing Energy Current (Journey Beam) */
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: -2px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: linear-gradient(
+    to top,
+    rgba(140, 111, 255, 0.1) 0%,
+    rgba(140, 111, 255, 0.8) 50%,
+    #ffffff 90%,
+    rgba(140, 111, 255, 0.1) 100%
+  );
+  background-size: 100% 250%;
+  animation: timelineJourneyFlow 3.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  pointer-events: none;
+  border-radius: 2px;
+  box-shadow: 0 0 8px var(--accent);
+}
+
+/* Traveling Journey Beacon Photon (Moving upwards along the track) */
+.timeline::after {
+  content: '';
+  position: absolute;
+  left: -4px;
+  width: 6px;
+  height: 18px;
+  border-radius: 3px;
+  background: linear-gradient(to top, var(--accent), #ffffff);
+  box-shadow: 0 0 10px var(--accent), 0 0 4px #ffffff;
+  animation: timelinePhotonAscent 3.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  pointer-events: none;
+  opacity: 0;
+}
+
+@keyframes timelineJourneyFlow {
+  0% {
+    background-position: 0% 100%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
+}
+
+@keyframes timelinePhotonAscent {
+  0% {
+    top: calc(100% - 24px);
+    opacity: 0;
+    transform: scaleY(0.4);
+  }
+  15% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+  85% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+  100% {
+    top: 8px;
+    opacity: 0;
+    transform: scaleY(0.4);
+  }
 }
 
 .tl-item {
@@ -2414,21 +2484,70 @@ p {
   padding-bottom: 0;
 }
 
+/* Milestone Node Base */
 .tl-item::before {
   content: '';
   position: absolute;
-  left: -38px;
+  left: -39px;
   top: 5px;
-  width: 9px;
-  height: 9px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   background: var(--accent);
-  box-shadow: 0 0 0 4px var(--canvas), 0 0 12px var(--accent-glow);
-  transition: box-shadow 0.3s;
+  border: 2px solid var(--canvas);
+  box-shadow: 0 0 0 2px var(--accent), 0 0 12px var(--accent-glow);
+  transition: transform 0.25s var(--ease-snap), box-shadow 0.25s ease;
+  z-index: 2;
+}
+
+/* Top Node: Current / Present Destination (Live Radar Beacon) */
+.tl-item:first-child::before {
+  background: #ffffff;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent), 0 0 18px var(--accent-glow);
+  animation: currentBeaconPulse 2s ease-in-out infinite;
+}
+
+.tl-item:first-child::after {
+  content: '';
+  position: absolute;
+  left: -44px;
+  top: 0px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1.5px solid var(--accent);
+  opacity: 0;
+  animation: currentBeaconRipple 2s cubic-bezier(0.2, 0.8, 0.4, 1) infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes currentBeaconPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 3px var(--accent), 0 0 14px var(--accent-glow);
+  }
+  50% {
+    transform: scale(1.18);
+    box-shadow: 0 0 0 4px var(--accent), 0 0 24px var(--accent-glow);
+  }
+}
+
+@keyframes currentBeaconRipple {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
 }
 
 .tl-item:hover::before {
-  box-shadow: 0 0 0 4px var(--canvas), 0 0 20px var(--accent-glow);
+  transform: scale(1.25);
+  box-shadow: 0 0 0 4px var(--accent), 0 0 24px var(--accent-glow);
 }
 
 .tl-version {
