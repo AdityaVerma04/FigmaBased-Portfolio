@@ -470,7 +470,7 @@ function initHeroParallax() {
     }
 
     // Floating micro-shift on script name
-    if (scriptName) {
+    if (scriptName && !window.isDraggingHeroLayer) {
       const snX = (currentX * 6).toFixed(2);
       const snY = (currentY * 3).toFixed(2);
       scriptName.style.transform = `rotate(-6deg) translate3d(${snX}px, ${snY}px, 0)`;

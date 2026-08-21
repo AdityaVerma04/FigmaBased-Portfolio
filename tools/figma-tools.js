@@ -268,23 +268,23 @@
         if (target) {
             // 1. Lock character layers together into a single unit
             const charGroup = target.closest('.hero-character-layer, .hero-character-wrapper, #heroCharacterImg, #heroCharacterOverlay');
-            // 2. Lock PORTFOLIO wordmark (base + color dodge layers) into a single unit
-            const portfolioWordmark = target.closest('.hero-frame-14, .hero-portfolio-text, .hero-portfolio-base, .hero-portfolio-dodge');
-            // 3. Individual header elements
+            // 2. Individual header text layers
             const scriptName = target.closest('.hero-script-name');
             const roleTitle = target.closest('.hero-role-title');
+            // 3. Lock PORTFOLIO wordmark (base + color dodge layers) into a single unit
+            const portfolioWordmark = target.closest('.hero-frame-14, .hero-portfolio-text, .hero-portfolio-base, .hero-portfolio-dodge');
             // 4. Lock about origin cutout & cards
             const originCard = target.closest('.origin');
             const card = target.closest('.case-card, .stat-card, .cert-item, .contact-card');
 
             if (charGroup) {
                 target = document.querySelector('.hero-character-layer');
-            } else if (portfolioWordmark) {
-                target = document.querySelector('.hero-frame-14');
             } else if (scriptName) {
                 target = scriptName;
             } else if (roleTitle) {
                 target = roleTitle;
+            } else if (portfolioWordmark) {
+                target = document.querySelector('.hero-frame-14');
             } else if (originCard) {
                 target = originCard;
             } else if (card) {
