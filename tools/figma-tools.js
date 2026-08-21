@@ -268,23 +268,30 @@
         if (target) {
             // 1. Lock character layers together into a single unit
             const charGroup = target.closest('.hero-character-layer, .hero-character-wrapper, #heroCharacterImg, #heroCharacterOverlay');
-            // 2. Lock portfolio title & wordmark layers together into a single unit
-            const portfolioGroup = target.closest('#heroWordmark, .hero-frame-15, .hero-frame-14, .hero-frame-13, .hero-portfolio-text, .hero-script-name, .hero-role-title');
-            // 3. Lock about origin cutout & cards
+            // 2. Lock PORTFOLIO wordmark (base + color dodge layers) into a single unit
+            const portfolioWordmark = target.closest('.hero-frame-14, .hero-portfolio-text, .hero-portfolio-base, .hero-portfolio-dodge');
+            // 3. Individual header elements
+            const scriptName = target.closest('.hero-script-name');
+            const roleTitle = target.closest('.hero-role-title');
+            // 4. Lock about origin cutout & cards
             const originCard = target.closest('.origin');
             const card = target.closest('.case-card, .stat-card, .cert-item, .contact-card');
 
             if (charGroup) {
                 target = document.querySelector('.hero-character-layer');
-            } else if (portfolioGroup) {
-                target = document.getElementById('heroWordmark') || document.querySelector('.hero-frame-15');
+            } else if (portfolioWordmark) {
+                target = document.querySelector('.hero-frame-14');
+            } else if (scriptName) {
+                target = scriptName;
+            } else if (roleTitle) {
+                target = roleTitle;
             } else if (originCard) {
                 target = originCard;
             } else if (card) {
                 target = card;
             } else {
                 // Prevent dragging structural background wrappers
-                const layoutClasses = ['section', 'about-grid', 'work-grid', 'about-text', 'stat-col', 'hero-meta', 'hero-cta', 'filter-bar', 'hero', 'workspace', 'skill-cols', 'skill-group-title', 'skill-list', 'contact-grid', 'contact-info'];
+                const layoutClasses = ['section', 'about-grid', 'work-grid', 'about-text', 'stat-col', 'hero-meta', 'hero-cta', 'filter-bar', 'hero', 'workspace', 'skill-cols', 'skill-group-title', 'skill-list', 'contact-grid', 'contact-info', 'hero-frame-15', 'hero-frame-13'];
                 const isLayout = layoutClasses.some(c => target.classList.contains(c)) || 
                                  ['MAIN', 'SECTION', 'UL'].includes(target.tagName) || 
                                  target.id === 'annotationLayer' || 
@@ -363,6 +370,8 @@
            
            if (draggedEl.classList.contains('hero-character-layer')) {
              draggedEl.style.transform = `translateX(calc(-50% + ${currentX}px)) translateY(${currentY}px) rotate(${rot}deg)`;
+           } else if (draggedEl.classList.contains('hero-script-name')) {
+             draggedEl.style.transform = `translate(${currentX}px, ${currentY}px) rotate(${rot - 6}deg)`;
            } else if (draggedEl.id === 'heroWordmark' || draggedEl.classList.contains('hero-frame-15')) {
              draggedEl.style.transform = `translate(calc(-50% + ${currentX}px), calc(-50% + ${currentY}px)) rotate(${rot}deg)`;
            } else {

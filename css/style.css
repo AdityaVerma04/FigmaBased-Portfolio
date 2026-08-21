@@ -1025,7 +1025,8 @@ p {
   transform-origin: left bottom;
   user-select: none;
   text-shadow: 2px 4px 23.1px rgba(0, 0, 0, 0.85), 4px 4px 4px rgba(0, 0, 0, 0.6);
-  pointer-events: none;
+  pointer-events: auto;
+  cursor: default;
   margin-left: 10px;
   margin-bottom: -45px;
   /* slight downward overlap into P */
@@ -1041,7 +1042,8 @@ p {
   text-transform: uppercase;
   user-select: none;
   white-space: nowrap;
-  pointer-events: none;
+  pointer-events: auto;
+  cursor: default;
   margin-right: 0;
   margin-bottom: -30px;
 }
