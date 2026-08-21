@@ -690,8 +690,15 @@ function initAmbientMusic() {
     });
   }
 
-  // Trigger 2 seconds after website home screen opens
-  setTimeout(showMusicNotification, 2000);
+  // Trigger 2 seconds AFTER the splash screen finishes and home screen is visible
+  const splash = document.getElementById('splashScreen');
+  if (splash) {
+    window.addEventListener('splashDismissed', () => {
+      setTimeout(showMusicNotification, 2000);
+    }, { once: true });
+  } else {
+    setTimeout(showMusicNotification, 2000);
+  }
 }
 
 // ── Character Eye Blink Cycle ──────────────────────────────
@@ -865,6 +872,7 @@ function initSplashScreen() {
     isExiting = true;
     if (timerId) clearTimeout(timerId);
     splash.classList.add('splash-hidden');
+    window.dispatchEvent(new CustomEvent('splashDismissed'));
     setTimeout(() => {
       try { splash.remove(); } catch(e) {}
     }, 900);
