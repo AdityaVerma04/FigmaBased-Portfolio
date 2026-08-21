@@ -843,12 +843,27 @@
     panel.innerHTML = `
       <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:12px;">Accent color</div>
       <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;">${grid}</div>
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(255,255,255,0.3);margin-bottom:6px;">Custom hex</div>
-      <input id="cpHexInput" type="text" value="${ACCENT_HEX}"
-        style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:6px 8px;color:#fff;font-family:'IBM Plex Mono',monospace;font-size:12px;outline:none;box-sizing:border-box;">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(255,255,255,0.4);margin-bottom:6px;letter-spacing:0.04em;">Custom hex</div>
+      <div id="cpHexWrap" style="display:flex;align-items:center;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:6px;padding:0 8px;height:32px;box-sizing:border-box;transition:border-color 0.2s,box-shadow 0.2s;">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:rgba(255,255,255,0.45);user-select:none;margin-right:2px;font-weight:600;line-height:1;">#</span>
+        <input id="cpHexInput" type="text" value="${ACCENT_HEX.replace('#', '')}" maxlength="6" spellcheck="false" autocomplete="off"
+          style="width:100%;background:transparent;border:none;color:#fff;font-family:'IBM Plex Mono',monospace;font-size:12px;outline:none;padding:0;letter-spacing:0.04em;">
+      </div>
     `;
 
     document.body.appendChild(panel);
+
+    const hexWrap = panel.querySelector('#cpHexWrap');
+    const hexInput = panel.querySelector('#cpHexInput');
+
+    hexInput.addEventListener('focus', () => {
+      hexWrap.style.borderColor = 'var(--accent)';
+      hexWrap.style.boxShadow = '0 0 0 1px var(--accent)';
+    });
+    hexInput.addEventListener('blur', () => {
+      hexWrap.style.borderColor = 'rgba(255,255,255,0.12)';
+      hexWrap.style.boxShadow = 'none';
+    });
 
     panel.querySelectorAll('.cp-swatch').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -857,14 +872,21 @@
           b.style.borderColor = b === btn ? '#fff' : 'transparent';
           b.classList.toggle('cp-active', b === btn);
         });
-        document.getElementById('cpHexInput').value = btn.dataset.hex;
+        hexInput.value = btn.dataset.hex.replace('#', '');
       });
     });
 
-    const hexInput = panel.querySelector('#cpHexInput');
     hexInput.addEventListener('input', () => {
-      const v = hexInput.value.trim();
-      if (/^#[0-9a-f]{6}$/i.test(v)) applyAccent(v);
+      const clean = hexInput.value.replace(/[^0-9a-fA-F]/g, '').slice(0, 6);
+      hexInput.value = clean;
+      if (clean.length === 6) {
+        applyAccent('#' + clean);
+        panel.querySelectorAll('.cp-swatch').forEach(b => {
+          const isMatch = b.dataset.hex.toLowerCase() === ('#' + clean).toLowerCase();
+          b.style.borderColor = isMatch ? '#fff' : 'transparent';
+          b.classList.toggle('cp-active', isMatch);
+        });
+      }
     });
     hexInput.addEventListener('keydown', e => { if (e.key === 'Escape') panel.remove(); });
 
