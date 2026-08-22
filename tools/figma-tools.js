@@ -1212,9 +1212,6 @@
     const lightHex = rgbToHex(...lightRgb);
     const tintHex = rgbToHex(...tintRgb);
 
-    // Save preference
-    try { localStorage.setItem('aditya_portfolio_accent', hex); } catch (e) {}
-
     // Update CSS custom properties live
     const root = document.documentElement.style;
     root.setProperty('--accent', hex);
@@ -1289,13 +1286,6 @@
 
   // ── Boot ───────────────────────────────────────────────────
   function boot() {
-    // Restore saved accent preference across normal refreshes
-    try {
-      const saved = localStorage.getItem('aditya_portfolio_accent');
-      if (saved && /^#[0-9a-f]{6}$/i.test(saved)) {
-        applyAccent(saved);
-      }
-    } catch (e) {}
     init();
   }
 
