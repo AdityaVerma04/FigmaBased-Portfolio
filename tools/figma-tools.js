@@ -1233,6 +1233,28 @@
     root.setProperty('--grad-hero', `linear-gradient(135deg, rgba(${r}, ${g}, ${b}, 0.18) 0%, transparent 60%)`);
     root.setProperty('--grad-accent', `linear-gradient(135deg, ${hex} 0%, ${lightHex} 100%)`);
 
+    // Update SVG gradient stops dynamically (for SVG definitions like clothGrad2 and mLogoGrad2)
+    const clothGrad = document.getElementById('clothGrad2');
+    if (clothGrad) {
+      const stops = clothGrad.querySelectorAll('stop');
+      if (stops.length >= 5) {
+        stops[0].setAttribute('stop-color', midHex);
+        stops[1].setAttribute('stop-color', hex);
+        stops[2].setAttribute('stop-color', lightHex);
+        stops[3].setAttribute('stop-color', hex);
+        stops[4].setAttribute('stop-color', midHex);
+      }
+    }
+
+    const mGrad = document.getElementById('mLogoGrad2');
+    if (mGrad) {
+      const stops = mGrad.querySelectorAll('stop');
+      if (stops.length >= 2) {
+        stops[0].setAttribute('stop-color', lightHex);
+        stops[1].setAttribute('stop-color', hex);
+      }
+    }
+
     // Update swatch button fill color
     const sw = document.querySelector('#colorSwatchBtn .swatch-fill');
     if (sw) sw.style.background = hex;
