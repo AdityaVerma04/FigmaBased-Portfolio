@@ -32,7 +32,7 @@ async function loadCaseStudies() {
         data = await res.json();
         if (data && Array.isArray(data.caseStudies) && data.caseStudies.length) break;
       }
-    } catch(e) {}
+    } catch (e) { }
   }
 
   try {
@@ -75,9 +75,9 @@ function csHref(cs) {
 // Type badge label
 function csTypeBadge(cs) {
   const t = cs.type || 'long';
-  if (t === 'quick')    return '<span class="cs-type-badge cs-type-quick" title="Quick Case Study">Q</span>';
+  if (t === 'quick') return '<span class="cs-type-badge cs-type-quick" title="Quick Case Study">Q</span>';
   if (t === 'detailed') return '<span class="cs-type-badge cs-type-detailed" title="Detailed Case Study">D</span>';
-  if (t === 'scratch')  return '<span class="cs-type-badge cs-type-scratch" title="Scratchpad">S</span>';
+  if (t === 'scratch') return '<span class="cs-type-badge cs-type-scratch" title="Scratchpad">S</span>';
   return '<span class="cs-type-badge cs-type-long" title="Long Case Study">L</span>';
 }
 
@@ -100,8 +100,8 @@ function renderGrid(studies) {
 
       <div class="case-thumb" aria-hidden="${!!cs.coverImage}">
         ${cs.coverImage
-          ? `<img src="${escapeHtml(cs.coverImage)}" alt="${escapeHtml(cs.title)} — cover image" loading="lazy">`
-          : `<span>${escapeHtml(cs.client || 'Case Study')}</span>`}
+        ? `<img src="${escapeHtml(cs.coverImage)}" alt="${escapeHtml(cs.title)} — cover image" loading="lazy">`
+        : `<span>${escapeHtml(cs.client || 'Case Study')}</span>`}
         ${csTypeBadge(cs)}
         ${isLocked ? `
           <div class="cs-lock-badge" title="Locked — Soon to be uploaded">
@@ -163,12 +163,12 @@ function renderFilterBar(studies) {
 }
 
 function filterCards(tag) {
-  const grid  = document.getElementById('workGrid');
+  const grid = document.getElementById('workGrid');
   const cards = grid.querySelectorAll('.case-card');
 
   cards.forEach((card, i) => {
     const cardTags = card.dataset.tags.split(',').map(s => s.trim());
-    const show     = tag === 'all' || cardTags.includes(tag);
+    const show = tag === 'all' || cardTags.includes(tag);
     card.style.display = show ? '' : 'none';
     if (show) card.style.animationDelay = `${i * 0.06}s`;
   });
@@ -215,19 +215,19 @@ function getRgbToHex(col) {
 }
 
 function initInspector() {
-  const sections    = document.querySelectorAll('.section[data-frame]');
-  const layerItems  = document.querySelectorAll('.layer-item');
-  const inspName    = document.getElementById('inspName');
-  const inspDevice  = document.getElementById('inspDevice');
-  const inspScreen  = document.getElementById('inspScreen');
-  const inspDpr     = document.getElementById('inspDpr');
-  const inspSize    = document.getElementById('inspSize');
-  const inspFill    = document.getElementById('inspFill');
-  const inspSwatch  = document.getElementById('inspSwatch');
-  const inspRadius  = document.getElementById('inspRadius');
-  const inspLayout  = document.getElementById('inspLayout');
+  const sections = document.querySelectorAll('.section[data-frame]');
+  const layerItems = document.querySelectorAll('.layer-item');
+  const inspName = document.getElementById('inspName');
+  const inspDevice = document.getElementById('inspDevice');
+  const inspScreen = document.getElementById('inspScreen');
+  const inspDpr = document.getElementById('inspDpr');
+  const inspSize = document.getElementById('inspSize');
+  const inspFill = document.getElementById('inspFill');
+  const inspSwatch = document.getElementById('inspSwatch');
+  const inspRadius = document.getElementById('inspRadius');
+  const inspLayout = document.getElementById('inspLayout');
   const inspOpacity = document.getElementById('inspOpacity');
-  const inspBlur    = document.getElementById('inspBlur');
+  const inspBlur = document.getElementById('inspBlur');
 
   if (!sections.length || !inspName) return;
 
@@ -257,7 +257,7 @@ function initInspector() {
     setVal(inspSize, `${measuredW} × ${measuredH}`);
 
     setVal(inspLayout, el.dataset.layout || 'Auto');
-    
+
     // Live radius
     const compStyle = window.getComputedStyle(el);
     const rad = el.dataset.radius || parseInt(compStyle.borderRadius) || '0';
@@ -393,16 +393,16 @@ function initFooterTs() {
 
 // ── Fullscreen / Presentation mode ───────────────────────
 function initFullscreen() {
-  const btn          = document.getElementById('fullscreenBtn');
+  const btn = document.getElementById('fullscreenBtn');
   if (!btn) return;
-  const iconExpand   = btn.querySelector('.icon-expand');
+  const iconExpand = btn.querySelector('.icon-expand');
   const iconCompress = btn.querySelector('.icon-compress');
 
   function enter() {
     document.body.classList.add('fullscreen');
     btn.setAttribute('aria-pressed', 'true');
     btn.classList.add('active');
-    iconExpand.style.display   = 'none';
+    iconExpand.style.display = 'none';
     iconCompress.style.display = '';
     btn.title = 'Exit fullscreen (F)';
   }
@@ -411,7 +411,7 @@ function initFullscreen() {
     document.body.classList.remove('fullscreen');
     btn.setAttribute('aria-pressed', 'false');
     btn.classList.remove('active');
-    iconExpand.style.display   = '';
+    iconExpand.style.display = '';
     iconCompress.style.display = 'none';
     btn.title = 'Toggle fullscreen (F)';
   }
@@ -469,7 +469,7 @@ function initAmbientMusic() {
   let audio = new Audio();
   audio.volume = 0;
   audio.crossOrigin = 'anonymous';
-  
+
   // Start on a random live jazz station
   let stationIdx = Math.floor(Math.random() * JAZZ_STREAMS.length);
 
@@ -545,7 +545,7 @@ function initAmbientMusic() {
     if (audioCtx) {
       try {
         audioCtx.close();
-      } catch (e) {}
+      } catch (e) { }
       audioCtx = null;
     }
   }
@@ -632,7 +632,7 @@ function initAmbientMusic() {
   // Appears after 2 seconds on home screen, stays for 5 seconds, then smoothly fades out
   function showMusicNotification() {
     if (window.innerWidth <= 600 || isPlaying) return;
-    
+
     const bubble = document.createElement('div');
     bubble.className = 'music-bubble-notif';
     bubble.setAttribute('role', 'status');
@@ -783,7 +783,7 @@ function initEyeBlink() {
 function initMagneticElements() {
   if (matchMedia("(max-width: 860px)").matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const magnets = document.querySelectorAll('.hero-btn-primary, .hero-btn-ghost, .social-circle, .tool-btn');
-  
+
   magnets.forEach(el => {
     el.addEventListener('mousemove', e => {
       const rect = el.getBoundingClientRect();
@@ -899,13 +899,9 @@ function initSplashScreen() {
     splash.classList.add('splash-hidden');
     window.dispatchEvent(new CustomEvent('splashDismissed'));
     setTimeout(() => {
-      try { splash.remove(); } catch(e) {}
+      try { splash.remove(); } catch (e) { }
     }, 900);
   }
-
-  // Click / tap to skip immediately
-  splash.addEventListener('click', dismissSplash);
-  splash.addEventListener('touchstart', dismissSplash, { passive: true });
 
   function showNextGreeting() {
     if (isExiting) return;
@@ -936,14 +932,383 @@ function initSplashScreen() {
   }
 
   timerId = setTimeout(showNextGreeting, WORD_SPEED_MS);
+
+  // Initialize Left-side Dropping ID Card Rig
+  initSplashIDCard(splash);
+}
+
+// ── Splash Screen 3D ID Card Physics & Flippable Rig ───────
+function initSplashIDCard(splash) {
+  const cardAssembly = document.getElementById('cardAssembly2');
+  const metalHardware = document.getElementById('metalHardware2');
+  const cardSheen = document.getElementById('cardSheen2');
+  const cardSheenBack = document.getElementById('cardSheen2Back');
+  const clothBody = document.getElementById('clothBody2');
+  const clothTexture = document.getElementById('clothTexture2');
+  const clothClipPath = document.getElementById('clothClipPath2');
+  const clothCenterLine = document.getElementById('clothCenterLine2');
+  const clothTextPath = document.getElementById('clothTextPath2');
+  const clothRivetGroup = document.getElementById('clothRivetGroup2');
+
+  if (!cardAssembly || !clothBody) return;
+
+  const REST_CARD_Y = 170;
+  const LANYARD_REST_LEN = 146;
+  const BASE_STRAP_WIDTH = 40;
+  const MAX_PULL_Y = 190;
+  const MAX_PULL_X = 140;
+  const SPRING_K = 0.055;
+  const DAMPING = 0.84;
+
+  let cardX = -20;
+  let cardY = -480;
+  let velX = 1.5;
+  let velY = 0;
+  let isInitialDrop = true;
+  let isAlive = true;
+
+  let isDragging = false;
+  let dragStartX = 0;
+  let dragStartY = 0;
+  let dragTargetX = 0;
+  let dragTargetY = 0;
+  let dragDistanceTotal = 0;
+  let pointerInitialX = 0;
+  let pointerInitialY = 0;
+
+  let mouseNormX = 0;
+  let mouseNormY = 0;
+  let currentTiltX = 0;
+  let currentTiltY = 0;
+  let isHovered = false;
+
+  let flipAngleY = 0;
+  let targetFlipAngleY = 0;
+
+  // Prevent card click from dismissing the splash screen
+  cardAssembly.addEventListener('click', (e) => e.stopPropagation());
+  cardAssembly.addEventListener('touchstart', (e) => e.stopPropagation(), { passive: false });
+
+  cardAssembly.addEventListener('mousemove', (e) => {
+    const rect = cardAssembly.getBoundingClientRect();
+    mouseNormX = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+    mouseNormY = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+
+    const sheenX = ((e.clientX - rect.left) / rect.width) * 100;
+    const sheenY = ((e.clientY - rect.top) / rect.height) * 100;
+    const sheenStyle = `radial-gradient(circle at ${sheenX.toFixed(1)}% ${sheenY.toFixed(1)}%, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.06) 40%, transparent 70%)`;
+
+    if (cardSheen) cardSheen.style.background = sheenStyle;
+    if (cardSheenBack) cardSheenBack.style.background = sheenStyle;
+  });
+
+  cardAssembly.addEventListener('mouseenter', () => { isHovered = true; });
+  cardAssembly.addEventListener('mouseleave', () => {
+    isHovered = false;
+    if (!isDragging) { mouseNormX = 0; mouseNormY = 0; }
+  });
+
+  function onPointerDragMove(clientX, clientY) {
+    if (isDragging) {
+      const rawDeltaX = clientX - dragStartX;
+      const rawDeltaY = clientY - dragStartY;
+      dragDistanceTotal += Math.hypot(clientX - pointerInitialX, clientY - pointerInitialY);
+
+      if (rawDeltaY >= 0) {
+        dragTargetY = MAX_PULL_Y * (1 - Math.exp(-rawDeltaY / (MAX_PULL_Y * 0.7)));
+      } else {
+        dragTargetY = -80 * (1 - Math.exp(-Math.abs(rawDeltaY) / 60));
+      }
+      dragTargetX = MAX_PULL_X * Math.tanh(rawDeltaX / (MAX_PULL_X * 0.7));
+    }
+  }
+
+  window.addEventListener('mousemove', (e) => {
+    if (isDragging) onPointerDragMove(e.clientX, e.clientY);
+  });
+  window.addEventListener('touchmove', (e) => {
+    if (isDragging && e.touches.length > 0) {
+      onPointerDragMove(e.touches[0].clientX, e.touches[0].clientY);
+    }
+  }, { passive: true });
+
+  function startDrag(clientX, clientY) {
+    isDragging = true;
+    dragStartX = clientX - cardX;
+    dragStartY = clientY - (cardY - REST_CARD_Y);
+    pointerInitialX = clientX;
+    pointerInitialY = clientY;
+    dragDistanceTotal = 0;
+    cardAssembly.style.cursor = 'grabbing';
+  }
+
+  cardAssembly.addEventListener('mousedown', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    startDrag(e.clientX, e.clientY);
+  });
+
+  cardAssembly.addEventListener('touchstart', (e) => {
+    if (e.touches.length > 0) {
+      startDrag(e.touches[0].clientX, e.touches[0].clientY);
+    }
+  }, { passive: true });
+
+  function endDrag(clientX, clientY) {
+    if (!isDragging) return;
+    isDragging = false;
+    cardAssembly.style.cursor = 'grab';
+
+    if (dragDistanceTotal < 14) {
+      targetFlipAngleY += 180;
+    }
+    if (Math.abs(cardX) > 40) {
+      const flipSpin = cardX > 0 ? 180 : -180;
+      targetFlipAngleY += flipSpin;
+    }
+
+    const deltaFromRestY = cardY - REST_CARD_Y;
+    velY = -deltaFromRestY * 0.22;
+    velX = -cardX * 0.22;
+    dragTargetX = 0;
+    dragTargetY = 0;
+
+    const splashEl = document.getElementById('splashScreen');
+    if ((!splashEl || splashEl.classList.contains('splash-hidden')) && !isHovered) {
+      scheduleRetract();
+    }
+  }
+
+  window.addEventListener('mouseup', (e) => endDrag(e.clientX, e.clientY));
+  window.addEventListener('touchend', (e) => {
+    const touch = e.changedTouches && e.changedTouches[0];
+    endDrag(touch ? touch.clientX : 0, touch ? touch.clientY : 0);
+  });
+
+  function updateClothSpline(anchorX, anchorY, bottomX, bottomY, tiltDeg, rotateY = 0) {
+    const dy = bottomY - anchorY;
+    const dx = bottomX - anchorX;
+
+    const flipCos = Math.cos((rotateY * Math.PI) / 180);
+    const halfWidthTop = BASE_STRAP_WIDTH / 2;
+    const halfWidthBottom = (BASE_STRAP_WIDTH / 2) * flipCos;
+
+    const angleRad = (tiltDeg * Math.PI) / 180;
+    const cosA = Math.cos(angleRad);
+    const sinA = Math.sin(angleRad);
+
+    const barTx = cosA;
+    const barTy = sinA;
+    const barNx = -sinA;
+    const barNy = cosA;
+
+    const topL_x = anchorX - halfWidthTop;
+    const topL_y = anchorY;
+    const topR_x = anchorX + halfWidthTop;
+    const topR_y = anchorY;
+
+    const tuck = 8;
+    const botL_x = bottomX - halfWidthBottom * barTx + tuck * barNx;
+    const botL_y = bottomY - halfWidthBottom * barTy + tuck * barNy;
+    const botR_x = bottomX + halfWidthBottom * barTx + tuck * barNx;
+    const botR_y = bottomY + halfWidthBottom * barTy + tuck * barNy;
+
+    let pathD = '';
+    let centerD = '';
+
+    const isUntwisted = Math.abs(rotateY % 360) < 3 || Math.abs(Math.abs(rotateY % 360) - 360) < 3;
+    const isPureVertical = isUntwisted && (Math.abs(dx) < 3.5 || (!isDragging && Math.abs(cardX) < 1.5));
+    // Determine dynamic rest length based on unpulled distance to prevent unnatural bending when scaled
+    const effectiveRestLen = isDragging ? LANYARD_REST_LEN : Math.max(dy, 40);
+    const isTensed = dy >= (effectiveRestLen - 15);
+
+    if (isPureVertical && isTensed) {
+      const straightBotL = anchorX - halfWidthBottom;
+      const straightBotR = anchorX + halfWidthBottom;
+      pathD = `M ${topL_x} ${topL_y} L ${straightBotL} ${bottomY + tuck} L ${straightBotR} ${bottomY + tuck} L ${topR_x} ${topR_y} Z`;
+      centerD = `M ${anchorX} ${bottomY + tuck} L ${anchorX} ${anchorY}`;
+    } else if (isDragging && dy < (LANYARD_REST_LEN - 15)) {
+      const slack = (LANYARD_REST_LEN - dy) * 0.75;
+      const foldDir = dx >= 0 ? 1 : -1;
+      const foldX = anchorX + dx * 0.45 + foldDir * slack;
+      const foldY = anchorY + dy * 0.55 + slack * 0.5;
+
+      pathD = `M ${topL_x} ${topL_y} Q ${foldX - halfWidthTop} ${foldY}, ${botL_x} ${botL_y} L ${botR_x} ${botR_y} Q ${foldX + halfWidthTop} ${foldY}, ${topR_x} ${topR_y} Z`;
+      centerD = `M ${bottomX + tuck * barNx} ${bottomY + tuck * barNy} Q ${foldX} ${foldY}, ${anchorX} ${anchorY}`;
+    } else {
+      const cpDist = Math.max(30, dy * 0.38);
+      const cp1L_x = topL_x;
+      const cp1L_y = topL_y + cpDist;
+      const cp1R_x = topR_x;
+      const cp1R_y = topR_y + cpDist;
+
+      const cp2L_x = botL_x - cpDist * barNx;
+      const cp2L_y = botL_y - cpDist * barNy;
+      const cp2R_x = botR_x - cpDist * barNx;
+      const cp2R_y = botR_y - cpDist * barNy;
+
+      const cp1C_x = anchorX;
+      const cp1C_y = anchorY + cpDist;
+      const cp2C_x = (bottomX + tuck * barNx) - cpDist * barNx;
+      const cp2C_y = (bottomY + tuck * barNy) - cpDist * barNy;
+
+      pathD = `M ${topL_x} ${topL_y} C ${cp1L_x} ${cp1L_y}, ${cp2L_x} ${cp2L_y}, ${botL_x} ${botL_y} L ${botR_x} ${botR_y} C ${cp2R_x} ${cp2R_y}, ${cp1R_x} ${cp1R_y}, ${topR_x} ${topR_y} Z`;
+      centerD = `M ${bottomX + tuck * barNx} ${bottomY + tuck * barNy} C ${cp2C_x} ${cp2C_y}, ${cp1C_x} ${cp1C_y}, ${anchorX} ${anchorY}`;
+    }
+
+    clothBody.setAttribute('d', pathD);
+    if (clothTexture) clothTexture.setAttribute('d', pathD);
+    if (clothClipPath) clothClipPath.setAttribute('d', pathD);
+    if (clothCenterLine) clothCenterLine.setAttribute('d', centerD);
+
+    if (clothTextPath) {
+      clothTextPath.style.opacity = Math.max(0, flipCos);
+      const fixedDistFromBottom = 75;
+      clothTextPath.setAttribute('startOffset', `${fixedDistFromBottom}px`);
+    }
+
+    if (clothRivetGroup) {
+      const rivetX = bottomX - 22 * barNx;
+      const rivetY = bottomY - 22 * barNy;
+      const rivetScale = Math.max(0.1, Math.abs(flipCos));
+      clothRivetGroup.setAttribute('transform', `translate(${rivetX.toFixed(1)}, ${rivetY.toFixed(1)}) scale(${rivetScale.toFixed(2)}, 1)`);
+    }
+  }
+
+  let isRetracting = false;
+  let retractTimer = null;
+  const RETRACT_DELAY_MS = 1000; // 1 second hold / inactivity timer
+
+  function scheduleRetract() {
+    if (retractTimer) clearTimeout(retractTimer);
+    retractTimer = setTimeout(() => {
+      if (!isHovered && !isDragging) {
+        isRetracting = true;
+      }
+    }, RETRACT_DELAY_MS);
+  }
+
+  // When splash is dismissed, wait 1 second, but if hovered or dragged, wait until cursor leaves for 1s
+  window.addEventListener('splashDismissed', () => {
+    scheduleRetract();
+  }, { once: true });
+
+  cardAssembly.addEventListener('mouseleave', () => {
+    isHovered = false;
+    if (!isDragging) { mouseNormX = 0; mouseNormY = 0; }
+    // If splash already faded, start the 1s countdown after cursor leaves
+    const splashEl = document.getElementById('splashScreen');
+    if (!splashEl || splashEl.classList.contains('splash-hidden')) {
+      scheduleRetract();
+    }
+  });
+
+  cardAssembly.addEventListener('mouseenter', () => {
+    isHovered = true;
+    if (retractTimer) {
+      clearTimeout(retractTimer);
+      retractTimer = null;
+    }
+  });
+
+  function updatePhysics() {
+    if (!isAlive) return;
+
+    // Dynamically calculate the anchor and card position directly from cardAssembly DOM rect
+    const assemblyRect = cardAssembly.getBoundingClientRect();
+    const topAnchorX = assemblyRect.left + assemblyRect.width / 2;
+    const topAnchorY = 0;
+
+    if (isRetracting) {
+      // Accelerate card upwards into the ceiling as if being pulled back up
+      velY -= 2.2;
+      cardY += velY;
+      cardX *= 0.92;
+      velX *= 0.92;
+
+      // When fully off-screen, stop the loop and clean up DOM
+      if (cardY < -600) {
+        isAlive = false;
+        const hangingRig = document.getElementById('hangingRig');
+        if (hangingRig) hangingRig.remove();
+        return;
+      }
+    } else if (isDragging) {
+      cardX += (dragTargetX - cardX) * 0.35;
+      const targetY = REST_CARD_Y + dragTargetY;
+      cardY += (targetY - cardY) * 0.35;
+      velX = 0;
+      velY = 0;
+    } else {
+      const forceX = -SPRING_K * cardX;
+      velX = (velX + forceX) * DAMPING;
+      cardX += velX;
+
+      const deltaY = cardY - REST_CARD_Y;
+      let forceY = -SPRING_K * deltaY;
+
+      if (isInitialDrop) {
+        forceY = Math.min(forceY, 15);
+        velY = (velY + forceY) * 0.88;
+        velY = Math.min(velY, 36);
+        if (Math.abs(deltaY) < 4 && Math.abs(velY) < 1.5) {
+          isInitialDrop = false;
+        }
+      } else {
+        velY = (velY + forceY) * DAMPING;
+      }
+      cardY += velY;
+
+      if (Math.abs(cardX) < 0.05 && Math.abs(velX) < 0.05) {
+        cardX = 0;
+        velX = 0;
+      }
+    }
+
+    flipAngleY += (targetFlipAngleY - flipAngleY) * 0.1;
+
+    const swayZ = cardX * 0.08;
+    const pullTiltY = cardX * 0.14;
+    const pullTiltX = -(cardY - REST_CARD_Y) * 0.08;
+    const targetTiltY = (isHovered && !isRetracting ? mouseNormX * 18 : 0) + pullTiltY;
+    const targetTiltX = (isHovered && !isRetracting ? -mouseNormY * 16 : 0) + pullTiltX;
+    currentTiltX += (targetTiltX - currentTiltX) * 0.12;
+    currentTiltY += (targetTiltY - currentTiltY) * 0.12;
+
+    const totalRotateY = currentTiltY + flipAngleY;
+
+    cardAssembly.style.transform = `
+      translate3d(${cardX.toFixed(2)}px, ${(cardY - REST_CARD_Y).toFixed(2)}px, 0)
+      rotateX(${currentTiltX.toFixed(2)}deg)
+      rotateY(${totalRotateY.toFixed(2)}deg)
+      rotateZ(${swayZ.toFixed(2)}deg)
+    `;
+
+    let clipCenterX = topAnchorX;
+    let clipCenterY = cardY - 28;
+
+    if (metalHardware) {
+      const metalRect = metalHardware.getBoundingClientRect();
+      if (metalRect.width > 0) {
+        clipCenterX = metalRect.left + metalRect.width / 2;
+        clipCenterY = metalRect.top + 5;
+      }
+    }
+
+    updateClothSpline(topAnchorX, topAnchorY, clipCenterX, clipCenterY, swayZ, totalRotateY);
+
+    requestAnimationFrame(updatePhysics);
+  }
+
+  requestAnimationFrame(updatePhysics);
 }
 
 // ── Custom Cursor ─────────────────────────────────────────
 function initCursor() {
   if (matchMedia("(max-width: 860px)").matches) return;
   const dot = document.querySelector(".cursor__dot"),
-        ring = document.querySelector(".cursor__ring"),
-        label = document.querySelector(".cursor__label");
+    ring = document.querySelector(".cursor__ring"),
+    label = document.querySelector(".cursor__label");
   if (!dot || !ring || !label) return;
 
   let mx = window.innerWidth / 2, my = window.innerHeight / 2, rx = mx, ry = my;

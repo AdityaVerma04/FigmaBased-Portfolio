@@ -1,0 +1,605 @@
+/* ==========================================================================
+   ADITYA VERMA — HANGING 3D ID CARD EXPERIENCE
+   ========================================================================== */
+
+:root {
+  --bg: #000000;
+  --purple-accent: #7c4dff;
+  --purple-vivid: #8c52ff;
+  --purple-glow: rgba(140, 82, 255, 0.4);
+  --card-dark: #14131b;
+  --card-border: rgba(255, 255, 255, 0.08);
+  --panel-bg: #c5c3d1;
+  --panel-text: #121118;
+  --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-display: 'Space Grotesk', sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+img {
+  -webkit-user-drag: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+body {
+  background-color: #000000;
+  color: #ffffff;
+  font-family: var(--font-main);
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective: 1200px;
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+/* ── Pure Black Canvas Scene ── */
+.studio-backdrop {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  background-color: #000000;
+  overflow: hidden;
+}
+
+/* ── Hanging Rig Container (Top Anchor) ── */
+.hanging-rig {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  overflow: visible;
+  z-index: 10;
+}
+
+/* ── Dynamic Foldable & Stretchable Cloth Lanyard (SVG Spline) ── */
+.cloth-lanyard-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+  z-index: 20;
+}
+
+.cloth-path {
+  transition: filter 0.2s ease;
+}
+
+.cloth-text {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 32px;
+  letter-spacing: 0.12em;
+  fill: #ffffff;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+  user-select: none;
+  pointer-events: none;
+}
+
+/* ── 3D Card Assembly ── */
+.card-assembly {
+  position: absolute;
+  width: 290px;
+  height: 440px;
+  top: 170px;
+  transform-style: preserve-3d;
+  transform-origin: 50% -30px;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+  pointer-events: auto;
+  will-change: transform;
+}
+
+.card-assembly--1 {
+  left: calc(50% - 190px);
+  margin-left: -145px;
+}
+
+.card-assembly--2 {
+  left: calc(50% + 190px);
+  margin-left: -145px;
+}
+
+.card-assembly:active {
+  cursor: grabbing;
+}
+
+/* ── Metal Hardware (Permanently locked into card top slot) ── */
+.metal-hardware {
+  position: absolute;
+  top: -38px;
+  left: 50%;
+  transform: translateX(-50%) translateZ(25px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 30;
+  pointer-events: none;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.7));
+}
+
+/* ── Shared ID Card Properties ── */
+.id-card {
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.85),
+    0 4px 16px rgba(0, 0, 0, 0.6);
+  backface-visibility: hidden;
+}
+
+/* ── Back Tilted Vivid Purple Accent Card ── */
+.id-card--back {
+  background: #733df2;
+  transform: rotate(-18deg) translate(-28px, 20px) translateZ(-40px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.7),
+    0 0 40px rgba(115, 61, 242, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  transition: transform 0.4s var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1));
+}
+
+.card-assembly:hover .id-card--back {
+  transform: rotate(-22deg) translate(-36px, 26px) translateZ(-50px);
+}
+
+.card-bg-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, transparent 60%, rgba(0, 0, 0, 0.35) 100%);
+}
+
+.card-back-text {
+  font-family: var(--font-display);
+  font-size: 82px;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.88);
+  letter-spacing: -0.04em;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+}
+
+.card-back-corner {
+  position: absolute;
+  bottom: 18px;
+  left: 20px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.65);
+  letter-spacing: 0.1em;
+}
+
+/* ── Front Matte Dark Main Card ── */
+.id-card--front {
+  background: #17161f;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px 18px 18px;
+  z-index: 10;
+  transform: translateZ(10px);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* ── Card 2 Specialized QR Back Face (360° Double-Sided) ── */
+.id-card--qr-back {
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #17161f;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px 18px 18px;
+  transform: rotateY(180deg) translateZ(1px);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.85);
+  z-index: 10;
+}
+
+.card-assembly--2 .id-card--front {
+  transform: translateZ(1px);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* QR Code Display Centerpiece */
+.qr-center-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 10px 0;
+}
+
+.qr-glow-aura {
+  position: absolute;
+  width: 170px;
+  height: 170px;
+  background: radial-gradient(circle, rgba(124, 77, 255, 0.28) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.qr-frame {
+  position: relative;
+  padding: 12px;
+  background: rgba(14, 13, 20, 0.85);
+  border: 1px solid rgba(124, 77, 255, 0.35);
+  border-radius: 16px;
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.7),
+    inset 0 0 15px rgba(124, 77, 255, 0.12);
+}
+
+.qr-matrix-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qr-image {
+  display: block;
+  width: 130px;
+  height: 130px;
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 6px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+}
+
+/* Cyber Scanning Corners */
+.qr-corner {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-color: #9d7aff;
+  border-style: solid;
+}
+
+.qr-corner--tl {
+  top: -2px;
+  left: -2px;
+  border-width: 2.5px 0 0 2.5px;
+  border-top-left-radius: 6px;
+}
+
+.qr-corner--tr {
+  top: -2px;
+  right: -2px;
+  border-width: 2.5px 2.5px 0 0;
+  border-top-right-radius: 6px;
+}
+
+.qr-corner--bl {
+  bottom: -2px;
+  left: -2px;
+  border-width: 0 0 2.5px 2.5px;
+  border-bottom-left-radius: 6px;
+}
+
+.qr-corner--br {
+  bottom: -2px;
+  right: -2px;
+  border-width: 0 2.5px 2.5px 0;
+  border-bottom-right-radius: 6px;
+}
+
+.qr-scan-label {
+  margin-top: 10px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #a78bfa;
+  letter-spacing: 0.12em;
+  text-align: center;
+}
+
+.qr-barcode-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+  padding-top: 6px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.12);
+}
+
+.barcode-container {
+  background: transparent;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.barcode-lines {
+  height: 14px;
+  width: 100px;
+  background: repeating-linear-gradient(90deg,
+      #000000 0px,
+      #000000 2px,
+      transparent 2px,
+      transparent 4px,
+      #000000 4px,
+      #000000 5px,
+      transparent 5px,
+      transparent 7px,
+      #000000 7px,
+      #000000 9px,
+      transparent 9px,
+      transparent 11px);
+}
+
+.barcode-num {
+  font-size: 10px;
+  color: #1b1b1bd6;
+  letter-spacing: 0.1em;
+}
+
+.spec-value--active {
+  color: #20c976 !important;
+  font-weight: 800;
+  /* text-shadow: 0 0 10px rgba(23, 255, 69, 0.768); */
+}
+
+/* Interactive Specular Glare / Sheen */
+.card-sheen {
+  position: absolute;
+  inset: -100%;
+  background: radial-gradient(circle at 50% 50%,
+      rgba(255, 255, 255, 0.14) 0%,
+      rgba(255, 255, 255, 0.04) 35%,
+      transparent 65%);
+  pointer-events: none;
+  z-index: 20;
+  opacity: 0.7;
+  mix-blend-mode: overlay;
+  transition: opacity 0.3s ease;
+}
+
+/* Hole Punch on Top of Card */
+.card-slot {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 14px;
+  height: 14px;
+  background: #08080c;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.95);
+  z-index: 15;
+}
+
+/* Card Header (Brand + Symbol) */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  z-index: 5;
+}
+
+.card-brand .brand-name {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+}
+
+.card-brand .brand-dot {
+  color: var(--purple-accent);
+}
+
+.card-logo-symbol {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 0 8px rgba(140, 82, 255, 0.5));
+}
+
+/* Portrait Artwork Area */
+.card-portrait-wrap {
+  position: relative;
+  width: 100%;
+  height: 210px;
+  margin: 10px 0 12px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #0e0d14;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.portrait-aura {
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(124, 77, 255, 0.25) 0%, transparent 70%);
+  filter: blur(20px);
+}
+
+.portrait-img {
+  width: 90%;
+  height: 90%;
+  object-fit: contain;
+  object-position: center;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  filter: contrast(105%) brightness(98%);
+  transition: filter 0.3s ease, transform 0.3s ease;
+  z-index: 2;
+  user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  pointer-events: none;
+}
+
+.card-assembly:hover .portrait-img {
+  filter: contrast(110%) brightness(102%);
+  transform: scale(1.04);
+}
+
+/* Abstract topographic line effect over portrait sides */
+.portrait-overlay-lines {
+  position: absolute;
+  inset: 0;
+  background-image: repeating-radial-gradient(circle at 50% 50%,
+      transparent 0,
+      transparent 8px,
+      rgba(255, 255, 255, 0.03) 9px,
+      transparent 10px);
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* ── Technical Spec Panel (Silver Badge Block) ── */
+.card-spec-panel {
+  background: var(--panel-bg);
+  color: var(--panel-text);
+  border-radius: 6px;
+  padding: 8px 10px 9px;
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.8),
+    0 4px 12px rgba(0, 0, 0, 0.4);
+  z-index: 5;
+}
+
+.spec-row--header {
+  margin-bottom: 5px;
+}
+
+.spec-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.spec-label {
+  font-family: var(--font-mono);
+  font-size: 7.5px;
+  font-weight: 700;
+  color: #555363;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 1px;
+}
+
+.spec-value {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #121118;
+  letter-spacing: -0.01em;
+}
+
+.spec-value--role {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.spec-divider {
+  height: 1px;
+  background: rgba(0, 0, 0, 0.15);
+  margin: 4px 0 5px;
+}
+
+.spec-grid {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.spec-grid--bottom {
+  grid-template-columns: 1fr 1fr auto;
+  gap: 6px;
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.spec-field--sector .spec-value {
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.spec-qr {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #121118;
+}
+
+/* ── Pendulum Animation ── */
+@keyframes pendulumSway {
+  0% {
+    transform: rotate(-1.5deg) translateX(-3px);
+  }
+
+  100% {
+    transform: rotate(1.5deg) translateX(3px);
+  }
+}
+
+/* ── Responsive Scaling ── */
+@media (max-width: 600px) {
+  .studio-backdrop {
+    padding: 24px 20px 20px;
+  }
+
+  .card-assembly {
+    width: 260px;
+    height: 400px;
+  }
+
+  .lanyard-strap {
+    height: 110px;
+    width: 34px;
+  }
+
+  .card-portrait-wrap {
+    height: 180px;
+  }
+
+  .card-back-text {
+    font-size: 70px;
+  }
+}

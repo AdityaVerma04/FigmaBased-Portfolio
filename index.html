@@ -24,7 +24,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Smooch&family=Poppins:wght@400;500;600;700&family=Syne:wght@700;800&family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Smooch&family=Poppins:wght@400;500;600;700&family=Syne:wght@700;800&family=Space+Grotesk:wght@500;600;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="css/style.css?v=56">
   <!-- Preload hero character animation frames for flicker-free blinking -->
@@ -43,6 +43,227 @@
     <div class="splash-content">
       <div class="splash-greeting-wrap">
         <h1 id="splashText" class="splash-text">Hello</h1>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hanging Lanyard & ID Card Container (Independent from Splash dismissal) -->
+  <div class="hanging-rig" id="hangingRig">
+    <!-- ── Dynamic Cloth Lanyard (Card 2) ── -->
+    <svg class="cloth-lanyard-svg" id="clothSvg2" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="fabricPattern2" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+          <line x1="0" y1="0" x2="0" y2="6" stroke="rgba(0,0,0,0.12)" stroke-width="2" />
+          <line x1="0" y1="0" x2="6" y2="0" stroke="rgba(255,255,255,0.06)" stroke-width="1.5" />
+        </pattern>
+
+        <linearGradient id="clothGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#552ccb" />
+          <stop offset="25%" stop-color="#7c4dff" />
+          <stop offset="50%" stop-color="#905cff" />
+          <stop offset="75%" stop-color="#7240f5" />
+          <stop offset="100%" stop-color="#4d24bd" />
+        </linearGradient>
+
+        <filter id="clothShadow2" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="rgba(0,0,0,0.6)" />
+        </filter>
+
+        <radialGradient id="rivetGrad2" cx="30%" cy="30%" r="70%">
+          <stop offset="0%" stop-color="#ffffff" />
+          <stop offset="25%" stop-color="#dedee8" />
+          <stop offset="55%" stop-color="#727280" />
+          <stop offset="85%" stop-color="#2a2a32" />
+          <stop offset="100%" stop-color="#0e0e12" />
+        </radialGradient>
+
+        <clipPath id="strapClip2">
+          <path id="clothClipPath2" />
+        </clipPath>
+      </defs>
+
+      <path id="clothBody2" class="cloth-path" fill="url(#clothGrad2)" filter="url(#clothShadow2)" />
+      <path id="clothTexture2" class="cloth-texture-path" fill="url(#fabricPattern2)" />
+      <path id="clothCenterLine2" fill="none" stroke="none" />
+
+      <g clip-path="url(#strapClip2)">
+        <text class="cloth-text" dy="22">
+          <textPath id="clothTextPath2" href="#clothCenterLine2" startOffset="75px" text-anchor="middle">
+            WORK
+          </textPath>
+        </text>
+      </g>
+
+      <g id="clothRivetGroup2">
+        <circle r="8.5" fill="rgba(0,0,0,0.55)" cx="0" cy="1.5" />
+        <circle r="7.5" fill="url(#rivetGrad2)" stroke="#1a1a20" stroke-width="1.2" />
+        <circle r="2.8" cx="-2.2" cy="-2.2" fill="rgba(255,255,255,0.85)" />
+      </g>
+    </svg>
+
+    <!-- ── 3D Card Assembly (Card 2) ── -->
+    <div class="card-assembly" id="cardAssembly2">
+      <div class="metal-hardware" id="metalHardware2">
+        <svg viewBox="0 0 46 68" width="46" height="68" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="barChrome2" x1="0" y1="0" x2="46" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#787884" />
+              <stop offset="25%" stop-color="#ffffff" />
+              <stop offset="50%" stop-color="#dedee8" />
+              <stop offset="75%" stop-color="#9292a0" />
+              <stop offset="100%" stop-color="#555560" />
+            </linearGradient>
+            <linearGradient id="hookChrome2" x1="10" y1="18" x2="35" y2="60" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#80808c" />
+              <stop offset="30%" stop-color="#ffffff" />
+              <stop offset="65%" stop-color="#b8b8c6" />
+              <stop offset="100%" stop-color="#50505a" />
+            </linearGradient>
+          </defs>
+
+          <rect x="2" y="2" width="42" height="11" rx="3.5" fill="url(#barChrome2)" stroke="#383842" stroke-width="0.8" />
+          <rect x="6" y="5" width="34" height="4.5" rx="2" fill="#121118" stroke="#303038" stroke-width="0.6" />
+          <rect x="19.5" y="13" width="7" height="7" rx="1.5" fill="url(#barChrome2)" stroke="#383842" stroke-width="0.8" />
+          <path d="M17 19h12c1.5 0 2.5 1 2.5 2.5v2c0 1.5-1 2.5-2.5 2.5H17c-1.5 0-2.5-1-2.5-2.5v-2c0-1.5 1-2.5 2.5-2.5z" fill="url(#barChrome2)" stroke="#383842" stroke-width="0.8" />
+          <path d="M26 26l3.5 18" stroke="#505058" stroke-width="2.2" stroke-linecap="round" />
+          <path d="M20 26c-5 3-7.5 9-7.5 16 0 7.5 4 13.5 11 13.5h2" stroke="url(#hookChrome2)" stroke-width="4.2" stroke-linecap="round" />
+        </svg>
+      </div>
+
+      <!-- Back Face for Card 2 (360° Flippable QR Design) -->
+      <div class="id-card id-card--qr-back">
+        <div class="card-sheen" id="cardSheen2Back"></div>
+
+        <!-- Top Slot Hole -->
+        <div class="card-slot">
+          <div class="slot-hole"></div>
+        </div>
+
+        <!-- Card Header on Back -->
+        <div class="card-header">
+          <div class="card-brand">
+            <span class="brand-name">ACCESS KEY</span>
+          </div>
+          <div class="card-chip-symbol">
+            <svg viewBox="0 0 32 24" width="28" height="20" fill="none">
+              <defs>
+                <linearGradient id="chipGold" x1="0" y1="0" x2="32" y2="24" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#ffd269" />
+                  <stop offset="50%" stop-color="#e5a93b" />
+                  <stop offset="100%" stop-color="#9a6e1a" />
+                </linearGradient>
+              </defs>
+              <rect x="1" y="1" width="30" height="22" rx="4" fill="url(#chipGold)" stroke="#684a10" stroke-width="0.8" />
+              <path d="M1 8h9m-9 8h9m12-8h9m-9 8h9M10 4v16m12-16v16" stroke="#4a3407" stroke-width="1.1" />
+              <circle cx="16" cy="12" r="3.2" fill="#382604" />
+            </svg>
+          </div>
+        </div>
+
+        <!-- Prominent Stylized QR Code Matrix Container -->
+        <div class="qr-center-container">
+          <div class="qr-glow-aura"></div>
+          <div class="qr-frame">
+            <div class="qr-corner qr-corner--tl"></div>
+            <div class="qr-corner qr-corner--tr"></div>
+            <div class="qr-corner qr-corner--bl"></div>
+            <div class="qr-corner qr-corner--br"></div>
+            <div class="qr-matrix-wrap">
+              <img src="assets/qr_code.svg?v=2" alt="Scan to connect" class="qr-image" width="135" height="135" draggable="false">
+            </div>
+          </div>
+          <div class="qr-scan-label">SCAN TO CONNECT · ADITYA VERMA</div>
+        </div>
+
+        <!-- Bottom Footer Details -->
+        <div class="card-spec-panel qr-bottom-panel">
+          <div class="spec-grid">
+            <div class="spec-field">
+              <span class="spec-label">ENCRYPTION</span>
+              <span class="spec-value mono">MEGH-2206 SECURE</span>
+            </div>
+            <div class="spec-field spec-field--sector">
+              <span class="spec-label">STATUS</span>
+              <span class="spec-value spec-value--active">VERIFIED ●</span>
+            </div>
+          </div>
+          <div class="qr-barcode-wrap">
+            <div class="barcode-container">
+              <div class="barcode-lines"></div>
+            </div>
+            <span class="barcode-num mono">220604-04-0204</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="id-card id-card--front">
+        <div class="card-sheen" id="cardSheen2"></div>
+
+        <div class="card-slot">
+          <div class="slot-hole"></div>
+        </div>
+
+        <div class="card-header">
+          <div class="card-brand">
+            <span class="brand-name">WORK</span>
+          </div>
+          <div class="card-logo-symbol">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none">
+              <defs>
+                <linearGradient id="mLogoGrad2" x1="3" y1="4" x2="21" y2="20" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#a78bfa" />
+                  <stop offset="100%" stop-color="#7c3aed" />
+                </linearGradient>
+              </defs>
+              <path d="M3 4h4l5 8 5-8h4v16h-4V11l-5 8-5-8v9H3V4z" fill="url(#mLogoGrad2)" />
+            </svg>
+          </div>
+        </div>
+
+        <div class="card-portrait-wrap">
+          <div class="portrait-aura"></div>
+          <img src="assets/id_avatar.png" alt="Aditya Verma Portrait" class="portrait-img" draggable="false">
+          <div class="portrait-overlay-lines"></div>
+        </div>
+
+        <div class="card-spec-panel">
+          <div class="spec-row spec-row--header">
+            <div class="spec-field">
+              <span class="spec-label">DESIGNATION</span>
+              <span class="spec-value spec-value--role">UI/UX DESIGNER &amp; DEV</span>
+            </div>
+          </div>
+
+          <div class="spec-divider"></div>
+
+          <div class="spec-grid">
+            <div class="spec-field">
+              <span class="spec-label">NAME</span>
+              <span class="spec-value">ADITYA VERMA</span>
+            </div>
+            <div class="spec-field spec-field--sector">
+              <span class="spec-label">SECTOR</span>
+              <span class="spec-value">01</span>
+            </div>
+          </div>
+
+          <div class="spec-grid spec-grid--bottom">
+            <div class="spec-field">
+              <span class="spec-label">REG. NO</span>
+              <span class="spec-value mono">220604</span>
+            </div>
+            <div class="spec-field">
+              <span class="spec-label">SYSTEM UNIT</span>
+              <span class="spec-value mono">9801010051</span>
+            </div>
+            <div class="spec-qr">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+                <path d="M2 2h7v7H2V2zm2 2v3h3V4H4zm5 0h1v2H9V4zm-7 7h2v1H2v-1zm4 0h3v1H6v-1zm4 0h1v2h-1v-2zm-8 4h7v7H2v-7zm2 2v3h3v-3H4zm7-2h1v1h-1v-1zm2 0h2v1h-2v-1zm3 0h3v1h-3v-1zm-5 2h2v1h-2v-1zm3 0h1v2h-1v-2zm2 0h1v1h-1v-1zm-6 3h1v2h-1v-2zm2 0h3v1h-3v-1zm4 0h1v2h-1v-2zm-6 2h2v1h-2v-1zm5 0h2v1h-2v-1zM15 2h7v7h-7V2zm2 2v3h3V4h-3z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -87,10 +308,12 @@
 
     <!-- Shapes Tool (Dropdown) -->
     <button class="tool-btn" data-tool="rect" id="shapeToolBtn" data-shortcut="R — Shapes" title="Shapes (R)">
-      <svg id="shapeToolIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <svg id="shapeToolIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+        stroke-linecap="round">
         <rect x="4" y="6" width="16" height="12" rx="1" />
       </svg>
-      <span class="tool-chevron" style="position:absolute;bottom:2px;right:2px;font-size:7px;line-height:1;opacity:0.65;pointer-events:none;">▾</span>
+      <span class="tool-chevron"
+        style="position:absolute;bottom:2px;right:2px;font-size:7px;line-height:1;opacity:0.65;pointer-events:none;">▾</span>
     </button>
     <!-- Pen -->
     <button class="tool-btn" data-tool="pen" data-shortcut="P — Pen" title="Pen (P)">
@@ -129,7 +352,8 @@
 
     <!-- Famous Jazz Music button (Desktop & Tablet only) -->
     <div class="tool-spacer" aria-hidden="true"></div>
-    <button class="tool-btn tool-music-btn" id="musicBtn" data-shortcut="M — Play Jazz" title="Play famous jazz classics (M)" aria-label="Play classic instrumental jazz">
+    <button class="tool-btn tool-music-btn" id="musicBtn" data-shortcut="M — Play Jazz"
+      title="Play famous jazz classics (M)" aria-label="Play classic instrumental jazz">
       <svg class="music-icon-play" viewBox="0 0 24 24" fill="currentColor">
         <polygon points="7 4 19 12 7 20" />
       </svg>
@@ -246,7 +470,8 @@
   <main class="workspace" id="mainContent">
 
     <!-- ─── 00 · HERO ─── -->
-    <section class="section hero" id="hero" data-frame="Cover" data-fill="#0D0C13" data-radius="0" data-layout="Fixed" data-opacity="100%" data-blur="0 px" aria-label="Cover">
+    <section class="section hero" id="hero" data-frame="Cover" data-fill="#0D0C13" data-radius="0" data-layout="Fixed"
+      data-opacity="100%" data-blur="0 px" aria-label="Cover">
 
       <!-- Frame corner brackets -->
       <div class="hero-corner tl" aria-hidden="true"></div>
@@ -289,8 +514,8 @@
         <div class="hero-character-wrapper" id="heroCharacterWrapper">
           <img src="assets/aditya-character-base.png" alt="Aditya Verma - UX Designer" class="hero-character-img"
             id="heroCharacterImg" width="544" height="816" loading="eager">
-          <img src="" alt="" class="hero-character-blink-overlay"
-            id="heroCharacterOverlay" width="544" height="816" aria-hidden="true">
+          <img src="" alt="" class="hero-character-blink-overlay" id="heroCharacterOverlay" width="544" height="816"
+            aria-hidden="true">
         </div>
       </div>
 
@@ -344,7 +569,8 @@
             <div class="origin__float">
               <div class="origin__frame">
                 <span class="origin__marquee" aria-hidden="true"></span>
-                <img src="assets/kiddo_aditya.png" alt="Little Aditya dressed as Krishna with flute" class="about-photo-cutout" loading="lazy">
+                <img src="assets/kiddo_aditya.png" alt="Little Aditya dressed as Krishna with flute"
+                  class="about-photo-cutout" loading="lazy">
                 <i class="origin__h origin__h--tl" aria-hidden="true"></i>
                 <i class="origin__h origin__h--tr" aria-hidden="true"></i>
                 <i class="origin__h origin__h--bl" aria-hidden="true"></i>
@@ -361,9 +587,12 @@
 
         <div class="about-text">
           <h2>I spend way too much time wondering <span class="about-accent-text">“what if?”</span></h2>
-          <p>I’m Aditya — UI/UX Designer who likes turning what ifs into things people can actually use. I’m curious about why people click, hesitate, get confused, or come back to something they love and I turn those little observations into cleaner flows, sharper interfaces, and experiences that feel almost obvious.</p>
+          <p>I’m Aditya — UI/UX Designer who likes turning what ifs into things people can actually use. I’m curious
+            about why people click, hesitate, get confused, or come back to something they love and I turn those little
+            observations into cleaner flows, sharper interfaces, and experiences that feel almost obvious.</p>
           <p>From a scribble on a blank canvas to a polished product that actually works.</p>
-          <p>I use AI to move faster, break away from obvious ideas, and experiment more. Because sometimes, the best design starts with a slightly stupid question.</p>
+          <p>I use AI to move faster, break away from obvious ideas, and experiment more. Because sometimes, the best
+            design starts with a slightly stupid question.</p>
 
           <div class="about-stats-row" role="list" aria-label="Key highlights">
             <div class="about-mini-stat" role="listitem">
@@ -480,7 +709,8 @@
         <!-- Miro -->
         <div class="tool-card" role="listitem">
           <div class="tool-card-icon">
-            <img src="assets/miro_icon.png" alt="Miro" style="width: 24px; height: 24px; object-fit: contain; display: block;" loading="lazy">
+            <img src="assets/miro_icon.png" alt="Miro"
+              style="width: 24px; height: 24px; object-fit: contain; display: block;" loading="lazy">
           </div>
           <div class="tool-card-info">
             <div class="tool-card-name">Miro</div>
@@ -524,7 +754,8 @@
         <!-- VS Code -->
         <div class="tool-card" role="listitem">
           <div class="tool-card-icon">
-            <img src="assets/vscode_icon.png" alt="VS Code" style="width: 24px; height: 24px; object-fit: contain; display: block;" loading="lazy">
+            <img src="assets/vscode_icon.png" alt="VS Code"
+              style="width: 24px; height: 24px; object-fit: contain; display: block;" loading="lazy">
           </div>
           <div class="tool-card-info">
             <div class="tool-card-name">VS Code</div>
@@ -559,7 +790,7 @@
         <div class="tool-card" role="listitem">
           <div class="tool-card-icon">
             <svg viewBox="0 0 24 24" width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M4 2h16v7h-8zM4 9h8l8 7H4zM4 16h8v7z" fill="#0055FF"/>
+              <path d="M4 2h16v7h-8zM4 9h8l8 7H4zM4 16h8v7z" fill="#0055FF" />
             </svg>
           </div>
           <div class="tool-card-info">
@@ -572,7 +803,8 @@
         <!-- Procreate -->
         <div class="tool-card" role="listitem">
           <div class="tool-card-icon">
-            <img src="assets/procreate_icon.png" alt="Procreate" style="width: 26px; height: 26px; object-fit: contain; display: block;" loading="lazy">
+            <img src="assets/procreate_icon.png" alt="Procreate"
+              style="width: 26px; height: 26px; object-fit: contain; display: block;" loading="lazy">
           </div>
           <div class="tool-card-info">
             <div class="tool-card-name">Procreate</div>
@@ -585,8 +817,9 @@
         <div class="tool-card" role="listitem">
           <div class="tool-card-icon">
             <svg viewBox="0 0 24 24" width="26" height="26" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect width="24" height="24" rx="5.5" fill="#001E36" stroke="#31A8FF" stroke-width="1.5"/>
-              <text x="5.2" y="16" fill="#31A8FF" font-family="system-ui, sans-serif" font-weight="800" font-size="11.5" letter-spacing="-0.5">Ps</text>
+              <rect width="24" height="24" rx="5.5" fill="#001E36" stroke="#31A8FF" stroke-width="1.5" />
+              <text x="5.2" y="16" fill="#31A8FF" font-family="system-ui, sans-serif" font-weight="800" font-size="11.5"
+                letter-spacing="-0.5">Ps</text>
             </svg>
           </div>
           <div class="tool-card-info">
@@ -600,8 +833,9 @@
         <div class="tool-card" role="listitem">
           <div class="tool-card-icon">
             <svg viewBox="0 0 24 24" width="26" height="26" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect width="24" height="24" rx="5.5" fill="#00005B" stroke="#9999FF" stroke-width="1.5"/>
-              <text x="5.2" y="16" fill="#9999FF" font-family="system-ui, sans-serif" font-weight="800" font-size="11.5" letter-spacing="-0.5">Pr</text>
+              <rect width="24" height="24" rx="5.5" fill="#00005B" stroke="#9999FF" stroke-width="1.5" />
+              <text x="5.2" y="16" fill="#9999FF" font-family="system-ui, sans-serif" font-weight="800" font-size="11.5"
+                letter-spacing="-0.5">Pr</text>
             </svg>
           </div>
           <div class="tool-card-info">
@@ -623,7 +857,9 @@
 
       <div class="timeline">
         <div class="tl-item">
-          <div class="tl-track" aria-hidden="true"><div class="tl-photon" aria-hidden="true"></div></div>
+          <div class="tl-track" aria-hidden="true">
+            <div class="tl-photon" aria-hidden="true"></div>
+          </div>
           <div class="tl-version mono">v1.2 · Feb – Apr 2026</div>
           <h3>Namisite Technologies</h3>
           <div class="tl-role">UI/UX Designer &amp; Front-End App Developer</div>
@@ -662,11 +898,15 @@
         <div class="cert-item">
           <div class="cert-logo-wrap" aria-hidden="true">
             <svg viewBox="0 0 38 57" width="18" height="27" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M19 28.5C19 23.2533 23.2533 19 28.5 19C33.7467 19 38 23.2533 38 28.5C38 33.7467 33.7467 38 28.5 38C23.2533 38 19 33.7467 19 28.5Z" fill="#1ABCFE"/>
-              <path d="M0 47.5C0 42.2533 4.25329 38 9.5 38H19V47.5C19 52.7467 14.7467 57 9.5 57C4.25329 57 0 52.7467 0 47.5Z" fill="#0ACF83"/>
-              <path d="M19 0V19H28.5C33.7467 19 38 14.7467 38 9.5C38 4.25329 33.7467 0 28.5 0H19Z" fill="#FF7262"/>
-              <path d="M0 9.5C0 14.7467 4.25329 19 9.5 19H19V0H9.5C4.25329 0 0 4.25329 0 9.5Z" fill="#F24E1E"/>
-              <path d="M0 28.5C0 33.7467 4.25329 38 9.5 38H19V19H9.5C4.25329 19 0 23.2533 0 28.5Z" fill="#A259FF"/>
+              <path
+                d="M19 28.5C19 23.2533 23.2533 19 28.5 19C33.7467 19 38 23.2533 38 28.5C38 33.7467 33.7467 38 28.5 38C23.2533 38 19 33.7467 19 28.5Z"
+                fill="#1ABCFE" />
+              <path
+                d="M0 47.5C0 42.2533 4.25329 38 9.5 38H19V47.5C19 52.7467 14.7467 57 9.5 57C4.25329 57 0 52.7467 0 47.5Z"
+                fill="#0ACF83" />
+              <path d="M19 0V19H28.5C33.7467 19 38 14.7467 38 9.5C38 4.25329 33.7467 0 28.5 0H19Z" fill="#FF7262" />
+              <path d="M0 9.5C0 14.7467 4.25329 19 9.5 19H19V0H9.5C4.25329 0 0 4.25329 0 9.5Z" fill="#F24E1E" />
+              <path d="M0 28.5C0 33.7467 4.25329 38 9.5 38H19V19H9.5C4.25329 19 0 23.2533 0 28.5Z" fill="#A259FF" />
             </svg>
           </div>
           <div class="cert-info">
@@ -678,11 +918,15 @@
         <div class="cert-item">
           <div class="cert-logo-wrap" aria-hidden="true">
             <svg viewBox="0 0 38 57" width="18" height="27" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M19 28.5C19 23.2533 23.2533 19 28.5 19C33.7467 19 38 23.2533 38 28.5C38 33.7467 33.7467 38 28.5 38C23.2533 38 19 33.7467 19 28.5Z" fill="#1ABCFE"/>
-              <path d="M0 47.5C0 42.2533 4.25329 38 9.5 38H19V47.5C19 52.7467 14.7467 57 9.5 57C4.25329 57 0 52.7467 0 47.5Z" fill="#0ACF83"/>
-              <path d="M19 0V19H28.5C33.7467 19 38 14.7467 38 9.5C38 4.25329 33.7467 0 28.5 0H19Z" fill="#FF7262"/>
-              <path d="M0 9.5C0 14.7467 4.25329 19 9.5 19H19V0H9.5C4.25329 0 0 4.25329 0 9.5Z" fill="#F24E1E"/>
-              <path d="M0 28.5C0 33.7467 4.25329 38 9.5 38H19V19H9.5C4.25329 19 0 23.2533 0 28.5Z" fill="#A259FF"/>
+              <path
+                d="M19 28.5C19 23.2533 23.2533 19 28.5 19C33.7467 19 38 23.2533 38 28.5C38 33.7467 33.7467 38 28.5 38C23.2533 38 19 33.7467 19 28.5Z"
+                fill="#1ABCFE" />
+              <path
+                d="M0 47.5C0 42.2533 4.25329 38 9.5 38H19V47.5C19 52.7467 14.7467 57 9.5 57C4.25329 57 0 52.7467 0 47.5Z"
+                fill="#0ACF83" />
+              <path d="M19 0V19H28.5C33.7467 19 38 14.7467 38 9.5C38 4.25329 33.7467 0 28.5 0H19Z" fill="#FF7262" />
+              <path d="M0 9.5C0 14.7467 4.25329 19 9.5 19H19V0H9.5C4.25329 0 0 4.25329 0 9.5Z" fill="#F24E1E" />
+              <path d="M0 28.5C0 33.7467 4.25329 38 9.5 38H19V19H9.5C4.25329 19 0 23.2533 0 28.5Z" fill="#A259FF" />
             </svg>
           </div>
           <div class="cert-info">
