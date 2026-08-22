@@ -4283,7 +4283,7 @@ body.cursor-hover .cursor__label {
   position: absolute;
   width: 170px;
   height: 170px;
-  background: radial-gradient(circle, var(--accent-glow, rgba(140, 111, 255, 0.35)) 0%, transparent 70%);
+  background: radial-gradient(circle, var(--accent-glow, rgba(124, 77, 255, 0.28)) 0%, transparent 70%);
   pointer-events: none;
 }
 
@@ -4291,11 +4291,11 @@ body.cursor-hover .cursor__label {
   position: relative;
   padding: 12px;
   background: rgba(14, 13, 20, 0.85);
-  border: 1px solid var(--accent-glow, rgba(140, 111, 255, 0.35));
+  border: 1px solid var(--accent-glow, rgba(124, 77, 255, 0.35));
   border-radius: 16px;
   box-shadow:
     0 10px 30px rgba(0, 0, 0, 0.7),
-    inset 0 0 15px var(--accent-soft, rgba(140, 111, 255, 0.14));
+    inset 0 0 15px var(--accent-soft, rgba(124, 77, 255, 0.12));
 }
 
 .qr-matrix-wrap {
@@ -4319,7 +4319,7 @@ body.cursor-hover .cursor__label {
   position: absolute;
   width: 10px;
   height: 10px;
-  border-color: var(--accent-light, #b4a3ff);
+  border-color: var(--accent-light, #9d7aff);
   border-style: solid;
 }
 
@@ -4356,7 +4356,7 @@ body.cursor-hover .cursor__label {
   font-family: var(--font-mono, monospace);
   font-size: 9.5px;
   font-weight: 700;
-  color: var(--accent-light, #b4a3ff);
+  color: var(--accent-light, #a78bfa);
   letter-spacing: 0.12em;
   text-align: center;
 }
