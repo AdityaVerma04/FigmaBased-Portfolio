@@ -1289,6 +1289,13 @@
 
   // ── Boot ───────────────────────────────────────────────────
   function boot() {
+    // Restore saved accent preference across normal refreshes
+    try {
+      const saved = localStorage.getItem('aditya_portfolio_accent');
+      if (saved && /^#[0-9a-f]{6}$/i.test(saved)) {
+        applyAccent(saved);
+      }
+    } catch (e) {}
     init();
   }
 
