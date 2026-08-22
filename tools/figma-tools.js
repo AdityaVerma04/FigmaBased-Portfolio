@@ -1255,6 +1255,24 @@
       }
     }
 
+    // Update QR Scanner Corners & Scan Label
+    document.querySelectorAll('.qr-corner').forEach(c => {
+      c.style.borderColor = lightHex;
+    });
+    const qrLabel = document.querySelector('.qr-scan-label');
+    if (qrLabel) qrLabel.style.color = lightHex;
+
+    const qrFrame = document.querySelector('.qr-frame');
+    if (qrFrame) {
+      qrFrame.style.borderColor = `rgba(${r}, ${g}, ${b}, 0.35)`;
+      qrFrame.style.boxShadow = `0 10px 30px rgba(0, 0, 0, 0.7), inset 0 0 15px rgba(${r}, ${g}, ${b}, 0.12)`;
+    }
+
+    const qrAura = document.querySelector('.qr-glow-aura');
+    if (qrAura) {
+      qrAura.style.background = `radial-gradient(circle, rgba(${r}, ${g}, ${b}, 0.28) 0%, transparent 70%)`;
+    }
+
     // Update swatch button fill color
     const sw = document.querySelector('#colorSwatchBtn .swatch-fill');
     if (sw) sw.style.background = hex;
@@ -1271,13 +1289,6 @@
 
   // ── Boot ───────────────────────────────────────────────────
   function boot() {
-    // Restore saved accent preference if available
-    try {
-      const saved = localStorage.getItem('aditya_portfolio_accent');
-      if (saved && /^#[0-9a-f]{6}$/i.test(saved)) {
-        applyAccent(saved);
-      }
-    } catch (e) {}
     init();
   }
 
